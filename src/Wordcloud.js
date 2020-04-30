@@ -24,7 +24,7 @@ export default class WordCloud extends Component{
             fontStyle: 'normal',
             fontWeight: 'normal',
             scale: 'log',
-            spiral: 'archimedean',
+            //spiral: 'archimedean',
             deterministic: true,
 
             rotations: 4,
@@ -33,15 +33,13 @@ export default class WordCloud extends Component{
             transitionDuration: 200,
         }
 
-        this.props.dataLoader.addWordsCallback(this.setWords.bind(this))
-
         this.state = {
             words : [{text: 'Loading...', value: 100}]
         }
     }
 
      componentDidMount() {
-
+         this.props.dataLoader.addWordsCallback(this.setWords.bind(this))
      }
 
     render() {
