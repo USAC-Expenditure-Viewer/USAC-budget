@@ -48,7 +48,7 @@ export default class WordCloud extends Component{
                         <TableBody>
                             {this.stableSort(this.state.records).map((row, index) => (
                                 <TableRow key={index}>
-                                    <TableCell>{row.date}</TableCell>
+                                    <TableCell>{new Date(row.date * 1000).toDateString()}</TableCell>
                                     <TableCell>{row.department}</TableCell>
                                     <TableCell>{row.description}</TableCell>
                                     <TableCell>{row.amount}</TableCell>
