@@ -10,7 +10,7 @@ import TopBar from "./TopBar";
 
 function App() {
     let list = new KeywordList()
-    let loader = new Dataloader("/expense_summary.json", list)
+    let loader = new Dataloader(window.location.pathname + "/expense_summary.json", list)
     return (
         <div>
             <TopBar/>
