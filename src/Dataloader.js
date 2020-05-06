@@ -4,6 +4,7 @@ export default class Dataloader{
     #data = null
     #records_callbacks = []
     #words_callbacks = []
+    #amount_callbacks = []
     #keywordList
 
     constructor(input_url, keywordList) {
@@ -20,6 +21,8 @@ export default class Dataloader{
     listChangeCallback() {
         let records = this.getRecords(this.#keywordList.getList())
         this.#records_callbacks.forEach(c=>c(records))
+        let totalAmount = this.getTotal(records)
+        this.#amount_callbacks.forEach(c=>c(totalAmount))
         let words = this.getWordList(records)
         this.#words_callbacks.forEach(c=>c(words))
     }
@@ -30,6 +33,10 @@ export default class Dataloader{
 
     addWordsCallback(callback) {
         this.#words_callbacks.push(callback)
+    }
+
+    addAmountCallback(callback) {
+        this.#amount_callbacks.push(callback)
     }
 
     getRecords(root_word) {
@@ -71,5 +78,9 @@ export default class Dataloader{
         words_list.sort((a, b) => a.value - b.value)
 
         return words_list
+    }
+
+    getTotal(records){
+        return records.reduce((prev, curr) => prev + curr.amount, 0)
     }
 }

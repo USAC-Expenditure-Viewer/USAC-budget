@@ -4,6 +4,7 @@
 import React, {Component} from 'react';
 import {TableContainer, Paper, Table, TableHead, TableRow, TableCell, TableBody, TableFooter} from "@material-ui/core";
 import TableSortLabel from "@material-ui/core/TableSortLabel";
+import {commaFormat} from "./util";
 
 export default class WordCloud extends Component{
 
@@ -51,7 +52,7 @@ export default class WordCloud extends Component{
                                     <TableCell>{new Date(row.date * 1000).toDateString()}</TableCell>
                                     <TableCell>{row.department}</TableCell>
                                     <TableCell>{row.description}</TableCell>
-                                    <TableCell>{row.amount}</TableCell>
+                                    <TableCell>{commaFormat(row.amount)}</TableCell>
                                 </TableRow>
                             ))}
                         </TableBody>
@@ -61,7 +62,7 @@ export default class WordCloud extends Component{
                                 <TableCell></TableCell>
                                 <TableCell align="right">Total: </TableCell>
                                 <TableCell>
-                                    {Math.round(this.state.records.reduce((prev, curr) => prev + curr.amount, 0) * 100) / 100}
+                                    {commaFormat(this.state.records.reduce((prev, curr) => prev + curr.amount, 0))}
                                 </TableCell>
                             </TableRow>
                         </TableFooter>

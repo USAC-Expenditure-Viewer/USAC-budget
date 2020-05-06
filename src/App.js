@@ -15,7 +15,7 @@ function App() {
         <div>
             <TopBar/>
             <Paper variant="outlined" className="App" style={{margin: '0 10%'}}>
-                <KeywordCrumb style={{margin: 10}} keywordList={list}/>
+                <KeywordCrumb style={{margin: 10}} keywordList={list} dataLoader={loader}/>
                 <WordCloud style={{width: '100%', height: '80vh'}} keywordList={list} dataLoader={loader}/>
                 <RecordTable style={{height: '80vh'}} dataLoader={loader}/>
             </Paper>

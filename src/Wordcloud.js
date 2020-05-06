@@ -5,6 +5,7 @@ import 'd3-transition';
 import { select } from 'd3-selection';
 import React, { Component } from 'react';
 import ReactWordcloud from "react-wordcloud";
+import {KMFormat} from "./util";
 
 export default class WordCloud extends Component{
 
@@ -12,7 +13,7 @@ export default class WordCloud extends Component{
         super(props)
 
         this.callbacks = {
-            getWordTooltip: word =>`${word.text} has $${Math.round(word.value * 100) / 100} in the category.`,
+            getWordTooltip: word =>`${word.text} has $${KMFormat(word.value)} in the category.`,
             onWordClick: this.getCallback('onWordClick').bind(this),
             onWordMouseOut: this.getCallback('onWordMouseOut').bind(this),
             onWordMouseOver: this.getCallback('onWordMouseOver').bind(this),
