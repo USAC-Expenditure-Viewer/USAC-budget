@@ -45,7 +45,9 @@ export default class WordCloud extends Component{
 
     render() {
         return(
-            <ReactWordcloud style={this.props.style} callbacks={this.callbacks} words={this.state.words} options={this.options}/>
+            <div style={this.props.style}>
+                <ReactWordcloud callbacks={this.callbacks} words={this.state.words} options={this.options}/>
+            </div>
         )
     }
 

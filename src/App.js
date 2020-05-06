@@ -1,6 +1,6 @@
 import React from 'react';
 import './App.css';
-import WordCloud from "./Wordcloud";
+import WordCloud from "./WordCloud";
 import RecordTable from "./RecordTable";
 import KeywordCrumb from "./KeywordCrumb";
 import Paper from "@material-ui/core/Paper";
@@ -17,8 +17,8 @@ function App() {
             <TopBar/>
             <Paper variant="outlined" className="App" style={{margin: '0 10%'}}>
                 <KeywordCrumb style={{margin: 10}} keywordlist={list} dataloader={loader}/>
-                <WordCloud style={{width: '100%', height: '80vh'}} keywordlist={list} dataloader={loader}/>
-                <WordChart style={{width: '100%', height: '80vh'}} dataloader={loader} />
+                <WordCloud style={{height: '80vh'}} keywordlist={list} dataloader={loader}/>
+                <WordChart style={{height: '80vh'}} dataloader={loader} />
                 <RecordTable style={{height: '80vh'}} dataloader={loader}/>
             </Paper>
         </div>
