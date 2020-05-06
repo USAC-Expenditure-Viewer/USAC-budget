@@ -28,11 +28,11 @@ export default class KeywordCrumb extends Component{
         let list = this.props.keywordList.getList()
         return(
             <Breadcrumbs separator=">" style={this.props.style}>
-                <Link color="textPrimary" onClick={()=>this.props.keywordList.reset()}>Transactions({this.state.amounts[0]})</Link>
+                <Link color="textPrimary" onClick={()=>this.props.keywordList.reset()}>Transactions(${this.state.amounts[0]})</Link>
                 {list.slice(0, -1).map((word, index)=>(
-                    <Link color="textSecondary" onClick={()=>this.props.keywordList.sliceWord(word)}>{word}({this.state.amounts[index + 1]})</Link>
+                    <Link color="textSecondary" onClick={()=>this.props.keywordList.sliceWord(word)}>{word}(${this.state.amounts[index + 1]})</Link>
                 ))}
-                {list.length > 0 ? (<Typography color="textPrimary">{list[list.length-1]}({this.state.amounts[list.length]})</Typography>) : null}
+                {list.length > 0 ? (<Typography color="textPrimary">{list[list.length-1]}(${this.state.amounts[list.length]})</Typography>) : null}
             </Breadcrumbs>
         )
     }
