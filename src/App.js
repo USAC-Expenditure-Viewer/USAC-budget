@@ -7,6 +7,7 @@ import Paper from "@material-ui/core/Paper";
 import KeywordList from "./KeywordList";
 import Dataloader from "./Dataloader";
 import TopBar from "./TopBar";
+import WordChart from "./WordChart";
 
 function App() {
     let list = new KeywordList()
@@ -15,9 +16,10 @@ function App() {
         <div>
             <TopBar/>
             <Paper variant="outlined" className="App" style={{margin: '0 10%'}}>
-                <KeywordCrumb style={{margin: 10}} keywordList={list} dataLoader={loader}/>
-                <WordCloud style={{width: '100%', height: '80vh'}} keywordList={list} dataLoader={loader}/>
-                <RecordTable style={{height: '80vh'}} dataLoader={loader}/>
+                <KeywordCrumb style={{margin: 10}} keywordlist={list} dataloader={loader}/>
+                <WordCloud style={{width: '100%', height: '80vh'}} keywordlist={list} dataloader={loader}/>
+                <WordChart style={{width: '100%', height: '80vh'}} dataloader={loader} />
+                <RecordTable style={{height: '80vh'}} dataloader={loader}/>
             </Paper>
         </div>
     );

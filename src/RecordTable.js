@@ -19,7 +19,7 @@ export default class WordCloud extends Component{
     }
 
      componentDidMount() {
-         this.props.dataLoader.addRecordCallback(this.setRecords.bind(this))
+         this.props.dataloader.addRecordCallback(this.setRecords.bind(this))
      }
 
     setRecords(records) {

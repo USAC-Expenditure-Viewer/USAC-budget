@@ -1,5 +1,5 @@
 /**
- * Created by TylerLiu on 2018/12/23.
+ * Created by TylerLiu on 2020/04/23.
  */
 import 'd3-transition';
 import { select } from 'd3-selection';
@@ -40,7 +40,7 @@ export default class WordCloud extends Component{
     }
 
      componentDidMount() {
-         this.props.dataLoader.addWordsCallback(this.setWords.bind(this))
+         this.props.dataloader.addWordsCallback(this.setWords.bind(this))
      }
 
     render() {
@@ -57,7 +57,7 @@ export default class WordCloud extends Component{
             text
                 .on('click', (() => {
                     if (isActive) {
-                        this.props.keywordList.addWord(word.text);
+                        this.props.keywordlist.addWord(word.text);
                     }
                 }))
                 .transition()
