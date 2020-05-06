@@ -39,7 +39,8 @@
     ]
   },
   "devDependencies": {
-    "gh-pages": "^2.2.0"
+    "gh-pages": "^2.2.0",
+    "typescript": "^3.8.3"
   },
   "homepage": "https://tylerliu.github.io/USAC-budget"
 }
