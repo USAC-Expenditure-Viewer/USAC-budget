@@ -35,14 +35,11 @@ export default class WordChart extends Component {
         this.height = this.divElement.clientHeight
         this.width = this.divElement.clientWidth
         this.setState({ height: this.height, width: this.width });
-        this.renderChart()
-    }
-
-    componentDidUpdate(prevProps, prevState, snapshot) {
-        this.renderChart()
+        //this.renderChart()
     }
 
     render() {
+        this.renderChart()
         return (
             <div style={this.props.style} ref={ (divElement) => { this.divElement = divElement } }>
                 <svg ref={node => this.svgElement = node}
@@ -50,7 +47,7 @@ export default class WordChart extends Component {
                      viewBox={[0, 0, this.width, this.height]}>
                 </svg>
             </div>
-        )
+        );
     }
 
     setWords(words) {
@@ -70,8 +67,7 @@ export default class WordChart extends Component {
             .padding(0.1)
 
         select(this.svgElement).selectAll("*").remove()
-        select(this.svgElement)
-            .call(this.setChartZoom.bind(this))
+        select(this.svgElement).call(this.setChartZoom.bind(this))
 
         select(this.svgElement).append('g')
             .attr("class", "bars")
@@ -121,7 +117,7 @@ export default class WordChart extends Component {
     setYAxis(g){
         g.attr("transform", `translate(${this.margin.left},0)`)
             .call(axisLeft(this.yScale)
-                .tickValues(this.yScale.domain().filter((d, i) => (i % Math.max(Math.round(20 / this.yScale.bandwidth()), 1) === 0))))
+                .tickValues(this.yScale.domain().filter((d, i) => (i % Math.max(Math.round(18 / this.yScale.bandwidth()), 1) === 0))))
             .call(g => g.select(".domain").remove())
     }
 }
