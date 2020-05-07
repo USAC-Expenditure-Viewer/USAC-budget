@@ -6,7 +6,8 @@ import {scaleLinear, scaleBand} from 'd3-scale';
 import {max} from 'd3-array';
 import {zoom} from 'd3-zoom';
 import { select, event } from "d3-selection";
-import {axisBottom, axisLeft} from 'd3-axis';
+import {axisTop, axisLeft} from 'd3-axis';
+import {format} from 'd3-format';
 import {KMFormat} from "./util";
 
 export default class WordChart extends Component {
@@ -26,7 +27,7 @@ export default class WordChart extends Component {
             data: []
         }
 
-        this.margin = {top: 20, right: 0, bottom: 30, left: 40}
+        this.margin = {top: 20, right: 0, bottom: 30, left: 80}
     }
 
     componentDidMount() {
@@ -38,8 +39,6 @@ export default class WordChart extends Component {
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
-        this.height = this.divElement.clientHeight
-        this.width = this.divElement.clientWidth
         this.renderChart()
     }
 
@@ -56,19 +55,19 @@ export default class WordChart extends Component {
 
     setWords(words) {
         this.setState({
-            data: words.reverse().filter(e => e.value > 0)
+            data: words.filter(e => e.value > 0)
         })
     }
 
     renderChart(){
-        this.xScale = scaleBand()
-            .domain(this.state.data.map(d => d.text))
-            .range([this.margin.left, this.width - this.margin.right])
-            .padding(0.1)
-
-        this.yScale = scaleLinear()
+        this.xScale = scaleLinear()
             .domain([0, max(this.state.data, d => d.value)]).nice()
+            .range([this.margin.left, this.width - this.margin.right])
+
+        this.yScale = scaleBand()
+            .domain(this.state.data.map(d => d.text))
             .range([this.height - this.margin.bottom, this.margin.top])
+            .padding(0.1)
 
         select(this.svgElement).selectAll("*").remove()
         select(this.svgElement)
@@ -80,10 +79,10 @@ export default class WordChart extends Component {
             .selectAll("rect")
             .data(this.state.data)
             .join("rect")
-            .attr("x", d => this.xScale(d.text))
-            .attr("y", d => this.yScale(d.value))
-            .attr("height", d => this.yScale(0) - this.yScale(d.value))
-            .attr("width", this.xScale.bandwidth());
+            .attr("x", this.xScale(0))
+            .attr("y", d => this.yScale(d.text))
+            .attr("height", this.yScale.bandwidth())
+            .attr("width", d => this.xScale(d.value) - this.xScale(0));
 
         select(this.svgElement).append("g")
             .attr("class", "x-axis")
@@ -96,32 +95,33 @@ export default class WordChart extends Component {
 
     setChartZoom(svg) {
         const margin = this.margin
-        const xScale = this.xScale
-        const setXAxis = this.setXAxis.bind(this)
+        const yScale = this.yScale
+        const setYAxis = this.setYAxis.bind(this)
         const extent = [[margin.left, margin.top], [this.width - margin.right, this.height - margin.top]];
-        const width = this.width
+        const height = this.height
 
         svg.call(zoom()
-            .scaleExtent([1, 8])
+            .scaleExtent([1, this.state.data.length / 10])
             .translateExtent(extent)
             .extent(extent)
             .on("zoom", zoomed));
 
         function zoomed() {
-            xScale.range([margin.left, width - margin.right].map(d => event.transform.applyX(d)));
-            svg.selectAll(".bars rect").attr("x", d => xScale(d.name)).attr("width", xScale.bandwidth());
-            svg.selectAll(".x-axis").call(setXAxis);
+            yScale.range([height - margin.bottom, margin.top].map(d => event.transform.applyY(d)));
+            svg.selectAll(".bars rect").attr("y", d => yScale(d.text)).attr("height", yScale.bandwidth());
+            svg.selectAll(".y-axis").call(setYAxis);
         }
     }
 
     setXAxis(g){
-        g.attr("transform", `translate(0,${this.height - this.margin.bottom})`)
-            .call(axisBottom(this.xScale).tickSizeOuter(0))
+        g.attr("transform", `translate(0,${this.margin.top})`)
+            .call(axisTop(this.xScale).tickFormat(format("~s")).tickSizeOuter(0))
     }
 
     setYAxis(g){
         g.attr("transform", `translate(${this.margin.left},0)`)
-            .call(axisLeft(this.yScale))
+            .call(axisLeft(this.yScale)
+                .tickValues(this.yScale.domain().filter((d, i) => (i % Math.max(Math.round(20 / this.yScale.bandwidth()), 1) === 0))))
             .call(g => g.select(".domain").remove())
     }
 }
