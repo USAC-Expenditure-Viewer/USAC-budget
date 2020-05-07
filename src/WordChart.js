@@ -8,7 +8,6 @@ import {zoom} from 'd3-zoom';
 import { select, event } from "d3-selection";
 import {axisTop, axisLeft} from 'd3-axis';
 import {format} from 'd3-format';
-import {KMFormat} from "./util";
 
 export default class WordChart extends Component {
 
