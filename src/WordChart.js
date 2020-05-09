@@ -8,9 +8,26 @@ import {zoom} from 'd3-zoom';
 import { select, event } from "d3-selection";
 import {axisTop, axisLeft} from 'd3-axis';
 import {format} from 'd3-format';
+import {makeStyles} from "@material-ui/core/styles";
+import {KMFormat} from "./util";
+
+const styles = {
+    tooltip: {
+        position: "absolute",
+        textAlign: "center",
+        padding: 5,
+        font: "12px sans-serif",
+        background: "lightsteelblue",
+        border: 0,
+        borderRadius: 8,
+        pointerEvents: "none",
+    }
+}
+
 
 export default class WordChart extends Component {
 
+    classes
     divElement
     svgElement
     margin
@@ -41,10 +58,11 @@ export default class WordChart extends Component {
         this.renderChart()
         return (
             <div style={this.props.style} ref={ (divElement) => { this.divElement = divElement } }>
-                <svg ref={node => this.svgElement = node}
-                     width={this.state.width} height={this.state.height}
-                     viewBox={[0, 0, this.width, this.height]}>
-                </svg>
+                <div style={styles.tooltip} ref={(tooltip)=>{this.tooltip = tooltip}}/>
+                    <svg ref={node => this.svgElement = node}
+                         width={this.state.width} height={this.state.height}
+                         viewBox={[0, 0, this.width, this.height]}>
+                    </svg>
             </div>
         );
     }
@@ -68,6 +86,8 @@ export default class WordChart extends Component {
         select(this.svgElement).selectAll("*").remove()
         select(this.svgElement).call(this.setChartZoom.bind(this))
 
+        select(this.tooltip).style("opacity", 0)
+
         select(this.svgElement).append('g')
             .attr("class", "bars")
             .attr("fill", "steelblue")
@@ -77,7 +97,8 @@ export default class WordChart extends Component {
             .attr("x", this.xScale(0))
             .attr("y", d => this.yScale(d.text))
             .attr("height", this.yScale.bandwidth())
-            .attr("width", d => this.xScale(d.value) - this.xScale(0));
+            .attr("width", d => this.xScale(d.value) - this.xScale(0))
+            .call(this.setTooltip.bind(this))
 
         select(this.svgElement).append("g")
             .attr("class", "x-axis")
@@ -86,6 +107,21 @@ export default class WordChart extends Component {
         select(this.svgElement).append("g")
             .attr("class", "y-axis")
             .call(this.setYAxis.bind(this));
+    }
+
+    setTooltip(rects) {
+        rects.on("mouseover", d => {
+            select(this.tooltip).transition()
+                .duration(200)
+                .style("opacity", .9);
+            select(this.tooltip).html(d.text + '<br>' + KMFormat(d.value))
+                .style("left", (event.pageX) + "px")
+                .style("top", (event.pageY - 28) + "px");
+        }).on("mouseout", d=>{
+            select(this.tooltip).transition()
+                .duration(500)
+                .style("opacity", 0);
+        })
     }
 
     setChartZoom(svg) {

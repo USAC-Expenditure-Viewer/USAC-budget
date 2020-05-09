@@ -6,6 +6,8 @@ import {TableContainer, Paper, Table, TableHead, TableRow, TableCell, TableBody,
 import TableSortLabel from "@material-ui/core/TableSortLabel";
 import {commaFormat} from "./util";
 
+//TODO virtualize
+
 export default class WordCloud extends Component{
 
     constructor(props) {
