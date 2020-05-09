@@ -18,7 +18,7 @@ function App() {
             <Paper variant="outlined" className="App" style={{margin: '0 10%'}}>
                 <KeywordCrumb style={{margin: 10}} keywordlist={list} dataloader={loader}/>
                 <WordCloud style={{height: '80vh'}} keywordlist={list} dataloader={loader}/>
-                <WordChart style={{height: '80vh', width: '100%'}} dataloader={loader} />
+                <WordChart style={{height: '80vh', width: '100%'}} keywordlist={list} dataloader={loader} />
                 <RecordTable style={{height: '80vh'}} dataloader={loader}/>
             </Paper>
         </div>

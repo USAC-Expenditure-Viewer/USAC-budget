@@ -51,7 +51,6 @@ export default class WordChart extends Component {
         this.height = this.divElement.clientHeight
         this.width = this.divElement.clientWidth
         this.setState({ height: this.height, width: this.width });
-        //this.renderChart()
     }
 
     render() {
@@ -121,7 +120,9 @@ export default class WordChart extends Component {
             select(this.tooltip).transition()
                 .duration(500)
                 .style("opacity", 0);
-        })
+        }).on('click', ((d) => {
+                this.props.keywordlist.addWord(d.text);
+        }))
     }
 
     setChartZoom(svg) {
