@@ -13,6 +13,8 @@ interface DataEntry {
     words: string[]
 }
 
+export type Category = 'fund'| 'division'| 'department'| 'gl'| 'event'
+
 interface WordEntry {
     text: string,
     value: number
@@ -25,12 +27,12 @@ interface Filter {
     amount: number,
 }
 
-export interface DataloaderProps {
-    dataloader: Dataloader,
+export interface DataLoaderProps {
+    dataloader: DataLoader,
     style?: Object,
 }
 
-export default class Dataloader{
+export default class DataLoader{
 
     private data: DataEntry[] = []
     private filters: Filter[] = []
@@ -39,7 +41,7 @@ export default class Dataloader{
     private total_amount: number = 0
 
     constructor(query : string) {
-        this.dataset = Dataloader.parseDataset(query)
+        this.dataset = DataLoader.parseDataset(query)
         Papa.parse(window.location.pathname + "/expense_summary_"+ this.dataset +".csv",
             {
                 download: true,
@@ -82,14 +84,14 @@ export default class Dataloader{
                 const v = entry.substr(sign_location + 1)
                 switch (q) {
                     case 'keyword':
-                        this.addkeywordFilter(v)
+                        this.addKeywordFilter(v)
                         break
                     case 'fund':
                     case 'division':
                     case 'department':
                     case 'gl':
                     case 'event':
-                        this.addCategoryFilter(q, btoa(v))
+                        this.addCategoryFilter(q, atob(v))
                         break
                     case 'amount':
                         if (!v.includes('..')) return
@@ -113,7 +115,7 @@ export default class Dataloader{
                     case 'amount':
                         return prev + '&amount=' + curr.name.replace('~', '..')
                     default:
-                        return prev + '&' + curr.category + '=' + atob(curr.name)
+                        return prev + '&' + curr.category + '=' + btoa(curr.name)
                 }
             }, "")
         let path = window.location.href
@@ -165,6 +167,27 @@ export default class Dataloader{
         return words_list
     }
 
+    getCategories(category: Category): WordEntry[] {
+        if (this.data.length === 0) {
+            return [];
+        }
+
+        let category_set = new Map<string, number>()
+        this.getRecords().forEach(row => {
+            const cate_name = row[category]
+                category_set.set(cate_name, (category_set.get(cate_name) || 0) + row.amount);
+        })
+
+        let category_list: WordEntry[] = []
+        for (let [word, val] of category_set.entries()) {
+            category_list.push({text: word, value: val})
+        }
+
+        category_list.sort((a, b) => a.value - b.value)
+
+        return category_list
+    }
+
     getTotal(): number {
         if (this.filters.length === 0) {
             return this.total_amount
@@ -189,7 +212,7 @@ export default class Dataloader{
         this.listChangeCallback()
     }
 
-    addkeywordFilter(word: string) {
+    addKeywordFilter(word: string) {
         if (this.data.length === 0) return
         if (this.filters.reduce((prev, curr) => prev || (curr.category === 'keyword' && curr.name === word), false))
             return
@@ -213,8 +236,10 @@ export default class Dataloader{
         this.listChangeCallback()
     }
 
-    addCategoryFilter(category: string, value: string) {
+    addCategoryFilter(category: Category, value: string) {
         if (this.data.length === 0) return
+        if (this.filters.reduce((prev, curr) => prev || (curr.category === category && curr.name === value), false))
+            return
 
         let new_index: DataEntry[]
         if (this.filters.length !== 0) {

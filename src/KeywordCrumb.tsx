@@ -5,9 +5,9 @@ import React, {Component} from 'react';
 import {Breadcrumbs, Typography} from "@material-ui/core";
 import Link from "@material-ui/core/Link";
 import {KMFormat} from "./util";
-import {DataloaderProps} from "./Dataloader";
+import {DataLoaderProps} from "./DataLoader";
 
-export default class KeywordCrumb extends Component<DataloaderProps>{
+export default class KeywordCrumb extends Component<DataLoaderProps>{
 
     componentDidMount() {
         this.props.dataloader.addChangeCallback(()=>this.forceUpdate())

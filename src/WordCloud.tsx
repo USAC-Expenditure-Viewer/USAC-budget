@@ -6,9 +6,13 @@ import { select } from 'd3-selection';
 import React, { Component } from 'react';
 import ReactWordcloud, {Callbacks, OptionsProp, Word} from "react-wordcloud";
 import {KMFormat} from "./util";
-import {DataloaderProps} from "./Dataloader";
+import {DataLoaderProps} from "./DataLoader";
 
-export default class WordCloud extends Component<DataloaderProps>{
+interface WordCloudProps extends DataLoaderProps{
+    hidden?: boolean
+}
+
+export default class WordCloud extends Component<WordCloudProps>{
     private callbacks: Callbacks = {
         getWordTooltip: (word: Word) =>`${word.text} has $${KMFormat(word.value)} in the category.`,
         onWordClick: this.getCallback('onWordClick').bind(this),
@@ -31,7 +35,7 @@ export default class WordCloud extends Component<DataloaderProps>{
         transitionDuration: 200,
     }
 
-    constructor(props: DataloaderProps) {
+    constructor(props: DataLoaderProps) {
         super(props)
 
         this.state = {
@@ -45,7 +49,7 @@ export default class WordCloud extends Component<DataloaderProps>{
 
     render() {
         return(
-            <div style={this.props.style}>
+            <div style={{height: '80vh'}}  hidden={this.props.hidden}>
                 <ReactWordcloud callbacks={this.callbacks} words={this.props.dataloader.getWordList()} options={this.options}/>
             </div>
         )
@@ -59,7 +63,7 @@ export default class WordCloud extends Component<DataloaderProps>{
             text
                 .on('click', (() => {
                     if (isActive) {
-                        this.props.dataloader.addkeywordFilter(word.text);
+                        this.props.dataloader.addKeywordFilter(word.text);
                     }
                 }))
                 .transition()

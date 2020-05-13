@@ -4,12 +4,12 @@
 import React, {Component} from 'react';
 import {commaFormat} from "./util";
 import MaterialTable, {Column, Icons, Options} from "material-table";
-import {DataloaderProps} from "./Dataloader";
+import {DataLoaderProps} from "./DataLoader";
 import {SaveAlt, ArrowDownward, FirstPage, LastPage, ChevronRight, ChevronLeft} from "@material-ui/icons"
 
 //TODO virtualize
 
-export default class RecordTable extends Component<DataloaderProps>{
+export default class RecordTable extends Component<DataLoaderProps>{
 
     private columns: Column<any>[] = [
         {title: 'Date', field: 'date', type: "date"},
@@ -50,7 +50,9 @@ export default class RecordTable extends Component<DataloaderProps>{
     }
 
      componentDidMount() {
-         this.props.dataloader.addChangeCallback(() => this.forceUpdate())
+         this.props.dataloader.addChangeCallback(() => {
+             this.forceUpdate()
+         })
      }
 
     render() {
