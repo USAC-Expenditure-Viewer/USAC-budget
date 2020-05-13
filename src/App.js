@@ -7,7 +7,7 @@ function App() {
     return (
         <div>
             <TopBar/>
-            <DatasetView dataset={"2018"}/>
+            <DatasetView dataset={window.location.search}/>
         </div>
     );
 }

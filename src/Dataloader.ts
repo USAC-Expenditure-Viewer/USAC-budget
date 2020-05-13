@@ -1,4 +1,4 @@
-import {KMFormat} from "./util";
+import {KMFormat, KMFToNum} from "./util";
 import * as Papa from 'papaparse';
 
 interface DataEntry {
@@ -35,12 +35,14 @@ export default class Dataloader{
     private data: DataEntry[] = []
     #filters: Filter[] = []
     #dataChangeCallbacks: (()=> void)[] = []
-    #dataset: string
+    private query: string;
+    private dataset: string;
     #total_amount: number = 0
 
-    constructor(dataset : string) {
-        this.#dataset = dataset
-        Papa.parse(window.location.pathname + "/expense_summary_"+ dataset +".csv",
+    constructor(query : string) {
+        this.query = query
+        this.dataset = Dataloader.parseDataset(query)
+        Papa.parse(window.location.pathname + "/expense_summary_"+ this.dataset +".csv",
             {
                 download: true,
                 header: true,
@@ -59,11 +61,71 @@ export default class Dataloader{
 
     private onLoad() {
         this.#total_amount = this.data.reduce((prev, curr) => prev + curr.amount, 0)
+        this.parseQuery(this.query)
         this.listChangeCallback()
+    }
+
+    private static parseDataset(query: string): string {
+        if (query[0] === '?') query = query.slice(1)
+        const res = query.split('&').filter((e) => e.startsWith('d='))
+        if (res.length === 0) return "2018"
+        return res[0].substr(2)
+    }
+
+    private parseQuery(query: string) {
+        if (query[0] === '?') query = query.slice(1)
+        const callbacks = this.#dataChangeCallbacks
+        this.#dataChangeCallbacks = []
+        try {
+            query.split('&').forEach(entry => {
+                if (!entry.includes('=')) return
+                const sign_location = entry.indexOf('=')
+                const q = entry.substr(0, sign_location)
+                const v = entry.substr(sign_location + 1)
+                switch (q) {
+                    case 'keyword':
+                        this.addkeywordFilter(v)
+                        break
+                    case 'fund':
+                    case 'division':
+                    case 'department':
+                    case 'gl':
+                    case 'event':
+                        this.addCategoryFilter(q, btoa(v))
+                        break
+                    case 'amount':
+                        if (!v.includes('..')) return
+                        const values = v.split('..').map(e => KMFToNum(e))
+                        this.addAmountFilter(values[0], values[1])
+                        break
+                }
+            })
+        } catch (e) {
+            console.log(e)
+        }
+        this.#dataChangeCallbacks = callbacks
+    }
+
+    setQueryString(){
+        const string = "d=" + this.dataset +
+            this.#filters.reduce((prev, curr) => {
+                switch (curr.category) {
+                    case 'keyword':
+                        return prev + '&keyword=' + curr.name
+                    case 'amount':
+                        return prev + '&amount=' + curr.name.replace('~', '..')
+                    default:
+                        return prev + '&' + curr.category + '=' + atob(curr.name)
+                }
+            }, "")
+        let path = window.location.href
+        if (path.includes('?')) path = path.substr(0, path.indexOf('?'))
+        window.history.pushState({path: path + '?' + string},'',path + '?' + string);
     }
 
     listChangeCallback() {
         this.#dataChangeCallbacks.forEach(c => c())
+        this.setQueryString()
     }
 
     addChangeCallback(callback: () => void) {
