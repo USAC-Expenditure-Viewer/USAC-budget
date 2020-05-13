@@ -5,7 +5,7 @@ import React, {Component} from 'react';
 import {commaFormat} from "./util";
 import MaterialTable, {Column, Icons, Options} from "material-table";
 import {DataloaderProps} from "./Dataloader";
-import {SaveAlt, ArrowDownward} from "@material-ui/icons"
+import {SaveAlt, ArrowDownward, FirstPage, LastPage, ChevronRight, ChevronLeft} from "@material-ui/icons"
 
 //TODO virtualize
 
@@ -13,9 +13,13 @@ export default class RecordTable extends Component<DataloaderProps>{
 
     private columns: Column<any>[] = [
         {title: 'Date', field: 'date', type: "date"},
-        {title: 'Department', field: 'department'},
+        {title: 'Amount', field: 'amount', type: "currency"},
         {title: 'Description', field: 'description'},
-        {title: 'Amount', field: 'amount', type: "currency"}
+        {title: 'Department', field: 'department'},
+        {title: 'Fund', field: 'fund'},
+        {title: 'Division', field: 'division'},
+        {title: 'Event', field: 'event'},
+        {title: 'GL', field: 'gl'},
     ]
 
     private options: Options = {
@@ -23,18 +27,26 @@ export default class RecordTable extends Component<DataloaderProps>{
         sorting: true,
         exportButton: true,
         padding: "dense",
-        paging: false,
+        paging: true,
         search: false,
         draggable: false,
-        maxBodyHeight: window.innerHeight * 0.8,
         headerStyle: { position: 'sticky', top: 0 },
+        exportAllData: true,
     }
 
     private icons: Icons = {
         // @ts-ignore
         Export: SaveAlt,
         // @ts-ignore
-        SortArrow: ArrowDownward
+        SortArrow: ArrowDownward,
+        // @ts-ignore
+        FirstPage: FirstPage,
+        // @ts-ignore
+        LastPage: LastPage,
+        // @ts-ignore
+        NextPage: ChevronRight,
+        // @ts-ignore
+        PreviousPage: ChevronLeft,
     }
 
      componentDidMount() {

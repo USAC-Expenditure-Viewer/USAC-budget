@@ -21,7 +21,7 @@ interface WordEntry {
 interface Filter {
     category: string,
     name: string,
-    index: Set<number>,
+    index: DataEntry[],
     amount: number,
 }
 
@@ -142,7 +142,7 @@ export default class Dataloader{
         }
 
         const indexes = this.#filters[this.#filters.length - 1].index
-        return this.data.filter((e, i) => indexes.has(i))
+        return indexes
     }
 
     getWordList() : WordEntry[] {
@@ -192,20 +192,19 @@ export default class Dataloader{
         if (this.#filters.reduce((prev, curr) => prev || (curr.category === 'keyword' && curr.name === word), false))
             return
 
-        let word_index: Set<number>
+        let word_index: DataEntry[]
         if (this.#filters.length !== 0) {
             const last_index = this.#filters[this.#filters.length - 1].index
-            word_index = new Set([...last_index].filter(i => this.data[i].words.includes(word)))
+            word_index = last_index.filter((e) => e.words.includes(word))
         } else {
-            word_index = new Set(this.data.map((e, i) => i)
-                .filter(i => this.data[i].words.includes(word)))
+            word_index = this.data.filter(e => e.words.includes(word))
         }
 
         this.#filters.push({
             category: 'keyword',
             name: word,
             index: word_index,
-            amount: this.data.filter((e, i) => word_index.has(i))
+            amount: word_index
                 .reduce((prev, curr) => prev + curr.amount, 0)
         })
 
@@ -215,22 +214,21 @@ export default class Dataloader{
     addCategoryFilter(category: string, value: string) {
         if (this.data.length === 0) return
 
-        let new_index: Set<number>
+        let new_index: DataEntry[]
         if (this.#filters.length !== 0) {
             const last_index = this.#filters[this.#filters.length - 1].index
             // @ts-ignore
-            new_index = new Set([...last_index].filter(i => this.data[i][category] === value))
+            new_index = last_index.filter((e) => (e[category] === value))
         } else {
             // @ts-ignore
-            new_index = new Set(this.data.map((e, i) => i).filter(i => this.data[i][category] === value))
+            new_index = this.data.filter(e => (e[category] === value))
         }
 
         this.#filters.push({
             category: category,
             name: value,
             index: new_index,
-            amount: this.data.filter((e, i) => new_index.has(i))
-                .reduce((prev, curr) => prev + curr.amount, 0)
+            amount: new_index.reduce((prev, curr) => prev + curr.amount, 0)
         })
 
         this.listChangeCallback()
@@ -239,24 +237,24 @@ export default class Dataloader{
     addAmountFilter(low: number, high: number) {
         if (this.data.length === 0) return
 
-        let word_index: Set<number>
+        let new_index: DataEntry[]
         if (this.#filters.length !== 0) {
             if (this.#filters[this.#filters.length - 1].category === 'amount') {
                 this.#filters = this.#filters.slice(0, -1)
             }
             const last_index = this.#filters[this.#filters.length - 1].index
-            word_index = new Set([...last_index]
-                .filter((i) => low <= this.data[i].amount && this.data[i].amount <= high))
+            new_index = last_index
+                .filter((e) => (low <= e.amount && e.amount <= high))
         } else {
-            word_index = new Set(this.data.map((e, i) => i)
-                .filter((i) => low <= this.data[i].amount && this.data[i].amount <= high))
+            new_index = this.data
+                .filter((e) => (low <= e.amount && e.amount <= high))
         }
 
         this.#filters.push({
             category: 'amount',
             name: KMFormat(low) + "~" + KMFormat(high),
-            index: word_index,
-            amount: this.data.filter((e, i) => word_index.has(i))
+            index: new_index,
+            amount: new_index
                 .reduce((prev, curr) => prev + curr.amount, 0)
         })
 
