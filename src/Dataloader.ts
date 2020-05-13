@@ -1,8 +1,13 @@
-import KeywordList from "./KeywordList";
+import {KMFormat} from "./util";
+import * as Papa from 'papaparse';
 
 interface DataEntry {
-    date: number,
+    date: Date,
+    fund: string,
+    division: string,
     department: string,
+    gl: string,
+    event: string,
     description: string,
     amount: number,
     words: string[]
@@ -13,74 +18,78 @@ interface WordEntry {
     value: number
 }
 
+interface Filter {
+    category: string,
+    name: string,
+    index: Set<number>,
+    amount: number,
+}
+
+export interface DataloaderProps {
+    dataloader: Dataloader,
+    style?: Object,
+}
+
 export default class Dataloader{
 
-    #data: DataEntry[] | null = null
-    #records_callbacks : ((r: DataEntry[]) => void)[] = []
-    #words_callbacks : ((w: WordEntry[]) => void)[] = []
-    #amount_callbacks : ((a: number) => void)[] = []
-    #keywordList: KeywordList
+    private data: DataEntry[] = []
+    #filters: Filter[] = []
+    #dataChangeCallbacks: (()=> void)[] = []
+    #dataset: string
+    #total_amount: number = 0
 
-    constructor(input_url : string, keywordList: KeywordList) {
-        fetch(input_url)
-            .then(res => res.json())
-            .then(result =>{
-                this.#data = result
-                this.listChangeCallback()
+    constructor(dataset : string) {
+        this.#dataset = dataset
+        Papa.parse(window.location.pathname + "/expense_summary_"+ dataset +".csv",
+            {
+                download: true,
+                header: true,
+                complete: (results)=> {
+                    this.data = results.data.map((e) => {
+                        e.date = new Date(Number.parseFloat(e.date) * 1000)
+                        e.amount = Number.parseFloat(e.amount)
+                        e.words = e.__parsed_extra || []
+                        return e
+                    })
+
+                    this.onLoad()
+                }
             })
-        this.#keywordList = keywordList
-        keywordList.addChangeCallback(() => this.listChangeCallback())
+    }
+
+    private onLoad() {
+        this.#total_amount = this.data.reduce((prev, curr) => prev + curr.amount, 0)
+        this.listChangeCallback()
     }
 
     listChangeCallback() {
-        const records: DataEntry[] = this.getRecords(this.#keywordList.getList())
-        this.#records_callbacks.forEach(c=>c(records))
-        let totalAmount = this.getTotal(records)
-        this.#amount_callbacks.forEach(c=>c(totalAmount))
-        let words = this.getWordList(records)
-        this.#words_callbacks.forEach(c=>c(words))
+        this.#dataChangeCallbacks.forEach(c => c())
     }
 
-    addRecordCallback(callback: (r: DataEntry[]) => void) {
-        this.#records_callbacks.push(callback)
+    addChangeCallback(callback: () => void) {
+        this.#dataChangeCallbacks.push(callback)
     }
 
-    addWordsCallback(callback: (w: WordEntry[]) => void) {
-        this.#words_callbacks.push(callback)
-    }
-
-    addAmountCallback(callback: (a: number) => void) {
-        this.#amount_callbacks.push(callback)
-    }
-
-    getRecords(root_word: string[]): DataEntry[] {
-        if (this.#data === null) {
-            return [{
-                date: 0,
-                department: "",
-                description: "Loading...",
-                amount: 0,
-                words: []
-            }];
+    getRecords(): DataEntry[] {
+        if (this.data.length === 0) {
+            return [];
         }
 
-        if (root_word === null || root_word === [])
-            return this.#data
+        if (this.#filters.length === 0) {
+            return this.data
+        }
 
-        let records : DataEntry[] = this.#data.filter(row => {
-            return root_word.map((w) => row.words.includes(w)).reduce((a, b)=>a && b, true)
-        })
-        //records.sort((a, b) => b.amount - a.amount)
-        return records
+        const indexes = this.#filters[this.#filters.length - 1].index
+        return this.data.filter((e, i) => indexes.has(i))
     }
 
-    getWordList(records: DataEntry[]) : WordEntry[] {
-        if (this.#data === null) {
-            return [{text: 'Loading...', value: 100}];
+    getWordList() : WordEntry[] {
+        if (this.data.length === 0) {
+            return [];
         }
 
         let words_set = new Map<string, number>()
-        records.forEach(row => {
+        this.getRecords().forEach(row => {
             row.words.forEach(w => {
                 words_set.set(w, (words_set.get(w) || 0) + row.amount);
             })
@@ -96,7 +105,99 @@ export default class Dataloader{
         return words_list
     }
 
-    getTotal(records : DataEntry[]){
-        return records.reduce((prev, curr) => prev + curr.amount, 0)
+    getTotal(): number {
+        if (this.#filters.length === 0) {
+            return this.#total_amount
+        }
+        return this.#filters[this.#filters.length - 1].amount
+    }
+
+    getDatasetTotal(): number {
+        return this.#total_amount
+    }
+
+    getFilters(){
+        return this.#filters
+    }
+
+    sliceFilter(remaining_length: number) {
+        this.#filters = this.#filters.slice(0, remaining_length)
+        this.listChangeCallback()
+    }
+
+    addkeywordFilter(word: string) {
+        if (this.data.length === 0) return
+        if (this.#filters.reduce((prev, curr) => prev || (curr.category === 'keyword' && curr.name === word), false))
+            return
+
+        let word_index: Set<number>
+        if (this.#filters.length !== 0) {
+            const last_index = this.#filters[this.#filters.length - 1].index
+            word_index = new Set([...last_index].filter(i => this.data[i].words.includes(word)))
+        } else {
+            word_index = new Set(this.data.map((e, i) => i)
+                .filter(i => this.data[i].words.includes(word)))
+        }
+
+        this.#filters.push({
+            category: 'keyword',
+            name: word,
+            index: word_index,
+            amount: this.data.filter((e, i) => word_index.has(i))
+                .reduce((prev, curr) => prev + curr.amount, 0)
+        })
+
+        this.listChangeCallback()
+    }
+
+    addCategoryFilter(category: string, value: string) {
+        if (this.data.length === 0) return
+
+        let new_index: Set<number>
+        if (this.#filters.length !== 0) {
+            const last_index = this.#filters[this.#filters.length - 1].index
+            // @ts-ignore
+            new_index = new Set([...last_index].filter(i => this.data[i][category] === value))
+        } else {
+            // @ts-ignore
+            new_index = new Set(this.data.map((e, i) => i).filter(i => this.data[i][category] === value))
+        }
+
+        this.#filters.push({
+            category: category,
+            name: value,
+            index: new_index,
+            amount: this.data.filter((e, i) => new_index.has(i))
+                .reduce((prev, curr) => prev + curr.amount, 0)
+        })
+
+        this.listChangeCallback()
+    }
+
+    addAmountFilter(low: number, high: number) {
+        if (this.data.length === 0) return
+
+        let word_index: Set<number>
+        if (this.#filters.length !== 0) {
+            if (this.#filters[this.#filters.length - 1].category === 'amount') {
+                this.#filters = this.#filters.slice(0, -1)
+            }
+            const last_index = this.#filters[this.#filters.length - 1].index
+            word_index = new Set([...last_index]
+                .filter((i) => low <= this.data[i].amount && this.data[i].amount <= high))
+        } else {
+            word_index = new Set(this.data.map((e, i) => i)
+                .filter((i) => low <= this.data[i].amount && this.data[i].amount <= high))
+        }
+
+        this.#filters.push({
+            category: 'amount',
+            name: KMFormat(low) + "~" + KMFormat(high),
+            index: word_index,
+            amount: this.data.filter((e, i) => word_index.has(i))
+                .reduce((prev, curr) => prev + curr.amount, 0)
+        })
+
+        this.listChangeCallback()
     }
 }
