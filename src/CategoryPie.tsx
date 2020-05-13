@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 import {Category, DataLoaderProps} from "./DataLoader";
-import {Pie, PieChart, Tooltip} from 'recharts';
+import {Pie, PieChart, ResponsiveContainer, Tooltip} from 'recharts';
 import {KMFormat} from "./util";
 
 interface CategoryPieProps extends DataLoaderProps{
@@ -20,13 +20,16 @@ export default class CategoryPie extends Component<CategoryPieProps>{
         const data = this.props.dataloader.getCategories(this.props.category)
         return (
             <div style={{height: '80vh'}} hidden={this.props.hidden || false} ref={(divElement) => this.divElement = divElement}>
-            <PieChart height={this.divElement?.clientHeight} width={this.divElement?.clientWidth}>
-                <Pie data={data} dataKey="value" nameKey="text" fill={this.getColor()}
-                     label={({percent}) => (KMFormat((percent || 0) * 100)+'%')}
-                     onClick={(e) => this.props.dataloader.addCategoryFilter(this.props.category, e.text)}/>
-                <Tooltip formatter={(value) => "$"+KMFormat(value as number)}
-                         contentStyle={{padding: '0 5px', margin: 0, borderRadius: 5}}/>
-            </PieChart>
+                <ResponsiveContainer height="100%" width="100%">
+                    <PieChart>
+                        <Pie data={data} dataKey="value" nameKey="text" fill={this.getColor()}
+                             label={({percent, name}) => ((percent || 0) > 0.005 ? name: "")}
+                             labelLine={false}
+                             onClick={(e) => this.props.dataloader.addCategoryFilter(this.props.category, e.text)}/>
+                        <Tooltip formatter={(value) => "$"+KMFormat(value as number)}
+                                 contentStyle={{padding: '0 5px', margin: 0, borderRadius: 5}}/>
+                    </PieChart>
+                </ResponsiveContainer>
             </div>
         )
     }
