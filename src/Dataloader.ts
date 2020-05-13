@@ -33,14 +33,12 @@ export interface DataloaderProps {
 export default class Dataloader{
 
     private data: DataEntry[] = []
-    #filters: Filter[] = []
-    #dataChangeCallbacks: (()=> void)[] = []
-    private query: string;
-    private dataset: string;
-    #total_amount: number = 0
+    private filters: Filter[] = []
+    private dataChangeCallbacks: (()=> void)[] = []
+    private readonly dataset: string;
+    private total_amount: number = 0
 
     constructor(query : string) {
-        this.query = query
         this.dataset = Dataloader.parseDataset(query)
         Papa.parse(window.location.pathname + "/expense_summary_"+ this.dataset +".csv",
             {
@@ -54,14 +52,14 @@ export default class Dataloader{
                         return e
                     })
 
-                    this.onLoad()
+                    this.onLoad(query)
                 }
             })
     }
 
-    private onLoad() {
-        this.#total_amount = this.data.reduce((prev, curr) => prev + curr.amount, 0)
-        this.parseQuery(this.query)
+    private onLoad(query: string) {
+        this.total_amount = this.data.reduce((prev, curr) => prev + curr.amount, 0)
+        this.parseQuery(query)
         this.listChangeCallback()
     }
 
@@ -74,8 +72,8 @@ export default class Dataloader{
 
     private parseQuery(query: string) {
         if (query[0] === '?') query = query.slice(1)
-        const callbacks = this.#dataChangeCallbacks
-        this.#dataChangeCallbacks = []
+        const callbacks = this.dataChangeCallbacks
+        this.dataChangeCallbacks = []
         try {
             query.split('&').forEach(entry => {
                 if (!entry.includes('=')) return
@@ -103,12 +101,12 @@ export default class Dataloader{
         } catch (e) {
             console.log(e)
         }
-        this.#dataChangeCallbacks = callbacks
+        this.dataChangeCallbacks = callbacks
     }
 
-    setQueryString(){
+    private setQueryString(){
         const string = "d=" + this.dataset +
-            this.#filters.reduce((prev, curr) => {
+            this.filters.reduce((prev, curr) => {
                 switch (curr.category) {
                     case 'keyword':
                         return prev + '&keyword=' + curr.name
@@ -123,13 +121,13 @@ export default class Dataloader{
         window.history.pushState({path: path + '?' + string},'',path + '?' + string);
     }
 
-    listChangeCallback() {
-        this.#dataChangeCallbacks.forEach(c => c())
+    private listChangeCallback() {
+        this.dataChangeCallbacks.forEach(c => c())
         this.setQueryString()
     }
 
     addChangeCallback(callback: () => void) {
-        this.#dataChangeCallbacks.push(callback)
+        this.dataChangeCallbacks.push(callback)
     }
 
     getRecords(): DataEntry[] {
@@ -137,11 +135,11 @@ export default class Dataloader{
             return [];
         }
 
-        if (this.#filters.length === 0) {
+        if (this.filters.length === 0) {
             return this.data
         }
 
-        const indexes = this.#filters[this.#filters.length - 1].index
+        const indexes = this.filters[this.filters.length - 1].index
         return indexes
     }
 
@@ -168,39 +166,43 @@ export default class Dataloader{
     }
 
     getTotal(): number {
-        if (this.#filters.length === 0) {
-            return this.#total_amount
+        if (this.filters.length === 0) {
+            return this.total_amount
         }
-        return this.#filters[this.#filters.length - 1].amount
+        return this.filters[this.filters.length - 1].amount
     }
 
     getDatasetTotal(): number {
-        return this.#total_amount
+        return this.total_amount
     }
 
     getFilters(){
-        return this.#filters
+        return this.filters
+    }
+
+    getDatasetName(){
+        return this.dataset
     }
 
     sliceFilter(remaining_length: number) {
-        this.#filters = this.#filters.slice(0, remaining_length)
+        this.filters = this.filters.slice(0, remaining_length)
         this.listChangeCallback()
     }
 
     addkeywordFilter(word: string) {
         if (this.data.length === 0) return
-        if (this.#filters.reduce((prev, curr) => prev || (curr.category === 'keyword' && curr.name === word), false))
+        if (this.filters.reduce((prev, curr) => prev || (curr.category === 'keyword' && curr.name === word), false))
             return
 
         let word_index: DataEntry[]
-        if (this.#filters.length !== 0) {
-            const last_index = this.#filters[this.#filters.length - 1].index
+        if (this.filters.length !== 0) {
+            const last_index = this.filters[this.filters.length - 1].index
             word_index = last_index.filter((e) => e.words.includes(word))
         } else {
             word_index = this.data.filter(e => e.words.includes(word))
         }
 
-        this.#filters.push({
+        this.filters.push({
             category: 'keyword',
             name: word,
             index: word_index,
@@ -215,8 +217,8 @@ export default class Dataloader{
         if (this.data.length === 0) return
 
         let new_index: DataEntry[]
-        if (this.#filters.length !== 0) {
-            const last_index = this.#filters[this.#filters.length - 1].index
+        if (this.filters.length !== 0) {
+            const last_index = this.filters[this.filters.length - 1].index
             // @ts-ignore
             new_index = last_index.filter((e) => (e[category] === value))
         } else {
@@ -224,7 +226,7 @@ export default class Dataloader{
             new_index = this.data.filter(e => (e[category] === value))
         }
 
-        this.#filters.push({
+        this.filters.push({
             category: category,
             name: value,
             index: new_index,
@@ -238,11 +240,11 @@ export default class Dataloader{
         if (this.data.length === 0) return
 
         let new_index: DataEntry[]
-        if (this.#filters.length !== 0) {
-            if (this.#filters[this.#filters.length - 1].category === 'amount') {
-                this.#filters = this.#filters.slice(0, -1)
+        if (this.filters.length !== 0) {
+            if (this.filters[this.filters.length - 1].category === 'amount') {
+                this.filters = this.filters.slice(0, -1)
             }
-            const last_index = this.#filters[this.#filters.length - 1].index
+            const last_index = this.filters[this.filters.length - 1].index
             new_index = last_index
                 .filter((e) => (low <= e.amount && e.amount <= high))
         } else {
@@ -250,7 +252,7 @@ export default class Dataloader{
                 .filter((e) => (low <= e.amount && e.amount <= high))
         }
 
-        this.#filters.push({
+        this.filters.push({
             category: 'amount',
             name: KMFormat(low) + "~" + KMFormat(high),
             index: new_index,
