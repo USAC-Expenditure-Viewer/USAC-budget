@@ -1,4 +1,4 @@
-import {KMFormat, KMFToNum} from "./util";
+import {KMFormat, KMFToNum} from "../util";
 import * as Papa from 'papaparse';
 import QueryBuilder from "./QueryBuilder";
 
@@ -201,7 +201,7 @@ export default class DataLoader{
 
         let records : DataEntry[];
         let domain: [number, number] | null = null;
-        if (this.filters.length != 0 && this.filters[this.filters.length - 1].category == 'amount') {
+        if (this.filters.length !== 0 && this.filters[this.filters.length - 1].category === 'amount') {
             records = this.filters.length >= 2 ? this.filters[this.filters.length - 2].index : this.data
             const values = this.filters[this.filters.length - 1].name.split('~').map(e => KMFToNum(e))
             domain = values as [number, number]
@@ -212,7 +212,7 @@ export default class DataLoader{
                 [Math.min(previousValue[0], currentValue.amount),
                     Math.max(previousValue[1], currentValue.amount)]), [Number.MAX_VALUE, Number.MIN_VALUE])
 
-        if (domain == null) domain = [allMin, allMax]
+        if (domain === null) domain = [allMin, allMax]
 
         let bins : AmountBin[] = []
         let bin_size = (allMax - allMin) / numBin

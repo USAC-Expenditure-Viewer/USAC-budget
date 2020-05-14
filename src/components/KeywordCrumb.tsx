@@ -4,8 +4,8 @@
 import React, {Component} from 'react';
 import {Breadcrumbs, Typography} from "@material-ui/core";
 import Link from "@material-ui/core/Link";
-import {KMFormat} from "./util";
-import {DataLoaderProps} from "./DataLoader";
+import {KMFormat} from "../util";
+import {DataLoaderProps} from "../models/DataLoader";
 
 export default class KeywordCrumb extends Component<DataLoaderProps>{
 

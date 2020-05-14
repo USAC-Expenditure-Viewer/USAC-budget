@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import {AmountBin, Category, DataLoaderProps} from "./DataLoader";
+import {AmountBin, DataLoaderProps} from "../models/DataLoader";
 import {
     Bar,
     BarChart,
@@ -8,7 +8,7 @@ import {
     XAxis,
     YAxis
 } from 'recharts';
-import {KMFormat} from "./util";
+import {KMFormat} from "../util";
 import {Mark, Slider} from "@material-ui/core";
 
 interface SliderProps extends DataLoaderProps{
@@ -48,7 +48,7 @@ export default class AmountSlider extends Component<SliderProps, SliderState>{
 
     render(): React.ReactNode {
         const data = this.state.data
-        const domain: [number, number] = data.length == 0 ? [0, 1] : [data[0].low, data[data.length - 1].high]
+        const domain: [number, number] = data.length === 0 ? [0, 1] : [data[0].low, data[data.length - 1].high]
         return (
             <div style={{height: '80vh', width: "80%", margin: "auto"}} hidden={this.props.hidden || false}>
                 <ResponsiveContainer height="90%" width="100%">

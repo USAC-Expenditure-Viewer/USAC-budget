@@ -10,7 +10,7 @@ export default function TopBar() {
                     <MenuIcon/>
                 </IconButton>
                 <Typography variant="h6">
-                    USAC Budget/Spendings 2018-2019
+                    USAC Budget/Spending 2018-2019
                 </Typography>
             </Toolbar>
         </AppBar>

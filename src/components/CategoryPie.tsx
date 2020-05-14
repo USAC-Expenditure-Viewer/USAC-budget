@@ -1,7 +1,7 @@
 import React, {Component} from "react";
-import {Category, DataLoaderProps} from "./DataLoader";
+import {Category, DataLoaderProps} from "../models/DataLoader";
 import {Pie, PieChart, ResponsiveContainer, Tooltip} from 'recharts';
-import {KMFormat} from "./util";
+import {KMFormat} from "../util";
 
 interface CategoryPieProps extends DataLoaderProps{
     category: Category

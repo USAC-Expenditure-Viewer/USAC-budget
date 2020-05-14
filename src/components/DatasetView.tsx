@@ -1,14 +1,14 @@
-import React, {ReactPropTypes} from 'react';
-import './App.css';
+import React from 'react';
+import '../App.css';
 import WordCloud from "./WordCloud";
 import RecordTable from "./RecordTable";
 import KeywordCrumb from "./KeywordCrumb";
 import Paper from "@material-ui/core/Paper";
-import DataLoader from "./DataLoader";
+import DataLoader from "../models/DataLoader";
 import CategoryPie from "./CategoryPie";
 import {Tab, Tabs} from "@material-ui/core";
 import AmountSlider from "./AmountSlider";
-import QueryBuilder from "./QueryBuilder";
+import QueryBuilder from "../models/QueryBuilder";
 
 interface DatasetState {
     value: number

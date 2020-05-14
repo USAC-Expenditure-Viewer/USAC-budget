@@ -2,9 +2,9 @@
  * Created by TylerLiu on 2018/12/23.
  */
 import React, {Component} from 'react';
-import {commaFormat} from "./util";
+import {commaFormat} from "../util";
 import MaterialTable, {Column, Icons, Options} from "material-table";
-import {DataLoaderProps} from "./DataLoader";
+import {DataLoaderProps} from "../models/DataLoader";
 import {SaveAlt, ArrowDownward, FirstPage, LastPage, ChevronRight, ChevronLeft} from "@material-ui/icons"
 
 //TODO virtualize

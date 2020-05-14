@@ -1,7 +1,7 @@
 import React from 'react';
 import './App.css';
-import TopBar from "./TopBar";
-import DatasetView from "./DatasetView"
+import TopBar from "./components/TopBar";
+import DatasetView from "./components/DatasetView"
 
 function App() {
     return (

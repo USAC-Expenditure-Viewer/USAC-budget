@@ -5,8 +5,8 @@ import 'd3-transition';
 import { select } from 'd3-selection';
 import React, { Component } from 'react';
 import ReactWordcloud, {Callbacks, OptionsProp, Word} from "react-wordcloud";
-import {KMFormat} from "./util";
-import {DataLoaderProps} from "./DataLoader";
+import {KMFormat} from "../util";
+import {DataLoaderProps} from "../models/DataLoader";
 
 interface WordCloudProps extends DataLoaderProps{
     hidden?: boolean
