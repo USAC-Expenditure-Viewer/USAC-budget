@@ -9,10 +9,13 @@ export function commaFormat(x: number) : string {
 export function KMFormat(x: number) : string {
     if (Number.isNaN(x)) return ""
     let suffix = "";
-    if (x >= 1000000) {
+    if (Math.abs(x) >= 1000000000) {
+        suffix = "B"
+        x /= 1000000000;
+    } else if (Math.abs(x) >= 1000000) {
         suffix = "M"
         x /= 1000000;
-    } else if (x >= 1000) {
+    } else if (Math.abs(x) >= 1000) {
         suffix = "K"
         x /= 1000;
     }

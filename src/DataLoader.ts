@@ -13,6 +13,13 @@ interface DataEntry {
     words: string[]
 }
 
+export interface AmountBin {
+    low: number
+    high: number
+    value: number
+    name: string
+}
+
 export type Category = 'fund'| 'division'| 'department'| 'gl'| 'event'
 
 interface WordEntry {
@@ -141,8 +148,7 @@ export default class DataLoader{
             return this.data
         }
 
-        const indexes = this.filters[this.filters.length - 1].index
-        return indexes
+        return this.filters[this.filters.length - 1].index
     }
 
     getWordList() : WordEntry[] {
@@ -186,6 +192,43 @@ export default class DataLoader{
         category_list.sort((a, b) => a.value - b.value)
 
         return category_list
+    }
+
+    getAmountBins(numBin: number): {data: AmountBin[], domain: [number, number]}{
+        if (this.data.length === 0) {
+            return {data: [], domain: [0, 1]}
+        }
+
+        let records : DataEntry[];
+        let domain: [number, number] | null = null;
+        if (this.filters.length != 0 && this.filters[this.filters.length - 1].category == 'amount') {
+            records = this.filters.length >= 2 ? this.filters[this.filters.length - 2].index : this.data
+            const values = this.filters[this.filters.length - 1].name.split('~').map(e => KMFToNum(e))
+            domain = values as [number, number]
+        } else {
+            records = this.getRecords()
+        }
+        let [allMin, allMax] = records.reduce(((previousValue, currentValue) =>
+                [Math.min(previousValue[0], currentValue.amount),
+                    Math.max(previousValue[1], currentValue.amount)]), [Number.MAX_VALUE, Number.MIN_VALUE])
+
+        if (domain == null) domain = [allMin, allMax]
+
+        let bins : AmountBin[] = []
+        let bin_size = (allMax - allMin) / numBin
+        for (let i = 0; i < numBin; i ++) {
+            bins.push({low: allMin + i * bin_size, high: allMin + (i + 1) * bin_size,
+                        value: 0, name: KMFormat(allMin + (i + 0.5) * bin_size)})
+        }
+
+        records.forEach((e) => {
+            bins.forEach((b) =>{
+                if (b.low <= e.amount && e.amount < b.high)
+                    b.value += e.amount
+            })
+        })
+
+        return {data: bins, domain: domain}
     }
 
     getTotal(): number {
@@ -264,18 +307,12 @@ export default class DataLoader{
     addAmountFilter(low: number, high: number) {
         if (this.data.length === 0) return
 
-        let new_index: DataEntry[]
-        if (this.filters.length !== 0) {
-            if (this.filters[this.filters.length - 1].category === 'amount') {
+        if (this.filters.length > 0 && this.filters[this.filters.length - 1].category === 'amount') {
                 this.filters = this.filters.slice(0, -1)
-            }
-            const last_index = this.filters[this.filters.length - 1].index
-            new_index = last_index
-                .filter((e) => (low <= e.amount && e.amount <= high))
-        } else {
-            new_index = this.data
-                .filter((e) => (low <= e.amount && e.amount <= high))
         }
+        const last_index = this.filters.length > 0 ? this.filters[this.filters.length - 1].index : this.data
+        const new_index = last_index
+            .filter((e) => (low <= e.amount && e.amount <= high))
 
         this.filters.push({
             category: 'amount',

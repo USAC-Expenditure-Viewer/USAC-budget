@@ -10,8 +10,6 @@ interface CategoryPieProps extends DataLoaderProps{
 
 export default class CategoryPie extends Component<CategoryPieProps>{
 
-    private divElement: HTMLDivElement | null = null
-
     componentDidMount(): void {
         this.props.dataloader.addChangeCallback(() => this.forceUpdate())
     }
@@ -19,7 +17,7 @@ export default class CategoryPie extends Component<CategoryPieProps>{
     render(): React.ReactNode {
         const data = this.props.dataloader.getCategories(this.props.category)
         return (
-            <div style={{height: '80vh'}} hidden={this.props.hidden || false} ref={(divElement) => this.divElement = divElement}>
+            <div style={{height: '80vh'}} hidden={this.props.hidden || false}>
                 <ResponsiveContainer height="100%" width="100%">
                     <PieChart>
                         <Pie data={data} dataKey="value" nameKey="text" fill={this.getColor()}

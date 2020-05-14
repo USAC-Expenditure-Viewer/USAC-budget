@@ -7,6 +7,7 @@ import Paper from "@material-ui/core/Paper";
 import DataLoader from "./DataLoader";
 import CategoryPie from "./CategoryPie";
 import {Tab, Tabs} from "@material-ui/core";
+import AmountSlider from "./AmountSlider";
 
 interface DatasetProp{
     query: string
@@ -29,7 +30,6 @@ export default class DatasetView extends React.Component<DatasetProp, DatasetSta
     }
 
     render() {
-        console.log("view render")
         return (
             <Paper variant="outlined" style={{margin: '0 10%'}}>
                 <KeywordCrumb style={{margin: 10}} dataloader={this.loader}/>
@@ -42,6 +42,7 @@ export default class DatasetView extends React.Component<DatasetProp, DatasetSta
                     <Tab label="Department"/>
                     <Tab label="GL"/>
                     <Tab label="Event"/>
+                    <Tab label="Amount"/>
                 </Tabs>
                 <WordCloud hidden={this.state.value !== 0} dataloader={this.loader}/>
                 <CategoryPie hidden={this.state.value !== 1} category={"fund"} dataloader={this.loader}/>
@@ -49,6 +50,7 @@ export default class DatasetView extends React.Component<DatasetProp, DatasetSta
                 <CategoryPie hidden={this.state.value !== 3} category={"department"} dataloader={this.loader}/>
                 <CategoryPie hidden={this.state.value !== 4} category={"gl"} dataloader={this.loader}/>
                 <CategoryPie hidden={this.state.value !== 5} category={"event"} dataloader={this.loader}/>
+                <AmountSlider hidden={this.state.value !== 6} dataloader={this.loader} />
                 <RecordTable dataloader={this.loader}/>
             </Paper>
         );
