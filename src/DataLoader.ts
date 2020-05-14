@@ -1,5 +1,6 @@
 import {KMFormat, KMFToNum} from "./util";
 import * as Papa from 'papaparse';
+import QueryBuilder from "./QueryBuilder";
 
 interface DataEntry {
     date: Date,
@@ -47,8 +48,8 @@ export default class DataLoader{
     private readonly dataset: string;
     private total_amount: number = 0
 
-    constructor(query : string) {
-        this.dataset = DataLoader.parseDataset(query)
+    constructor() {
+        this.dataset = DataLoader.parseDataset(QueryBuilder.getInstance().getQuery())
         Papa.parse(window.location.pathname + "/expense_summary_"+ this.dataset +".csv",
             {
                 download: true,
@@ -61,14 +62,15 @@ export default class DataLoader{
                         return e
                     })
 
-                    this.onLoad(query)
+                    this.onLoad()
                 }
             })
     }
 
-    private onLoad(query: string) {
+    private onLoad() {
         this.total_amount = this.data.reduce((prev, curr) => prev + curr.amount, 0)
-        this.parseQuery(query)
+        this.parseQuery(QueryBuilder.getInstance().getQuery())
+        QueryBuilder.getInstance().addGenerator(this.generateQueryString.bind(this), 0)
         this.listChangeCallback()
     }
 
@@ -113,7 +115,7 @@ export default class DataLoader{
         this.dataChangeCallbacks = callbacks
     }
 
-    private setQueryString(){
+    private generateQueryString(){
         const string = "d=" + this.dataset +
             this.filters.reduce((prev, curr) => {
                 switch (curr.category) {
@@ -125,14 +127,12 @@ export default class DataLoader{
                         return prev + '&' + curr.category + '=' + btoa(curr.name)
                 }
             }, "")
-        let path = window.location.href
-        if (path.includes('?')) path = path.substr(0, path.indexOf('?'))
-        window.history.pushState({path: path + '?' + string},'',path + '?' + string);
+        return string
     }
 
     private listChangeCallback() {
         this.dataChangeCallbacks.forEach(c => c())
-        this.setQueryString()
+        QueryBuilder.getInstance().update()
     }
 
     addChangeCallback(callback: () => void) {

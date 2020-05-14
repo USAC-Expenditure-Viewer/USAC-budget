@@ -7,7 +7,7 @@ function App() {
     return (
         <div>
             <TopBar/>
-            <DatasetView query={window.location.search}/>
+            <DatasetView/>
         </div>
     );
 }

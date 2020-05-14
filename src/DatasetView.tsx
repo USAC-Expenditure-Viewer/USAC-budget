@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {ReactPropTypes} from 'react';
 import './App.css';
 import WordCloud from "./WordCloud";
 import RecordTable from "./RecordTable";
@@ -8,25 +8,44 @@ import DataLoader from "./DataLoader";
 import CategoryPie from "./CategoryPie";
 import {Tab, Tabs} from "@material-ui/core";
 import AmountSlider from "./AmountSlider";
-
-interface DatasetProp{
-    query: string
-}
+import QueryBuilder from "./QueryBuilder";
 
 interface DatasetState {
     value: number
 }
 
-export default class DatasetView extends React.Component<DatasetProp, DatasetState> {
+interface DatasetProps {
+
+}
+
+export default class DatasetView extends React.Component<DatasetProps, DatasetState> {
+    private value: number = 0
     private readonly loader: DataLoader;
-    constructor(props: DatasetProp) {
+    constructor(props: DatasetProps) {
         super(props);
 
+        this.value = this.parseQuery(QueryBuilder.getInstance().getQuery())
+
         this.state = {
-            value: 0
+            value: this.value
         }
 
-        this.loader = new DataLoader(this.props.query)
+        QueryBuilder.getInstance().addGenerator(this.generateQuery.bind(this), 1)
+        this.loader = new DataLoader()
+    }
+
+    componentDidMount(): void {
+    }
+
+    parseQuery(query: string): number {
+        if (query[0] === '?') query = query.slice(1)
+        const res = query.split('&').filter((e) => e.startsWith('tab='))
+        if (res.length === 0) return 0
+        return Number.parseInt(res[0].substr(4))
+    }
+
+    generateQuery(): string {
+        return 'tab=' + this.value
     }
 
     render() {
@@ -34,7 +53,11 @@ export default class DatasetView extends React.Component<DatasetProp, DatasetSta
             <Paper variant="outlined" style={{margin: '0 10%'}}>
                 <KeywordCrumb style={{margin: 10}} dataloader={this.loader}/>
                 <Tabs value={this.state.value}
-                      onChange={(e, value) => {this.setState({value: value})}}
+                      onChange={(e, value) => {
+                          this.value = value
+                          this.setState({value: value})
+                          QueryBuilder.getInstance().update()
+                      }}
                       indicatorColor="primary" textColor="primary" centered>
                     <Tab label="Keywords"/>
                     <Tab label="Fund"/>
