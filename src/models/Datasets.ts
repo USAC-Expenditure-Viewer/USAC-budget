@@ -7,7 +7,7 @@ export default class Datasets {
     private datasets: string[] = []
     private currentDataset: string | null = null
     private callbacks: (() => void)[] = []
-    private dataLoader: DataLoader | null = null
+    private dataLoader: DataLoader = new DataLoader(null)
     private ready: boolean = false
 
     static getInstance(){
@@ -58,18 +58,12 @@ export default class Datasets {
     }
 
     getDataLoader() {
-        if (this.dataLoader != null) return this.dataLoader
-        else {
-            this.dataLoader = new DataLoader(this.currentDataset)
-            return this.dataLoader
-        }
+        return this.dataLoader
     }
 
     setCurrentDataset(name: string) {
         this.currentDataset = name
-        if (this.dataLoader !== null) {
-            this.dataLoader.setDataset(name)
-        }
+        this.dataLoader.setDataset(name)
         this.callbacks.forEach(c => c())
     }
 
