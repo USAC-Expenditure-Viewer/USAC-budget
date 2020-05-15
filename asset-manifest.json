@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/USAC-budget/static/css/main.d1b05096.chunk.css",
-    "main.js": "/USAC-budget/static/js/main.c206fdad.chunk.js",
-    "main.js.map": "/USAC-budget/static/js/main.c206fdad.chunk.js.map",
+    "main.js": "/USAC-budget/static/js/main.1aeac32f.chunk.js",
+    "main.js.map": "/USAC-budget/static/js/main.1aeac32f.chunk.js.map",
     "runtime-main.js": "/USAC-budget/static/js/runtime-main.d708de8d.js",
     "runtime-main.js.map": "/USAC-budget/static/js/runtime-main.d708de8d.js.map",
     "static/css/2.61a570a4.chunk.css": "/USAC-budget/static/css/2.61a570a4.chunk.css",
     "static/js/2.d3dc096e.chunk.js": "/USAC-budget/static/js/2.d3dc096e.chunk.js",
     "static/js/2.d3dc096e.chunk.js.map": "/USAC-budget/static/js/2.d3dc096e.chunk.js.map",
     "index.html": "/USAC-budget/index.html",
-    "precache-manifest.9bb5fac3e1e337700236dd1146f1bff3.js": "/USAC-budget/precache-manifest.9bb5fac3e1e337700236dd1146f1bff3.js",
+    "precache-manifest.7d8830e508625b4c151818431d442549.js": "/USAC-budget/precache-manifest.7d8830e508625b4c151818431d442549.js",
     "service-worker.js": "/USAC-budget/service-worker.js",
     "static/css/2.61a570a4.chunk.css.map": "/USAC-budget/static/css/2.61a570a4.chunk.css.map",
     "static/css/main.d1b05096.chunk.css.map": "/USAC-budget/static/css/main.d1b05096.chunk.css.map",
@@ -20,6 +20,6 @@
     "static/css/2.61a570a4.chunk.css",
     "static/js/2.d3dc096e.chunk.js",
     "static/css/main.d1b05096.chunk.css",
-    "static/js/main.c206fdad.chunk.js"
+    "static/js/main.1aeac32f.chunk.js"
   ]
 }
