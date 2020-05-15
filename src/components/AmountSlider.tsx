@@ -51,6 +51,7 @@ export default class AmountSlider extends Component<SliderProps, SliderState>{
         const domain: [number, number] = data.length === 0 ? [0, 1] : [data[0].low, data[data.length - 1].high]
         return (
             <div style={{height: '80vh', width: "80%", margin: "auto"}} hidden={this.props.hidden || false}>
+                {(this.props.hidden || false) ? null : (
                 <ResponsiveContainer height="90%" width="100%">
                     <BarChart data={data}>
                         <CartesianGrid strokeDasharray="3 3" />
@@ -65,6 +66,7 @@ export default class AmountSlider extends Component<SliderProps, SliderState>{
                         </Bar>
                     </BarChart>
                 </ResponsiveContainer>
+                )}
                 <Slider value={this.state.value}
                         min={domain[0]} max={domain[1]}
                         onChange={this.onRangeChange.bind(this)}

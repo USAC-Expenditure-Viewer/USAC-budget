@@ -9,7 +9,6 @@ import CategoryPie from "./CategoryPie";
 import {Tab, Tabs} from "@material-ui/core";
 import AmountSlider from "./AmountSlider";
 import QueryBuilder from "../models/QueryBuilder";
-import Datasets from "../models/Datasets";
 
 interface DatasetState {
     value: number

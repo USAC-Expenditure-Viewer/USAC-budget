@@ -67,7 +67,9 @@ export default class Datasets {
 
     setCurrentDataset(name: string) {
         this.currentDataset = name
-        this.dataLoader = null
+        if (this.dataLoader !== null) {
+            this.dataLoader.setDataset(name)
+        }
         this.callbacks.forEach(c => c())
     }
 

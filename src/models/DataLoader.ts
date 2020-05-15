@@ -48,6 +48,15 @@ export default class DataLoader{
     private total_amount: number = 0
 
     constructor(dataset: string | null) {
+        this.setDataset(dataset)
+    }
+
+    setDataset(dataset: string | null) {
+        this.sliceFilter(0)
+        this.loadDataset(dataset)
+    }
+
+    private loadDataset(dataset: string | null) {
         if (dataset == null) return
         Papa.parse(window.location.pathname + "/expense_summary_" + dataset + ".csv",
             {

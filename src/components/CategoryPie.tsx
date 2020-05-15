@@ -18,6 +18,7 @@ export default class CategoryPie extends Component<CategoryPieProps>{
         const data = this.props.dataloader.getCategories(this.props.category)
         return (
             <div style={{height: '80vh'}} hidden={this.props.hidden || false}>
+                {(this.props.hidden || false) ? null : (
                 <ResponsiveContainer height="100%" width="100%">
                     <PieChart>
                         <Pie data={data} dataKey="value" nameKey="text" fill={this.getColor()}
@@ -28,6 +29,7 @@ export default class CategoryPie extends Component<CategoryPieProps>{
                                  contentStyle={{padding: '0 5px', margin: 0, borderRadius: 5}}/>
                     </PieChart>
                 </ResponsiveContainer>
+                )}
             </div>
         )
     }

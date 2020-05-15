@@ -10,6 +10,7 @@ import {
     Typography
 } from "@material-ui/core";
 import MenuIcon from "@material-ui/icons/Menu";
+import ListIcon from "@material-ui/icons/List"
 import React from "react";
 import Datasets from "../models/Datasets";
 
@@ -52,7 +53,7 @@ export default class TopBar extends React.Component<{}, BarState> {
                                     toggleDrawer(false)
                                     Datasets.getInstance().setCurrentDataset(text)
                                 }}>
-                                    <ListItemIcon><MenuIcon/></ListItemIcon>
+                                    <ListItemIcon><ListIcon/></ListItemIcon>
                                     <ListItemText primary={"Budget " + Datasets.getDatasetTitle(text)} />
                                 </ListItem>
                             ))}
