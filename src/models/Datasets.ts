@@ -7,7 +7,7 @@ export default class Datasets {
     private datasets: string[] = []
     private currentDataset: string | null = null
     private callbacks: (() => void)[] = []
-    private dataLoader: DataLoader = new DataLoader(null)
+    private dataLoader: DataLoader
     private ready: boolean = false
 
     static getInstance(){
@@ -18,6 +18,7 @@ export default class Datasets {
 
     private constructor() {
         this.parseDataset(QueryBuilder.getInstance().getQuery())
+        this.dataLoader = new DataLoader(this.currentDataset)
         QueryBuilder.getInstance().addGenerator(this.getQueryString.bind(this), 0)
         fetch(window.location.pathname + "/datasets.json")
             .then(res => res.json())
@@ -63,6 +64,7 @@ export default class Datasets {
 
     setCurrentDataset(name: string) {
         this.currentDataset = name
+        QueryBuilder.getInstance().update()
         this.dataLoader.setDataset(name)
         this.callbacks.forEach(c => c())
     }
