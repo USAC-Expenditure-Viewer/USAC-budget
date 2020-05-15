@@ -41,7 +41,7 @@ export default class TopBar extends React.Component<{}, BarState> {
                     <IconButton edge="start" color="inherit" aria-label="menu" onClick={toggleDrawer(true)}>
                         <MenuIcon/>
                     </IconButton>
-                    <Typography variant="h6">
+                    <Typography variant="h6" style={{flexGrow: 1}}>
                         {"USAC budget spending "+Datasets.getInstance().getCurrentDatasetName()}
                     </Typography>
                 </Toolbar>
