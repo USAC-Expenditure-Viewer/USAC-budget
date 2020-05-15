@@ -5,7 +5,6 @@ export default class Datasets {
 
     private static instance: Datasets | null = null
     private datasets: string[] = []
-    private dataset_names : string[] = []
     private currentDataset: string | null = null
     private callbacks: (() => void)[] = []
     private dataLoader: DataLoader | null = null
@@ -24,18 +23,10 @@ export default class Datasets {
             .then(res => res.json())
             .then((res) => {
                 this.datasets = res
-                this.dataset_names = this.datasets.map(e => {
-                    if (e.match(/^\d*$/)) {
-                        const year = Number.parseInt(e)
-                        return "USAC budget spendings " + e + '-' + (year + 1).toString()
-                    }
-                    else return e
-
-                })
-                if (this.currentDataset === null) this.currentDataset = this.datasets[0]
                 this.ready = true
+                if (this.currentDataset === null) this.currentDataset = this.datasets[0]
+                this.setCurrentDataset(this.currentDataset)
             })
-            .then(() => this.callbacks.forEach(c => c()))
     }
 
     addChangeCallback(callback: ()=>void) {
@@ -48,17 +39,22 @@ export default class Datasets {
 
     getCurrentDataset() {
         if (this.currentDataset != null) return this.currentDataset
-        return null
+        return undefined
+    }
+
+    getCurrentDatasetName() {
+        if (this.currentDataset != null) return Datasets.getDatasetTitle(this.currentDataset)
+        return undefined
     }
 
     getDatasets() {
         if (this.ready) return this.datasets
-        return null
+        return undefined
     }
 
     getDatasetNames() {
-        if (this.ready) return this.dataset_names
-        return null
+        if (this.ready) return this.datasets.map(Datasets.getDatasetTitle)
+        return undefined
     }
 
     getDataLoader() {
@@ -85,5 +81,13 @@ export default class Datasets {
     private getQueryString(): string {
         if (this.currentDataset === null) return ""
         return 'd=' + this.currentDataset
+    }
+
+    static getDatasetTitle(name: string): string {
+            if (name.match(/^\d*$/)) {
+                const year = Number.parseInt(name)
+                return name + '-' + (year + 1).toString()
+            }
+            else return name
     }
 }

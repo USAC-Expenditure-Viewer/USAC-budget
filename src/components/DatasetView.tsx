@@ -35,7 +35,7 @@ export default class DatasetView extends React.Component<DatasetProps, DatasetSt
     }
 
     componentDidMount(): void {
-
+        this.props.loader.addChangeCallback(() => this.forceUpdate())
     }
 
     parseQuery(query: string): number {
@@ -60,7 +60,8 @@ export default class DatasetView extends React.Component<DatasetProps, DatasetSt
                           this.setState({value: value})
                           QueryBuilder.getInstance().update()
                       }}
-                      indicatorColor="primary" textColor="primary" centered>
+                      variant="scrollable"
+                      indicatorColor="primary" textColor="primary">
                     <Tab label="Keywords"/>
                     <Tab label="Fund"/>
                     <Tab label="Division"/>
