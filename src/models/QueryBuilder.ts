@@ -25,7 +25,6 @@ export default class QueryBuilder {
     update() {
         let strings : string[] = [...this.generators.values()].map((c) => c())
         const query = strings.join('&')
-        this.queryString = query
 
         let path = window.location.href
         if (path.includes('?')) path = path.substr(0, path.indexOf('?'))

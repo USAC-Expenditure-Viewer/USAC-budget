@@ -26,7 +26,8 @@ export default class Datasets {
                 this.datasets = res
                 this.ready = true
                 if (this.currentDataset === null) this.currentDataset = this.datasets[0]
-                this.setCurrentDataset(this.currentDataset)
+                this.dataLoader.setDataset(this.currentDataset)
+                this.callbacks.forEach(c => c())
             })
     }
 
