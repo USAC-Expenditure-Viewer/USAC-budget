@@ -45,22 +45,21 @@ export default class DataLoader{
     private data: DataEntry[] = []
     private filters: Filter[] = []
     private dataChangeCallbacks: (()=> void)[] = []
-    private readonly dataset: string;
     private total_amount: number = 0
 
-    constructor() {
-        this.dataset = DataLoader.parseDataset(QueryBuilder.getInstance().getQuery())
-        Papa.parse(window.location.pathname + "/expense_summary_"+ this.dataset +".csv",
+    constructor(dataset: string | null) {
+        if (dataset == null) return
+        Papa.parse(window.location.pathname + "/expense_summary_" + dataset + ".csv",
             {
                 download: true,
                 header: true,
-                complete: (results)=> {
+                complete: (results) => {
                     this.data = results.data.map((e) => {
                         e.date = new Date(Number.parseFloat(e.date) * 1000)
                         e.amount = Number.parseFloat(e.amount)
                         e.words = e.__parsed_extra || []
                         return e
-                    })
+                    }).filter(e => !Number.isNaN(e.amount))
 
                     this.onLoad()
                 }
@@ -70,15 +69,8 @@ export default class DataLoader{
     private onLoad() {
         this.total_amount = this.data.reduce((prev, curr) => prev + curr.amount, 0)
         this.parseQuery(QueryBuilder.getInstance().getQuery())
-        QueryBuilder.getInstance().addGenerator(this.generateQueryString.bind(this), 0)
+        QueryBuilder.getInstance().addGenerator(this.generateQueryString.bind(this), 2)
         this.listChangeCallback()
-    }
-
-    private static parseDataset(query: string): string {
-        if (query[0] === '?') query = query.slice(1)
-        const res = query.split('&').filter((e) => e.startsWith('d='))
-        if (res.length === 0) return "2018"
-        return res[0].substr(2)
     }
 
     private parseQuery(query: string) {
@@ -116,18 +108,17 @@ export default class DataLoader{
     }
 
     private generateQueryString(){
-        const string = "d=" + this.dataset +
-            this.filters.reduce((prev, curr) => {
+        const strings = this.filters.map((curr) => {
                 switch (curr.category) {
                     case 'keyword':
-                        return prev + '&keyword=' + curr.name
+                        return 'keyword=' + curr.name
                     case 'amount':
-                        return prev + '&amount=' + curr.name.replace('~', '..')
+                        return 'amount=' + curr.name.replace('~', '..')
                     default:
-                        return prev + '&' + curr.category + '=' + btoa(curr.name)
+                        return curr.category + '=' + btoa(curr.name)
                 }
-            }, "")
-        return string
+            })
+        return strings.join('&')
     }
 
     private listChangeCallback() {
@@ -244,10 +235,6 @@ export default class DataLoader{
 
     getFilters(){
         return this.filters
-    }
-
-    getDatasetName(){
-        return this.dataset
     }
 
     sliceFilter(remaining_length: number) {

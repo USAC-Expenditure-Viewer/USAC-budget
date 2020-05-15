@@ -1,0 +1,89 @@
+import QueryBuilder from "./QueryBuilder";
+import DataLoader from "./DataLoader";
+
+export default class Datasets {
+
+    private static instance: Datasets | null = null
+    private datasets: string[] = []
+    private dataset_names : string[] = []
+    private currentDataset: string | null = null
+    private callbacks: (() => void)[] = []
+    private dataLoader: DataLoader | null = null
+    private ready: boolean = false
+
+    static getInstance(){
+        if (this.instance === null) this.instance = new Datasets()
+        return this.instance
+    }
+
+
+    private constructor() {
+        this.parseDataset(QueryBuilder.getInstance().getQuery())
+        QueryBuilder.getInstance().addGenerator(this.getQueryString.bind(this), 0)
+        fetch(window.location.pathname + "/datasets.json")
+            .then(res => res.json())
+            .then((res) => {
+                this.datasets = res
+                this.dataset_names = this.datasets.map(e => {
+                    if (e.match(/^\d*$/)) {
+                        const year = Number.parseInt(e)
+                        return "USAC budget spendings " + e + '-' + (year + 1).toString()
+                    }
+                    else return e
+
+                })
+                if (this.currentDataset === null) this.currentDataset = this.datasets[0]
+                this.ready = true
+            })
+            .then(() => this.callbacks.forEach(c => c()))
+    }
+
+    addChangeCallback(callback: ()=>void) {
+        this.callbacks.push(callback)
+    }
+
+    isReady() {
+        return this.ready
+    }
+
+    getCurrentDataset() {
+        if (this.currentDataset != null) return this.currentDataset
+        return null
+    }
+
+    getDatasets() {
+        if (this.ready) return this.datasets
+        return null
+    }
+
+    getDatasetNames() {
+        if (this.ready) return this.dataset_names
+        return null
+    }
+
+    getDataLoader() {
+        if (this.dataLoader != null) return this.dataLoader
+        else {
+            this.dataLoader = new DataLoader(this.currentDataset)
+            return this.dataLoader
+        }
+    }
+
+    setCurrentDataset(name: string) {
+        this.currentDataset = name
+        this.dataLoader = null
+        this.callbacks.forEach(c => c())
+    }
+
+    private parseDataset(query: string) {
+        if (query[0] === '?') query = query.slice(1)
+        const res = query.split('&').filter((e) => e.startsWith('d='))
+        if (res.length !== 0)
+            this.currentDataset = res[0].substr(2)
+    }
+
+    private getQueryString(): string {
+        if (this.currentDataset === null) return ""
+        return 'd=' + this.currentDataset
+    }
+}

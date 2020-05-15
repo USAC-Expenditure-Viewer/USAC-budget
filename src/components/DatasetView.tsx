@@ -9,32 +9,33 @@ import CategoryPie from "./CategoryPie";
 import {Tab, Tabs} from "@material-ui/core";
 import AmountSlider from "./AmountSlider";
 import QueryBuilder from "../models/QueryBuilder";
+import Datasets from "../models/Datasets";
 
 interface DatasetState {
     value: number
+
 }
 
 interface DatasetProps {
-
+    loader: DataLoader
 }
 
 export default class DatasetView extends React.Component<DatasetProps, DatasetState> {
     private value: number = 0
-    private readonly loader: DataLoader;
     constructor(props: DatasetProps) {
         super(props);
 
         this.value = this.parseQuery(QueryBuilder.getInstance().getQuery())
 
         this.state = {
-            value: this.value
+            value: this.value,
         }
 
         QueryBuilder.getInstance().addGenerator(this.generateQuery.bind(this), 1)
-        this.loader = new DataLoader()
     }
 
     componentDidMount(): void {
+
     }
 
     parseQuery(query: string): number {
@@ -49,9 +50,10 @@ export default class DatasetView extends React.Component<DatasetProps, DatasetSt
     }
 
     render() {
+        const loader = this.props.loader
         return (
             <Paper variant="outlined" style={{margin: '0 10%'}}>
-                <KeywordCrumb style={{margin: 10}} dataloader={this.loader}/>
+                <KeywordCrumb style={{margin: 10}} dataloader={loader}/>
                 <Tabs value={this.state.value}
                       onChange={(e, value) => {
                           this.value = value
@@ -67,14 +69,14 @@ export default class DatasetView extends React.Component<DatasetProps, DatasetSt
                     <Tab label="Event"/>
                     <Tab label="Amount"/>
                 </Tabs>
-                <WordCloud hidden={this.state.value !== 0} dataloader={this.loader}/>
-                <CategoryPie hidden={this.state.value !== 1} category={"fund"} dataloader={this.loader}/>
-                <CategoryPie hidden={this.state.value !== 2} category={"division"} dataloader={this.loader}/>
-                <CategoryPie hidden={this.state.value !== 3} category={"department"} dataloader={this.loader}/>
-                <CategoryPie hidden={this.state.value !== 4} category={"gl"} dataloader={this.loader}/>
-                <CategoryPie hidden={this.state.value !== 5} category={"event"} dataloader={this.loader}/>
-                <AmountSlider hidden={this.state.value !== 6} dataloader={this.loader} />
-                <RecordTable dataloader={this.loader}/>
+                <WordCloud hidden={this.state.value !== 0} dataloader={loader}/>
+                <CategoryPie hidden={this.state.value !== 1} category={"fund"} dataloader={loader}/>
+                <CategoryPie hidden={this.state.value !== 2} category={"division"} dataloader={loader}/>
+                <CategoryPie hidden={this.state.value !== 3} category={"department"} dataloader={loader}/>
+                <CategoryPie hidden={this.state.value !== 4} category={"gl"} dataloader={loader}/>
+                <CategoryPie hidden={this.state.value !== 5} category={"event"} dataloader={loader}/>
+                <AmountSlider hidden={this.state.value !== 6} dataloader={loader} />
+                <RecordTable dataloader={loader}/>
             </Paper>
         );
     }
