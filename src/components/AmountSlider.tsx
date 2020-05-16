@@ -53,7 +53,7 @@ export default class AmountSlider extends Component<SliderProps, SliderState>{
             <div style={{height: '80vh', width: "80%", margin: "auto"}} hidden={this.props.hidden || false}>
                 {(this.props.hidden || false) ? null : (
                 <ResponsiveContainer height="90%" width="100%">
-                    <BarChart data={data}>
+                    <BarChart data={data} barCategoryGap={0}>
                         <CartesianGrid strokeDasharray="3 3" />
                         <XAxis dataKey="name" domain={domain} tick={false} axisLine={false} />
                         <YAxis domain={[0, 'datamax']} tickFormatter={(v) => '$'+KMFormat(v)}/>
