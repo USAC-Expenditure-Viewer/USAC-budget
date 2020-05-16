@@ -53,10 +53,10 @@ export default class AmountSlider extends Component<SliderProps, SliderState>{
             <div style={{height: '80vh', width: "80%", margin: "auto"}} hidden={this.props.hidden || false}>
                 {(this.props.hidden || false) ? null : (
                 <ResponsiveContainer height="90%" width="100%">
-                    <BarChart data={data} barCategoryGap={0}>
+                    <BarChart data={data} barCategoryGap={0} margin={{bottom: 0, left: 0, right: 0}}>
                         <CartesianGrid strokeDasharray="3 3" />
-                        <XAxis dataKey="name" domain={domain} tick={false} axisLine={false} />
-                        <YAxis domain={[0, 'datamax']} tickFormatter={(v) => '$'+KMFormat(v)}/>
+                        <XAxis dataKey="name" domain={domain} hide orientation="top"/>
+                        <YAxis domain={[0, 'dataMax']} tickFormatter={(v) => '$'+KMFormat(v)} width={AmountSlider.getYAxisWidth()}/>
                         <ReferenceLine y={0} label="" stroke="black" />
                         <Bar dataKey={"value"} fill={this.getColor()}>
                             {data.map((value, index) => (
@@ -67,6 +67,7 @@ export default class AmountSlider extends Component<SliderProps, SliderState>{
                     </BarChart>
                 </ResponsiveContainer>
                 )}
+                <div style={{paddingLeft: AmountSlider.getYAxisWidth()}}>
                 <Slider value={this.state.value}
                         min={domain[0]} max={domain[1]}
                         onChange={this.onRangeChange.bind(this)}
@@ -75,8 +76,17 @@ export default class AmountSlider extends Component<SliderProps, SliderState>{
                         valueLabelFormat={(v) => '$'+KMFormat(v)}
                         marks={this.getMarks(domain)}
                 />
+                </div>
             </div>
         )
+    }
+
+    static getViewportWidth(){
+        return Math.max(document.documentElement.clientWidth, window.innerWidth || 0)
+    }
+
+    static getYAxisWidth(){
+        return AmountSlider.getViewportWidth() < 360 ? 0 : 60
     }
 
     onRangeChange(event: any, newValues: number | number[]){

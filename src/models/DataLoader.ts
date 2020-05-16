@@ -213,6 +213,7 @@ export default class DataLoader{
                     Math.max(previousValue[1], currentValue.amount)]), [Number.MAX_VALUE, Number.MIN_VALUE])
 
         if (domain === null) domain = [allMin, allMax]
+        allMax += 0.001
 
         let bins : AmountBin[] = []
         let bin_size = (allMax - allMin) / numBin
