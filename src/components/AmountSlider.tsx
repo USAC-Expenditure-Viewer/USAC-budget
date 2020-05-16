@@ -112,13 +112,18 @@ export default class AmountSlider extends Component<SliderProps, SliderState>{
     }
 
     getMarks(domain: [number, number]): Mark[]{
+        const total_width = AmountSlider.getViewportWidth() * 0.8 - AmountSlider.getYAxisWidth()
+        const min_diff = 60 / total_width * (domain[1] - domain[0])
         let marks: Mark[] = domain.map(e => this.getMarkPoint(e))
-        if (domain[0] < 0 && domain[1] > 0) marks.push(this.getMarkPoint(0))
+        if (domain[0] < 0 && domain[1] > 0) {
+            marks = marks.filter(e => Math.abs(e.value) >= min_diff)
+            marks.push(this.getMarkPoint(0))
+        }
 
-        const step_size = (domain[1] - domain[0]) / 10
-        for (let i = 1; i < 10; i ++) {
+        const step_size = Math.max((domain[1] - domain[0]) / 10, min_diff)
+        for (let i = 1; domain[0] + i * step_size <= domain[1] - min_diff; i ++) {
             const val = Number.parseFloat((domain[0] + i * step_size).toPrecision(2))
-            if (Math.abs(val) < 0.5 * step_size) continue
+            if (Math.abs(val) < 0.9 * step_size) continue
             marks.push(this.getMarkPoint(val))
         }
 
