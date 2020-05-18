@@ -3,7 +3,7 @@ import {AmountBin, DataLoaderProps} from "../models/DataLoader";
 import {
     Bar,
     BarChart,
-    CartesianGrid, Cell, ReferenceLine,
+    CartesianGrid, Cell, Label, ReferenceLine,
     ResponsiveContainer,
     XAxis,
     YAxis
@@ -50,13 +50,18 @@ export default class AmountSlider extends Component<SliderProps, SliderState>{
         const data = this.state.data
         const domain: [number, number] = data.length === 0 ? [0, 1] : [data[0].low, data[data.length - 1].high]
         return (
-            <div style={{height: '80vh', width: "80%", margin: "auto"}} hidden={this.props.hidden || false}>
+            <div style={{paddingLeft: '5%', paddingRight: `calc(5% + ${AmountSlider.getYAxisWidth()}px)`,
+                height: '80vh', margin: "auto"}} hidden={this.props.hidden || false}>
                 {(this.props.hidden || false) ? null : (
                 <ResponsiveContainer height="90%" width="100%">
                     <BarChart data={data} barCategoryGap={0} margin={{bottom: 0, left: 0, right: 0}}>
                         <CartesianGrid strokeDasharray="3 3" />
                         <XAxis dataKey="name" domain={domain} hide orientation="top"/>
-                        <YAxis domain={[0, 'dataMax']} tickFormatter={(v) => '$'+KMFormat(v)} width={AmountSlider.getYAxisWidth()}/>
+                        <YAxis domain={[0, 'dataMax']} tickFormatter={(v) => '$'+KMFormat(v)} width={AmountSlider.getYAxisWidth()}>
+                            <Label angle={270} position="insideLeft" style={{ textAnchor: 'middle' }}>
+                                Expense Sum in Transaction Amount Bin($)
+                            </Label>
+                        </YAxis>
                         <ReferenceLine y={0} label="" stroke="black" />
                         <Bar dataKey={"value"} fill={this.getColor()}>
                             {data.map((value, index) => (
@@ -86,7 +91,7 @@ export default class AmountSlider extends Component<SliderProps, SliderState>{
     }
 
     static getYAxisWidth(){
-        return AmountSlider.getViewportWidth() < 360 ? 0 : 60
+        return AmountSlider.getViewportWidth() < 480 ? 0 : 72
     }
 
     onRangeChange(event: any, newValues: number | number[]){

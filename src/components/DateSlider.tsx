@@ -1,10 +1,12 @@
 import React, {Component} from "react";
 import {WordEntry, DataLoaderProps} from "../models/DataLoader";
 import {
+    Area,
+    AreaChart,
     Bar,
     BarChart,
-    CartesianGrid, Cell, ReferenceLine,
-    ResponsiveContainer,
+    CartesianGrid, Cell, Label, ReferenceLine,
+    ResponsiveContainer, Tooltip,
     XAxis,
     YAxis
 } from 'recharts';
@@ -44,7 +46,6 @@ export default class DateSlider extends Component<SliderProps, SliderState>{
 
     updateState(){
         const {data, domain} = this.props.dataloader.getMonthBins()
-        console.log(data)
         const names = data.map(e => e.text)
         this.setState({
             data: data,
@@ -55,21 +56,33 @@ export default class DateSlider extends Component<SliderProps, SliderState>{
     render(): React.ReactNode {
         const data = this.state.data
         return (
-            <div style={{height: '80vh', width: "80%", margin: "auto"}} hidden={this.props.hidden || false}>
+            <div style={{paddingLeft: '5%', paddingRight: `calc(5% + ${DateSlider.getYAxisWidth()}px)`,
+                height: '80vh', margin: "auto"}} hidden={this.props.hidden || false}>
                 {(this.props.hidden || false) ? null : (
                 <ResponsiveContainer height="90%" width="100%">
-                    <BarChart data={data} barCategoryGap={0} margin={{bottom: 0, left: 0, right: 0}}>
+                    <AreaChart data={data} barCategoryGap={0} margin={{bottom: 0, left: 0, right: 0}}>
+                        <defs>
+                            <linearGradient id="fillGrad" x1="0" y1="0" x2="0" y2="1">
+                                <stop offset="5%" stopColor={this.getColor()} stopOpacity={0.9}/>
+                                <stop offset="95%" stopColor={this.getColor()} stopOpacity={0.3}/>
+                            </linearGradient>
+                        </defs>
                         <CartesianGrid strokeDasharray="3 3" />
-                        <XAxis dataKey="text" hide orientation="top"/>
-                        <YAxis tickFormatter={(v) => '$'+KMFormat(v)} width={DateSlider.getYAxisWidth()}/>
+                        <XAxis dataKey="text" hide orientation="top" scale="band"/>
+                        <YAxis tickFormatter={(v) => '$'+KMFormat(v)} width={DateSlider.getYAxisWidth()}>
+                            <Label angle={270} position="insideLeft" style={{ textAnchor: 'middle' }}>
+                                Monthly Expense($)
+                            </Label>
+                        </YAxis>
+                        <Tooltip></Tooltip>
                         <ReferenceLine y={0} label="" stroke="black" />
-                        <Bar dataKey={"value"} fill={this.getColor()}>
+                        <Area type="monotone" dataKey="value" stroke={this.getColor()} fillOpacity={1} fill="url(#fillGrad)">
                             {data.map((value, index) => (
                                 <Cell key={`cell-${index}`} fill={this.getColor()}
                                       opacity={this.getOpacity(index)}/>
                             ))}
-                        </Bar>
-                    </BarChart>
+                        </Area>
+                    </AreaChart>
                 </ResponsiveContainer>
                 )}
                 <div style={{paddingLeft: DateSlider.getYAxisWidth()}}>
@@ -91,7 +104,7 @@ export default class DateSlider extends Component<SliderProps, SliderState>{
     }
 
     static getYAxisWidth(){
-        return this.getViewportWidth() < 360 ? 0 : 60
+        return this.getViewportWidth() < 480 ? 0 : 72
     }
 
     onRangeChange(event: any, newValues: number | number[]){
@@ -105,7 +118,7 @@ export default class DateSlider extends Component<SliderProps, SliderState>{
     }
 
     getColor(): string {
-        return "#ffee58"
+        return "#009688"
     }
 
     getOpacity(index: number): number {
