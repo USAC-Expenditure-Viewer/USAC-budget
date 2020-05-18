@@ -10,7 +10,7 @@ export default class Datasets {
     private dataLoader: DataLoader
     private ready: boolean = false
 
-    static getInstance(){
+    static getInstance() {
         if (this.instance === null) this.instance = new Datasets()
         return this.instance
     }
@@ -31,12 +31,8 @@ export default class Datasets {
             })
     }
 
-    addChangeCallback(callback: ()=>void) {
+    addChangeCallback(callback: () => void) {
         this.callbacks.push(callback)
-    }
-
-    isReady() {
-        return this.ready
     }
 
     getCurrentDataset() {
@@ -83,10 +79,9 @@ export default class Datasets {
     }
 
     static getDatasetTitle(name: string): string {
-            if (name.match(/^\d*$/)) {
-                const year = Number.parseInt(name)
-                return name + '-' + (year + 1).toString()
-            }
-            else return name
+        if (name.match(/^\d*$/)) {
+            const year = Number.parseInt(name)
+            return name + '-' + (year + 1).toString()
+        } else return name
     }
 }

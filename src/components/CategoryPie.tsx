@@ -3,12 +3,12 @@ import {Category, DataLoaderProps} from "../models/DataLoader";
 import {Pie, PieChart, ResponsiveContainer, Tooltip} from 'recharts';
 import {KMFormat} from "../util";
 
-interface CategoryPieProps extends DataLoaderProps{
+interface CategoryPieProps extends DataLoaderProps {
     category: Category
     hidden?: boolean
 }
 
-export default class CategoryPie extends Component<CategoryPieProps>{
+export default class CategoryPie extends Component<CategoryPieProps> {
 
     componentDidMount(): void {
         this.props.dataloader.addChangeCallback(() => this.forceUpdate())
@@ -19,16 +19,16 @@ export default class CategoryPie extends Component<CategoryPieProps>{
         return (
             <div style={{height: '80vh'}} hidden={this.props.hidden || false}>
                 {(this.props.hidden || false) ? null : (
-                <ResponsiveContainer height="100%" width="100%">
-                    <PieChart>
-                        <Pie data={data} dataKey="value" nameKey="text" fill={this.getColor()}
-                             label={({percent, name}) => ((percent || 0) > 0.005 ? name: "")}
-                             labelLine={false}
-                             onClick={(e) => this.props.dataloader.addCategoryFilter(this.props.category, e.text)}/>
-                        <Tooltip formatter={(value) => "$"+KMFormat(value as number)}
-                                 contentStyle={{padding: '0 5px', margin: 0, borderRadius: 5}}/>
-                    </PieChart>
-                </ResponsiveContainer>
+                    <ResponsiveContainer height="100%" width="100%">
+                        <PieChart>
+                            <Pie data={data} dataKey="value" nameKey="text" fill={this.getColor()}
+                                 label={({percent, name}) => ((percent || 0) > 0.005 ? name : "")}
+                                 labelLine={false}
+                                 onClick={(e) => this.props.dataloader.addCategoryFilter(this.props.category, e.text)}/>
+                            <Tooltip formatter={(value) => "$" + KMFormat(value as number)}
+                                     contentStyle={{padding: '0 5px', margin: 0, borderRadius: 5}}/>
+                        </PieChart>
+                    </ResponsiveContainer>
                 )}
             </div>
         )

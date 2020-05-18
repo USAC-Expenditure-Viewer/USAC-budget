@@ -2,19 +2,19 @@
  * Created by TylerLiu on 2020/04/23.
  */
 import 'd3-transition';
-import { select } from 'd3-selection';
-import React, { Component } from 'react';
+import {select} from 'd3-selection';
+import React, {Component} from 'react';
 import ReactWordcloud, {Callbacks, OptionsProp, Word} from "react-wordcloud";
 import {KMFormat} from "../util";
 import {DataLoaderProps} from "../models/DataLoader";
 
-interface WordCloudProps extends DataLoaderProps{
+interface WordCloudProps extends DataLoaderProps {
     hidden?: boolean
 }
 
-export default class WordCloud extends Component<WordCloudProps>{
+export default class WordCloud extends Component<WordCloudProps> {
     private callbacks: Callbacks = {
-        getWordTooltip: (word: Word) =>`${word.text} has $${KMFormat(word.value)} in the category.`,
+        getWordTooltip: (word: Word) => `${word.text} has $${KMFormat(word.value)} in the category.`,
         onWordClick: this.getCallback('onWordClick').bind(this),
         onWordMouseOut: this.getCallback('onWordMouseOut').bind(this),
         onWordMouseOver: this.getCallback('onWordMouseOver').bind(this),
@@ -39,19 +39,20 @@ export default class WordCloud extends Component<WordCloudProps>{
         super(props)
 
         this.state = {
-            words : [{text: 'Loading...', value: 100}]
+            words: [{text: 'Loading...', value: 100}]
         }
     }
 
-     componentDidMount() {
-         this.props.dataloader.addChangeCallback(this.setWords.bind(this))
-     }
+    componentDidMount() {
+        this.props.dataloader.addChangeCallback(this.setWords.bind(this))
+    }
 
     render() {
-        return(
-            <div style={{height: '80vh'}}  hidden={this.props.hidden}>
+        return (
+            <div style={{height: '80vh'}} hidden={this.props.hidden}>
                 {(this.props.hidden || false) ? null : (
-                <ReactWordcloud callbacks={this.callbacks} words={this.props.dataloader.getWordList()} options={this.options}/>
+                    <ReactWordcloud callbacks={this.callbacks} words={this.props.dataloader.getWordList()}
+                                    options={this.options}/>
                 )}
             </div>
         )

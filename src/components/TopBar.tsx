@@ -42,7 +42,7 @@ export default class TopBar extends React.Component<{}, BarState> {
                         <MenuIcon/>
                     </IconButton>
                     <Typography variant="h6" style={{flexGrow: 1}}>
-                        {"USAC budget spending "+Datasets.getInstance().getCurrentDatasetName()}
+                        {"USAC budget spending " + Datasets.getInstance().getCurrentDatasetName()}
                     </Typography>
                 </Toolbar>
                 <Drawer anchor={'left'} open={this.state.drawer} onClose={toggleDrawer(false)}>
@@ -54,7 +54,7 @@ export default class TopBar extends React.Component<{}, BarState> {
                                     Datasets.getInstance().setCurrentDataset(text)
                                 }}>
                                     <ListItemIcon><ListIcon/></ListItemIcon>
-                                    <ListItemText primary={"Budget " + Datasets.getDatasetTitle(text)} />
+                                    <ListItemText primary={"Budget " + Datasets.getDatasetTitle(text)}/>
                                 </ListItem>
                             ))}
                         </List>

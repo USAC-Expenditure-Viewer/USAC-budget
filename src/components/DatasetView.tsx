@@ -22,6 +22,7 @@ interface DatasetProps {
 
 export default class DatasetView extends React.Component<DatasetProps, DatasetState> {
     private value: number = 0
+
     constructor(props: DatasetProps) {
         super(props);
 
@@ -77,9 +78,9 @@ export default class DatasetView extends React.Component<DatasetProps, DatasetSt
                 <CategoryPie hidden={this.state.value !== 3} category={"department"} dataloader={loader}/>
                 <CategoryPie hidden={this.state.value !== 4} category={"gl"} dataloader={loader}/>
                 <CategoryPie hidden={this.state.value !== 5} category={"event"} dataloader={loader}/>
-                <AmountSlider hidden={this.state.value !== 6} dataloader={loader} />
-                <DateSlider hidden={this.state.value !== 7}dataloader={loader}  />
-                <RecordTable dataloader={loader} />
+                <AmountSlider hidden={this.state.value !== 6} dataloader={loader}/>
+                <DateSlider hidden={this.state.value !== 7} dataloader={loader}/>
+                <RecordTable dataloader={loader}/>
             </Paper>
         );
     }

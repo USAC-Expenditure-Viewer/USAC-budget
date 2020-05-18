@@ -5,11 +5,11 @@ import React, {Component} from 'react';
 import {commaFormat} from "../util";
 import MaterialTable, {Column, Icons, Options} from "material-table";
 import {DataLoaderProps} from "../models/DataLoader";
-import {SaveAlt, ArrowDownward, FirstPage, LastPage, ChevronRight, ChevronLeft} from "@material-ui/icons"
+import {ArrowDownward, ChevronLeft, ChevronRight, FirstPage, LastPage, SaveAlt} from "@material-ui/icons"
 
 //TODO virtualize
 
-export default class RecordTable extends Component<DataLoaderProps>{
+export default class RecordTable extends Component<DataLoaderProps> {
 
     private columns: Column<any>[] = [
         {title: 'Date', field: 'date', type: "date"},
@@ -30,7 +30,7 @@ export default class RecordTable extends Component<DataLoaderProps>{
         paging: true,
         search: false,
         draggable: false,
-        headerStyle: { position: 'sticky', top: 0 },
+        headerStyle: {position: 'sticky', top: 0},
         exportAllData: true,
     }
 
@@ -49,17 +49,17 @@ export default class RecordTable extends Component<DataLoaderProps>{
         PreviousPage: ChevronLeft,
     }
 
-     componentDidMount() {
-         this.props.dataloader.addChangeCallback(() => {
-             this.forceUpdate()
-         })
-     }
+    componentDidMount() {
+        this.props.dataloader.addChangeCallback(() => {
+            this.forceUpdate()
+        })
+    }
 
     render() {
-        return(
-                <MaterialTable options={this.options} columns={this.columns} icons={this.icons}
-                               data={this.props.dataloader.getRecords()}
-                               title={"Displayed total $"+commaFormat(this.props.dataloader.getTotal())}/>
+        return (
+            <MaterialTable options={this.options} columns={this.columns} icons={this.icons}
+                           data={this.props.dataloader.getRecords()}
+                           title={"Displayed total $" + commaFormat(this.props.dataloader.getTotal())}/>
         )
     }
 

@@ -9,7 +9,7 @@ interface AppState {
     loader: DataLoader
 }
 
-class App extends React.Component<{},AppState> {
+class App extends React.Component<{}, AppState> {
 
     constructor(props: {}) {
         super(props);
@@ -19,7 +19,7 @@ class App extends React.Component<{},AppState> {
     }
 
     componentDidMount(): void {
-        Datasets.getInstance().addChangeCallback(() =>{
+        Datasets.getInstance().addChangeCallback(() => {
             this.setState({
                 loader: Datasets.getInstance().getDataLoader()
             })

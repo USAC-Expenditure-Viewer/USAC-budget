@@ -21,7 +21,7 @@ export interface AmountBin {
     name: string
 }
 
-export type Category = 'fund'| 'division'| 'department'| 'gl'| 'event'
+export type Category = 'fund' | 'division' | 'department' | 'gl' | 'event'
 
 export interface WordEntry {
     text: string,
@@ -40,11 +40,11 @@ export interface DataLoaderProps {
     style?: Object,
 }
 
-export default class DataLoader{
+export default class DataLoader {
 
     private data: DataEntry[] = []
     private filters: Filter[] = []
-    private dataChangeCallbacks: (()=> void)[] = []
+    private dataChangeCallbacks: (() => void)[] = []
     private total_amount: number = 0
 
     constructor(dataset: string | null) {
@@ -57,7 +57,7 @@ export default class DataLoader{
     }
 
     private loadDataset(dataset: string | null) {
-        if (dataset == null) return
+        if (dataset === null) return
         Papa.parse(window.location.pathname + "/expense_summary_" + dataset + ".csv",
             {
                 download: true,
@@ -121,19 +121,19 @@ export default class DataLoader{
         this.dataChangeCallbacks = callbacks
     }
 
-    private generateQueryString(){
+    private generateQueryString() {
         const strings = this.filters.map((curr) => {
-                switch (curr.category) {
-                    case 'keyword':
-                        return 'keyword=' + curr.name
-                    case 'amount':
-                        return 'amount=' + curr.name.replace('~', '..')
-                    case 'date':
-                        return 'date=' + curr.name.replace('~', '..')
-                    default:
-                        return curr.category + '=' + btoa(curr.name)
-                }
-            })
+            switch (curr.category) {
+                case 'keyword':
+                    return 'keyword=' + curr.name
+                case 'amount':
+                    return 'amount=' + curr.name.replace('~', '..')
+                case 'date':
+                    return 'date=' + curr.name.replace('~', '..')
+                default:
+                    return curr.category + '=' + btoa(curr.name)
+            }
+        })
         return strings.join('&')
     }
 
@@ -158,7 +158,7 @@ export default class DataLoader{
         return this.filters[this.filters.length - 1].index
     }
 
-    getWordList() : WordEntry[] {
+    getWordList(): WordEntry[] {
         if (this.data.length === 0) {
             return [];
         }
@@ -170,7 +170,7 @@ export default class DataLoader{
             })
         })
 
-        const chosen_words = this.filters.filter(e => e.category == 'keyword').map(e => e.name)
+        const chosen_words = this.filters.filter(e => e.category === 'keyword').map(e => e.name)
 
         let words_list: WordEntry[] = []
         for (let [word, val] of words_set.entries()) {
@@ -191,7 +191,7 @@ export default class DataLoader{
         let category_set = new Map<string, number>()
         this.getRecords().forEach(row => {
             const cate_name = row[category]
-                category_set.set(cate_name, (category_set.get(cate_name) || 0) + row.amount);
+            category_set.set(cate_name, (category_set.get(cate_name) || 0) + row.amount);
         })
 
         let category_list: WordEntry[] = []
@@ -204,12 +204,12 @@ export default class DataLoader{
         return category_list
     }
 
-    getAmountBins(numBin: number): {data: AmountBin[], domain: [number, number]}{
+    getAmountBins(numBin: number): { data: AmountBin[], domain: [number, number] } {
         if (this.data.length === 0) {
             return {data: [], domain: [0, 1]}
         }
 
-        let records : DataEntry[];
+        let records: DataEntry[];
         let domain: [number, number] | null = null;
         if (this.filters.length !== 0 && this.filters[this.filters.length - 1].category === 'amount') {
             records = this.filters.length >= 2 ? this.filters[this.filters.length - 2].index : this.data
@@ -219,21 +219,23 @@ export default class DataLoader{
             records = this.getRecords()
         }
         let [allMin, allMax] = records.reduce(((previousValue, currentValue) =>
-                [Math.min(previousValue[0], currentValue.amount),
-                    Math.max(previousValue[1], currentValue.amount)]), [Number.MAX_VALUE, Number.MIN_VALUE])
+            [Math.min(previousValue[0], currentValue.amount),
+                Math.max(previousValue[1], currentValue.amount)]), [Number.MAX_VALUE, Number.MIN_VALUE])
 
         if (domain === null) domain = [allMin, allMax]
         allMax += 0.001
 
-        let bins : AmountBin[] = []
+        let bins: AmountBin[] = []
         let bin_size = (allMax - allMin) / numBin
-        for (let i = 0; i < numBin; i ++) {
-            bins.push({low: allMin + i * bin_size, high: allMin + (i + 1) * bin_size,
-                        value: 0, name: KMFormat(allMin + (i + 0.5) * bin_size)})
+        for (let i = 0; i < numBin; i++) {
+            bins.push({
+                low: allMin + i * bin_size, high: allMin + (i + 1) * bin_size,
+                value: 0, name: KMFormat(allMin + (i + 0.5) * bin_size)
+            })
         }
 
         records.forEach((e) => {
-            bins.forEach((b) =>{
+            bins.forEach((b) => {
                 if (b.low <= e.amount && e.amount < b.high)
                     b.value += e.amount
             })
@@ -242,12 +244,12 @@ export default class DataLoader{
         return {data: bins, domain: domain}
     }
 
-    getMonthBins(): {data: WordEntry[], domain: [string, string]}{
+    getMonthBins(): { data: WordEntry[], domain: [string, string] } {
         if (this.data.length === 0) {
             return {data: [{text: '0000-01', value: 0}], domain: ['0000-01', '0000-01']}
         }
 
-        let records : DataEntry[];
+        let records: DataEntry[];
         let domain: [string, string] | null = null;
         if (this.filters.length !== 0 && this.filters[this.filters.length - 1].category === 'date') {
             records = this.filters.length >= 2 ? this.filters[this.filters.length - 2].index : this.data
@@ -257,28 +259,28 @@ export default class DataLoader{
             records = this.getRecords()
         }
         let [allMin, allMax] = records.reduce((previousValue, currentValue) => {
-            const month_string = (currentValue.date.getFullYear()+"").padStart(4, '0') + '-' + ((currentValue.date.getMonth()+1)+"").padStart(2, "0")
-            return [previousValue[0].localeCompare(month_string) < 0? previousValue[0] : month_string,
-                previousValue[1].localeCompare(month_string) > 0? previousValue[1] : month_string]
+            const month_string = (currentValue.date.getFullYear() + "").padStart(4, '0') + '-' + ((currentValue.date.getMonth() + 1) + "").padStart(2, "0")
+            return [previousValue[0].localeCompare(month_string) < 0 ? previousValue[0] : month_string,
+                previousValue[1].localeCompare(month_string) > 0 ? previousValue[1] : month_string]
         }, ['9999-99', '0000-00'])
 
         if (domain === null) domain = [allMin, allMax]
         console.log(domain)
 
-        let bins : Map<string, number> = new Map()
+        let bins: Map<string, number> = new Map()
         records.forEach((e) => {
-            const month_string = (e.date.getFullYear()+"").padStart(4, "0") + '-' + ((e.date.getMonth()+1)+"").padStart(2, "0")
+            const month_string = (e.date.getFullYear() + "").padStart(4, "0") + '-' + ((e.date.getMonth() + 1) + "").padStart(2, "0")
             bins.set(month_string, (bins.get(month_string) || 0) + e.amount)
         })
 
         let data: WordEntry[] = [...bins.entries()].map((e) => ({text: e[0], value: e[1]}))
             .sort((a, b) => (a.text.localeCompare(b.text)))
 
-        while (data.length != 0 && data.length < 12) {
-            let month_num = data[data.length-1].text.split('-').map((s) => Number.parseInt(s))
-            if (month_num[1] != 12) month_num[1] ++
+        while (data.length !== 0 && data.length < 12) {
+            let month_num = data[data.length - 1].text.split('-').map((s) => Number.parseInt(s))
+            if (month_num[1] !== 12) month_num[1]++
             else month_num = [month_num[0] + 1, 1]
-            let next_month = (month_num[0]+"").padStart(4, "0") + '-' + (month_num[1]+"").padStart(2, "0")
+            let next_month = (month_num[0] + "").padStart(4, "0") + '-' + (month_num[1] + "").padStart(2, "0")
             data.push({text: next_month, value: 0})
         }
 
@@ -296,7 +298,7 @@ export default class DataLoader{
         return this.total_amount
     }
 
-    getFilters(){
+    getFilters() {
         return this.filters
     }
 
@@ -358,7 +360,7 @@ export default class DataLoader{
         if (this.data.length === 0) return
 
         if (this.filters.length > 0 && this.filters[this.filters.length - 1].category === 'amount') {
-                this.filters = this.filters.slice(0, -1)
+            this.filters = this.filters.slice(0, -1)
         }
         const last_index = this.filters.length > 0 ? this.filters[this.filters.length - 1].index : this.data
         const new_index = last_index
@@ -384,7 +386,7 @@ export default class DataLoader{
         const last_index = this.filters.length > 0 ? this.filters[this.filters.length - 1].index : this.data
         const new_index = last_index
             .filter((e) => {
-                const month_string = (e.date.getFullYear()+ "").padStart(4, '0') + '-' + ((e.date.getMonth()+1)+ "").padStart(2, '0')
+                const month_string = (e.date.getFullYear() + "").padStart(4, '0') + '-' + ((e.date.getMonth() + 1) + "").padStart(2, '0')
                 return low.localeCompare(month_string) <= 0 && month_string.localeCompare(high) <= 0
             })
 

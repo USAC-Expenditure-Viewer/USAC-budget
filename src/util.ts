@@ -1,4 +1,4 @@
-export function commaFormat(x: number) : string {
+export function commaFormat(x: number): string {
     if (Number.isNaN(x)) return ""
     let x_str: string = x.toFixed(2)
     let parts: string[] = x_str.split(".")
@@ -6,7 +6,7 @@ export function commaFormat(x: number) : string {
     return parts.join(".");
 }
 
-export function KMFormat(x: number) : string {
+export function KMFormat(x: number): string {
     if (Number.isNaN(x)) return ""
     let suffix = "";
     if (Math.abs(x) >= 1000000000) {
@@ -22,7 +22,7 @@ export function KMFormat(x: number) : string {
     return x.toPrecision(3) + suffix;
 }
 
-export function KMFToNum(str: string) : number {
+export function KMFToNum(str: string): number {
     let unit = 1
     if (str.includes('K')) {
         unit = 1000

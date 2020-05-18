@@ -1,19 +1,20 @@
 import React, {Component} from "react";
-import {WordEntry, DataLoaderProps} from "../models/DataLoader";
+import {DataLoaderProps, WordEntry} from "../models/DataLoader";
 import {
     Area,
     AreaChart,
-    Bar,
-    BarChart,
-    CartesianGrid, Cell, Label, ReferenceLine,
-    ResponsiveContainer, Tooltip,
+    CartesianGrid,
+    Label,
+    ReferenceLine,
+    ResponsiveContainer,
+    Tooltip,
     XAxis,
     YAxis
 } from 'recharts';
 import {KMFormat} from "../util";
 import {Mark, Slider} from "@material-ui/core";
 
-interface SliderProps extends DataLoaderProps{
+interface SliderProps extends DataLoaderProps {
     hidden?: boolean
 }
 
@@ -25,7 +26,7 @@ interface SliderState {
 
 const month_name = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
 
-export default class DateSlider extends Component<SliderProps, SliderState>{
+export default class DateSlider extends Component<SliderProps, SliderState> {
 
     constructor(props: SliderProps) {
         super(props);
@@ -44,7 +45,7 @@ export default class DateSlider extends Component<SliderProps, SliderState>{
         this.updateState()
     }
 
-    updateState(){
+    updateState() {
         const {data, domain} = this.props.dataloader.getMonthBins()
         const names = data.map(e => e.text)
         this.setState({
@@ -56,65 +57,71 @@ export default class DateSlider extends Component<SliderProps, SliderState>{
     render(): React.ReactNode {
         const data = this.state.data
         return (
-            <div style={{paddingLeft: '5%', paddingRight: `calc(5% + ${DateSlider.getYAxisWidth()}px)`,
-                height: '80vh', margin: "auto"}} hidden={this.props.hidden || false}>
+            <div style={{
+                paddingLeft: '5%', paddingRight: `calc(5% + ${DateSlider.getYAxisWidth()}px)`,
+                height: '80vh', margin: "auto"
+            }} hidden={this.props.hidden || false}>
                 {(this.props.hidden || false) ? null : (
-                <ResponsiveContainer height="90%" width="100%">
-                    <AreaChart data={data} barCategoryGap={0} margin={{bottom: 0, left: 0, right: 0}}>
-                        <defs>
-                            <linearGradient id="fillGrad" x1="0" y1="0" x2="0" y2="1">
-                                <stop offset="5%" stopColor={this.getColor()} stopOpacity={0.9}/>
-                                <stop offset="95%" stopColor={this.getColor()} stopOpacity={0.3}/>
-                            </linearGradient>
-                            <linearGradient id="fillGrad2" x1="0" y1="0" x2="1" y2="0">
-                                <stop offset={this.getLeftPoint()-0.01} stopColor={this.getColor()} stopOpacity={0.2}/>
-                                <stop offset={this.getLeftPoint()+0.01} stopColor={this.getColor()} stopOpacity={0.6}/>
-                                <stop offset={this.getRightPoint()-0.01} stopColor={this.getColor()} stopOpacity={0.6}/>
-                                <stop offset={this.getRightPoint()+0.01} stopColor={this.getColor()} stopOpacity={0.2}/>
-                            </linearGradient>
-                        </defs>
-                        <CartesianGrid strokeDasharray="3 3" />
-                        <XAxis dataKey="text" hide orientation="top" scale="band"/>
-                        <YAxis tickFormatter={(v) => '$'+KMFormat(v)} width={DateSlider.getYAxisWidth()}>
-                            <Label angle={270} position="insideLeft" style={{ textAnchor: 'middle' }}>
-                                Monthly Expense($)
-                            </Label>
-                        </YAxis>
-                        <Tooltip formatter={(value) => "$"+KMFormat(value as number)}
-                                 contentStyle={{display: 'none'}}/>
-                        <ReferenceLine y={0} label="" stroke="black" />
-                        <Area type="monotone" dataKey="value" stroke={this.getColor()} fillOpacity={1}
-                              fill="url(#fillGrad2)"/>
-                    </AreaChart>
-                </ResponsiveContainer>
+                    <ResponsiveContainer height="90%" width="100%">
+                        <AreaChart data={data} barCategoryGap={0} margin={{bottom: 0, left: 0, right: 0}}>
+                            <defs>
+                                <linearGradient id="fillGrad" x1="0" y1="0" x2="0" y2="1">
+                                    <stop offset="5%" stopColor={this.getColor()} stopOpacity={0.9}/>
+                                    <stop offset="95%" stopColor={this.getColor()} stopOpacity={0.3}/>
+                                </linearGradient>
+                                <linearGradient id="fillGrad2" x1="0" y1="0" x2="1" y2="0">
+                                    <stop offset={this.getLeftPoint() - 0.01} stopColor={this.getColor()}
+                                          stopOpacity={0.2}/>
+                                    <stop offset={this.getLeftPoint() + 0.01} stopColor={this.getColor()}
+                                          stopOpacity={0.6}/>
+                                    <stop offset={this.getRightPoint() - 0.01} stopColor={this.getColor()}
+                                          stopOpacity={0.6}/>
+                                    <stop offset={this.getRightPoint() + 0.01} stopColor={this.getColor()}
+                                          stopOpacity={0.2}/>
+                                </linearGradient>
+                            </defs>
+                            <CartesianGrid strokeDasharray="3 3"/>
+                            <XAxis dataKey="text" hide orientation="top" scale="band"/>
+                            <YAxis tickFormatter={(v) => '$' + KMFormat(v)} width={DateSlider.getYAxisWidth()}>
+                                <Label angle={270} position="insideLeft" style={{textAnchor: 'middle'}}>
+                                    Monthly Expense($)
+                                </Label>
+                            </YAxis>
+                            <Tooltip formatter={(value) => "$" + KMFormat(value as number)}
+                                     contentStyle={{display: 'none'}}/>
+                            <ReferenceLine y={0} label="" stroke="black"/>
+                            <Area type="monotone" dataKey="value" stroke={this.getColor()} fillOpacity={1}
+                                  fill="url(#fillGrad2)"/>
+                        </AreaChart>
+                    </ResponsiveContainer>
                 )}
                 <div style={{paddingLeft: DateSlider.getYAxisWidth()}}>
-                <Slider value={this.state.value}
-                        min={0} max={this.state.data.length}
-                        onChange={this.onRangeChange.bind(this)}
-                        onChangeCommitted={this.onRangeChangeCommitted.bind(this)}
-                        valueLabelDisplay="off"
-                        marks={this.getMarks(this.state.data)}
-                        step={null}
-                />
+                    <Slider value={this.state.value}
+                            min={0} max={this.state.data.length}
+                            onChange={this.onRangeChange.bind(this)}
+                            onChangeCommitted={this.onRangeChangeCommitted.bind(this)}
+                            valueLabelDisplay="off"
+                            marks={this.getMarks(this.state.data)}
+                            step={null}
+                    />
                 </div>
             </div>
         )
     }
 
-    static getViewportWidth(){
+    static getViewportWidth() {
         return Math.max(document.documentElement.clientWidth, window.innerWidth || 0)
     }
 
-    static getYAxisWidth(){
+    static getYAxisWidth() {
         return this.getViewportWidth() < 480 ? 0 : 72
     }
 
-    onRangeChange(event: any, newValues: number | number[]){
+    onRangeChange(event: any, newValues: number | number[]) {
         this.setState({value: newValues as [number, number]})
     }
 
-    onRangeChangeCommitted(event: any, newValues: number | number[]){
+    onRangeChangeCommitted(event: any, newValues: number | number[]) {
         const nVal = (newValues as [number, number]).map(e => Math.round(e - 0.5))
         const data = this.state.data
         this.props.dataloader.addMonthFilter(data[nVal[0]].text, data[nVal[1]].text)
@@ -129,11 +136,11 @@ export default class DateSlider extends Component<SliderProps, SliderState>{
         return this.state.value[0] <= index && index <= this.state.value[1] ? 1 : 0.3
     }
 
-    getLeftPoint(): number{
+    getLeftPoint(): number {
         return (this.state.value[0] - 1) / (this.state.data.length - 1)
     }
 
-    getRightPoint(): number{
+    getRightPoint(): number {
         return (this.state.value[1]) / (this.state.data.length - 1)
     }
 

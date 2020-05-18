@@ -2,9 +2,9 @@ export default class QueryBuilder {
 
     private static instance: QueryBuilder | null = null
     private queryString: string
-    private generators: Map<number, ()=>string> = new Map()
+    private generators: Map<number, () => string> = new Map()
 
-    static getInstance(){
+    static getInstance() {
         if (this.instance === null) this.instance = new QueryBuilder()
         return this.instance
     }
@@ -23,11 +23,11 @@ export default class QueryBuilder {
     }
 
     update() {
-        let strings : string[] = [...this.generators.values()].map((c) => c())
+        let strings: string[] = [...this.generators.values()].map((c) => c())
         const query = strings.join('&')
 
         let path = window.location.href
         if (path.includes('?')) path = path.substr(0, path.indexOf('?'))
-        window.history.pushState({path: path + '?' + query},'',path + '?' + query);
+        window.history.pushState({path: path + '?' + query}, '', path + '?' + query);
     }
 }
