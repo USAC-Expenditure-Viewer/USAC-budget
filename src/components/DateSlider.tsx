@@ -66,6 +66,12 @@ export default class DateSlider extends Component<SliderProps, SliderState>{
                                 <stop offset="5%" stopColor={this.getColor()} stopOpacity={0.9}/>
                                 <stop offset="95%" stopColor={this.getColor()} stopOpacity={0.3}/>
                             </linearGradient>
+                            <linearGradient id="fillGrad2" x1="0" y1="0" x2="1" y2="0">
+                                <stop offset={this.getLeftPoint()-0.01} stopColor={this.getColor()} stopOpacity={0.2}/>
+                                <stop offset={this.getLeftPoint()+0.01} stopColor={this.getColor()} stopOpacity={0.6}/>
+                                <stop offset={this.getRightPoint()-0.01} stopColor={this.getColor()} stopOpacity={0.6}/>
+                                <stop offset={this.getRightPoint()+0.01} stopColor={this.getColor()} stopOpacity={0.2}/>
+                            </linearGradient>
                         </defs>
                         <CartesianGrid strokeDasharray="3 3" />
                         <XAxis dataKey="text" hide orientation="top" scale="band"/>
@@ -74,14 +80,11 @@ export default class DateSlider extends Component<SliderProps, SliderState>{
                                 Monthly Expense($)
                             </Label>
                         </YAxis>
-                        <Tooltip></Tooltip>
+                        <Tooltip formatter={(value) => "$"+KMFormat(value as number)}
+                                 contentStyle={{display: 'none'}}/>
                         <ReferenceLine y={0} label="" stroke="black" />
-                        <Area type="monotone" dataKey="value" stroke={this.getColor()} fillOpacity={1} fill="url(#fillGrad)">
-                            {data.map((value, index) => (
-                                <Cell key={`cell-${index}`} fill={this.getColor()}
-                                      opacity={this.getOpacity(index)}/>
-                            ))}
-                        </Area>
+                        <Area type="monotone" dataKey="value" stroke={this.getColor()} fillOpacity={1}
+                              fill="url(#fillGrad2)"/>
                     </AreaChart>
                 </ResponsiveContainer>
                 )}
@@ -126,9 +129,17 @@ export default class DateSlider extends Component<SliderProps, SliderState>{
         return this.state.value[0] <= index && index <= this.state.value[1] ? 1 : 0.3
     }
 
-    getMarks(data: WordEntry[]): Mark[]{
+    getLeftPoint(): number{
+        return (this.state.value[0] - 1) / (this.state.data.length - 1)
+    }
+
+    getRightPoint(): number{
+        return (this.state.value[1]) / (this.state.data.length - 1)
+    }
+
+    getMarks(data: WordEntry[]): Mark[] {
         let marks = data.map((e, i) => ({value: i + 0.5, label: e.text}))
-        let years : Set<String> = new Set<String>();
+        let years: Set<String> = new Set<String>();
         marks.forEach((e, i) => {
             const d = e.label.split('-')
             if (years.has(d[0])) marks[i].label = month_name[Number.parseInt(d[1]) - 1]
