@@ -9,6 +9,7 @@ import CategoryPie from "./CategoryPie";
 import {Tab, Tabs} from "@material-ui/core";
 import AmountSlider from "./AmountSlider";
 import QueryBuilder from "../models/QueryBuilder";
+import DateSlider from "./DateSlider";
 
 interface DatasetState {
     value: number
@@ -68,6 +69,7 @@ export default class DatasetView extends React.Component<DatasetProps, DatasetSt
                     <Tab label="GL"/>
                     <Tab label="Event"/>
                     <Tab label="Amount"/>
+                    <Tab label="Date"/>
                 </Tabs>
                 <WordCloud hidden={this.state.value !== 0} dataloader={loader}/>
                 <CategoryPie hidden={this.state.value !== 1} category={"fund"} dataloader={loader}/>
@@ -76,7 +78,8 @@ export default class DatasetView extends React.Component<DatasetProps, DatasetSt
                 <CategoryPie hidden={this.state.value !== 4} category={"gl"} dataloader={loader}/>
                 <CategoryPie hidden={this.state.value !== 5} category={"event"} dataloader={loader}/>
                 <AmountSlider hidden={this.state.value !== 6} dataloader={loader} />
-                <RecordTable dataloader={loader}/>
+                <DateSlider hidden={this.state.value !== 7}dataloader={loader}  />
+                <RecordTable dataloader={loader} />
             </Paper>
         );
     }

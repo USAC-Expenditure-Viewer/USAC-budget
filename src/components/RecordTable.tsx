@@ -59,7 +59,7 @@ export default class RecordTable extends Component<DataLoaderProps>{
         return(
                 <MaterialTable options={this.options} columns={this.columns} icons={this.icons}
                                data={this.props.dataloader.getRecords()}
-                               title={"Transactions: total $"+commaFormat(this.props.dataloader.getTotal())}/>
+                               title={"Displayed total $"+commaFormat(this.props.dataloader.getTotal())}/>
         )
     }
 

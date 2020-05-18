@@ -23,7 +23,7 @@ export interface AmountBin {
 
 export type Category = 'fund'| 'division'| 'department'| 'gl'| 'event'
 
-interface WordEntry {
+export interface WordEntry {
     text: string,
     value: number
 }
@@ -105,8 +105,13 @@ export default class DataLoader{
                         break
                     case 'amount':
                         if (!v.includes('..')) return
-                        const values = v.split('..').map(e => KMFToNum(e))
-                        this.addAmountFilter(values[0], values[1])
+                        const valuesa = v.split('..').map(e => KMFToNum(e))
+                        this.addAmountFilter(valuesa[0], valuesa[1])
+                        break
+                    case 'date':
+                        if (!v.includes('..')) return
+                        const valuesd = v.split('..')
+                        this.addMonthFilter(valuesd[0], valuesd[1])
                         break
                 }
             })
@@ -123,6 +128,8 @@ export default class DataLoader{
                         return 'keyword=' + curr.name
                     case 'amount':
                         return 'amount=' + curr.name.replace('~', '..')
+                    case 'date':
+                        return 'date=' + curr.name.replace('~', '..')
                     default:
                         return curr.category + '=' + btoa(curr.name)
                 }
@@ -163,9 +170,12 @@ export default class DataLoader{
             })
         })
 
+        const chosen_words = this.filters.filter(e => e.category == 'keyword').map(e => e.name)
+
         let words_list: WordEntry[] = []
         for (let [word, val] of words_set.entries()) {
-            words_list.push({text: word, value: val})
+            if (!chosen_words.includes(word))
+                words_list.push({text: word, value: val})
         }
 
         words_list.sort((a, b) => a.value - b.value)
@@ -230,6 +240,49 @@ export default class DataLoader{
         })
 
         return {data: bins, domain: domain}
+    }
+
+    getMonthBins(): {data: WordEntry[], domain: [string, string]}{
+        if (this.data.length === 0) {
+            return {data: [{text: '0000-01', value: 0}], domain: ['0000-01', '0000-01']}
+        }
+
+        let records : DataEntry[];
+        let domain: [string, string] | null = null;
+        if (this.filters.length !== 0 && this.filters[this.filters.length - 1].category === 'date') {
+            records = this.filters.length >= 2 ? this.filters[this.filters.length - 2].index : this.data
+            const values = this.filters[this.filters.length - 1].name.split('~')
+            domain = values as [string, string]
+        } else {
+            records = this.getRecords()
+        }
+        let [allMin, allMax] = records.reduce((previousValue, currentValue) => {
+            const month_string = (currentValue.date.getFullYear()+"").padStart(4, '0') + '-' + ((currentValue.date.getMonth()+1)+"").padStart(2, "0")
+            return [previousValue[0].localeCompare(month_string) < 0? previousValue[0] : month_string,
+                previousValue[1].localeCompare(month_string) > 0? previousValue[1] : month_string]
+        }, ['9999-99', '0000-00'])
+
+        if (domain === null) domain = [allMin, allMax]
+        console.log(domain)
+
+        let bins : Map<string, number> = new Map()
+        records.forEach((e) => {
+            const month_string = (e.date.getFullYear()+"").padStart(4, "0") + '-' + ((e.date.getMonth()+1)+"").padStart(2, "0")
+            bins.set(month_string, (bins.get(month_string) || 0) + e.amount)
+        })
+
+        let data: WordEntry[] = [...bins.entries()].map((e) => ({text: e[0], value: e[1]}))
+            .sort((a, b) => (a.text.localeCompare(b.text)))
+
+        while (data.length != 0 && data.length < 12) {
+            let month_num = data[data.length-1].text.split('-').map((s) => Number.parseInt(s))
+            if (month_num[1] != 12) month_num[1] ++
+            else month_num = [month_num[0] + 1, 1]
+            let next_month = (month_num[0]+"").padStart(4, "0") + '-' + (month_num[1]+"").padStart(2, "0")
+            data.push({text: next_month, value: 0})
+        }
+
+        return {data: data, domain: domain}
     }
 
     getTotal(): number {
@@ -314,6 +367,30 @@ export default class DataLoader{
         this.filters.push({
             category: 'amount',
             name: KMFormat(low) + "~" + KMFormat(high),
+            index: new_index,
+            amount: new_index
+                .reduce((prev, curr) => prev + curr.amount, 0)
+        })
+
+        this.listChangeCallback()
+    }
+
+    addMonthFilter(low: string, high: string) {
+        if (this.data.length === 0) return
+
+        if (this.filters.length > 0 && this.filters[this.filters.length - 1].category === 'date') {
+            this.filters = this.filters.slice(0, -1)
+        }
+        const last_index = this.filters.length > 0 ? this.filters[this.filters.length - 1].index : this.data
+        const new_index = last_index
+            .filter((e) => {
+                const month_string = (e.date.getFullYear()+ "").padStart(4, '0') + '-' + ((e.date.getMonth()+1)+ "").padStart(2, '0')
+                return low.localeCompare(month_string) <= 0 && month_string.localeCompare(high) <= 0
+            })
+
+        this.filters.push({
+            category: 'date',
+            name: low + "~" + high,
             index: new_index,
             amount: new_index
                 .reduce((prev, curr) => prev + curr.amount, 0)
