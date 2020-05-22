@@ -16,7 +16,7 @@ import {
     IntegratedSorting,
     IntegratedSummary, SearchState,
     Sorting,
-    SortingState,
+    SortingState, SummaryItem,
     SummaryState
 } from "@devexpress/dx-react-grid";
 import {Paper, Typography} from "@material-ui/core";
@@ -28,12 +28,12 @@ import {Workbook} from "exceljs";
 
 const CurrencyFormatter = ({value}: {value: number}) => (
     <span style={{ color: 'darkblue' }}>
-        {value === undefined ? "" : value.toLocaleString('en-US', { style: 'currency', currency: 'USD' })}
+        {value.toLocaleString('en-US', { style: 'currency', currency: 'USD' })}
     </span>
 );
 
 const DateFormatter = ({ value }: {value: Date}) => (
-    <span>{value === undefined ? "" : value.toDateString()}</span>
+    <span>{value.toDateString()}</span>
 );
 
 interface RecordTableState {
@@ -47,9 +47,9 @@ interface RecordTableProps extends DataLoaderProps{
 
 export default class RecordTable extends Component<RecordTableProps, RecordTableState> {
 
-    private summaryItems = [
+    private summaryItems: SummaryItem[] = [
         { columnName: 'date', type: 'count' },
-        { columnName: 'amount', type: 'sum' },
+        { columnName: 'amount', type: 'sum'},
     ]
 
     private columns: Column[] = [
@@ -65,6 +65,7 @@ export default class RecordTable extends Component<RecordTableProps, RecordTable
     ]
 
     private exporter: React.RefObject<{exportGrid: (options?: object) => void}>
+
     constructor(props: DataLoaderProps) {
         super(props);
         this.exporter = React.createRef()
@@ -86,25 +87,35 @@ export default class RecordTable extends Component<RecordTableProps, RecordTable
         return (
             <Paper>
                 <Grid rows={rows} columns={this.columns}>
-                    <DataTypeProvider for={['amount']} formatterComponent={CurrencyFormatter} />
-                    <DataTypeProvider for={['date']} formatterComponent={DateFormatter} />
                     <SortingState
                         sorting={this.state.sortingState}
                         onSortingChange={this.setSorting.bind(this)}
                     />
+                    <GroupingState
+                        grouping={this.props.groupBy != undefined ? [{columnName: this.props.groupBy}]:[]}
+                    />
                     <SearchState/>
                     <SummaryState totalItems={this.summaryItems} />
-                    <IntegratedSorting />
+
+                    <IntegratedGrouping />
                     <IntegratedFiltering />
+                    <IntegratedSorting />
                     <IntegratedSummary />
+
+                    <DataTypeProvider for={['amount']} formatterComponent={CurrencyFormatter} />
+                    <DataTypeProvider for={['date']} formatterComponent={DateFormatter} />
+
                     <VirtualTable />
                     <TableHeaderRow showSortingControls/>
+                    <TableGroupRow />
                     <TableSummaryRow />
                     <TableColumnVisibility
                         hiddenColumnNames={this.state.hiddenColumns}
                         onHiddenColumnNamesChange={(hiddenColumns) => this.setState({hiddenColumns: hiddenColumns})}
                     />
+
                     <Toolbar />
+                    <GroupingPanel showSortingControls/>
                     <SearchPanel />
                     <ColumnChooser />
                     <ExportPanel startExport={(options) => this.exporter.current?.exportGrid(options)} />
