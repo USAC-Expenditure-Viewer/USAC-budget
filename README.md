@@ -72,8 +72,10 @@ TODO
 color code table
 tutorial on load
 
-Filters --- pie/wordclouds/slider
-Then table of all accounts
+grouping
+export
+column width
+searching
 
-Reflect URL query
+Reflect URL query - router?
 

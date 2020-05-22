@@ -80,8 +80,19 @@ export default class DatasetView extends React.Component<DatasetProps, DatasetSt
                 <CategoryPie hidden={this.state.value !== 5} category={"event"} dataloader={loader}/>
                 <AmountSlider hidden={this.state.value !== 6} dataloader={loader}/>
                 <DateSlider hidden={this.state.value !== 7} dataloader={loader}/>
-                <RecordTable dataloader={loader}/>
+                <RecordTable dataloader={loader} groupBy={this.getCategory(this.state.value)}/>
             </Paper>
         );
+    }
+
+    private getCategory(index: number) {
+        switch (index) {
+            case 1: return "fund"
+            case 2: return "division"
+            case 3: return "department"
+            case 4: return "gl"
+            case 5: return "event"
+            default: return undefined
+        }
     }
 }

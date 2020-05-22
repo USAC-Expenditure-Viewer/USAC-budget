@@ -8,13 +8,13 @@ import {
     TableHeaderRow,
     TableSummaryRow,
     ExportPanel,
-    TableColumnVisibility, ColumnChooser, Toolbar, TableColumnResizing, TableGroupRow
+    TableColumnVisibility, ColumnChooser, Toolbar, TableColumnResizing, TableGroupRow, GroupingPanel, SearchPanel
 } from "@devexpress/dx-react-grid-material-ui";
 import {DataLoaderProps} from "../models/DataLoader";
 import {
-    Column, GroupingState,
+    Column, GroupingState, IntegratedFiltering, IntegratedGrouping,
     IntegratedSorting,
-    IntegratedSummary,
+    IntegratedSummary, SearchState,
     Sorting,
     SortingState,
     SummaryState
@@ -24,8 +24,6 @@ import {DataTypeProvider} from "@devexpress/dx-react-grid";
 import {GridExporter} from "@devexpress/dx-react-grid-export";
 import saveAs from "file-saver";
 import Datasets from "../models/Datasets";
-
-//TODO virtualize
 
 const CurrencyFormatter = ({value}: {value: number}) => (
     <b style={{ color: 'darkblue' }}>
@@ -42,7 +40,11 @@ interface RecordTableState {
     hiddenColumns: string[]
 }
 
-export default class RecordTable extends Component<DataLoaderProps, RecordTableState> {
+interface RecordTableProps extends DataLoaderProps{
+    groupBy?: string | undefined;
+}
+
+export default class RecordTable extends Component<RecordTableProps, RecordTableState> {
 
     private summaryItems = [
         { columnName: 'date', type: 'count' },
@@ -88,17 +90,17 @@ export default class RecordTable extends Component<DataLoaderProps, RecordTableS
         return (
             <Paper>
                 <Grid rows={rows} columns={this.columns}>
+                    <DataTypeProvider for={['amount']} formatterComponent={CurrencyFormatter} />
+                    <DataTypeProvider for={['date']} formatterComponent={DateFormatter} />
                     <SortingState
                         sorting={this.state.sortingState}
                         onSortingChange={this.setSorting.bind(this)}
                     />
+                    <SearchState/>
+                    <SummaryState totalItems={this.summaryItems} />
                     <IntegratedSorting/>
-                    <SummaryState
-                        totalItems={this.summaryItems}
-                    />
+                    <IntegratedFiltering />
                     <IntegratedSummary />
-                    <DataTypeProvider for={['amount']} formatterComponent={CurrencyFormatter} />
-                    <DataTypeProvider for={['date']} formatterComponent={DateFormatter} />
                     <VirtualTable />
                     <TableHeaderRow showSortingControls/>
                     <TableSummaryRow />
@@ -107,6 +109,7 @@ export default class RecordTable extends Component<DataLoaderProps, RecordTableS
                         onHiddenColumnNamesChange={(hiddenColumns) => this.setState({hiddenColumns: hiddenColumns})}
                     />
                     <Toolbar />
+                    <SearchPanel />
                     <ColumnChooser />
                 </Grid>
             </Paper>
@@ -115,9 +118,9 @@ export default class RecordTable extends Component<DataLoaderProps, RecordTableS
 
     private setSorting(newSorting: Sorting[]) {
         const oldSorting = this.state.sortingState;
-        if (newSorting.length == 1 && oldSorting.length == 1 &&
-            newSorting[0].columnName == oldSorting[0].columnName &&
-            newSorting[0].direction == "asc" && oldSorting[0].direction == "desc") {
+        if (newSorting.length === 1 && oldSorting.length === 1 &&
+            newSorting[0].columnName === oldSorting[0].columnName &&
+            newSorting[0].direction === "asc" && oldSorting[0].direction === "desc") {
             this.setState({sortingState: [{ columnName: 'id', direction: 'asc' }]})
         }
         else this.setState({sortingState: newSorting})
