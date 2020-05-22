@@ -12,7 +12,7 @@ import {
 } from "@devexpress/dx-react-grid-material-ui";
 import {DataLoaderProps} from "../models/DataLoader";
 import {
-    Column, GroupingState, IntegratedFiltering, IntegratedGrouping,
+    Column, GroupingState, GroupSummaryItem, IntegratedFiltering, IntegratedGrouping,
     IntegratedSorting,
     IntegratedSummary, SearchState,
     Sorting,
@@ -64,6 +64,10 @@ export default class RecordTable extends Component<RecordTableProps, RecordTable
         {title: 'GL', name: 'gl'},
     ]
 
+    private groupSummaryItems: GroupSummaryItem[] = [
+        { columnName: 'amount', type: 'sum', showInGroupFooter: false},
+    ]
+
     private exporter: React.RefObject<{exportGrid: (options?: object) => void}>
 
     constructor(props: DataLoaderProps) {
@@ -95,7 +99,7 @@ export default class RecordTable extends Component<RecordTableProps, RecordTable
                         grouping={this.props.groupBy != undefined ? [{columnName: this.props.groupBy}]:[]}
                     />
                     <SearchState/>
-                    <SummaryState totalItems={this.summaryItems} />
+                    <SummaryState totalItems={this.summaryItems} groupItems={this.groupSummaryItems}/>
 
                     <IntegratedGrouping />
                     <IntegratedFiltering />
@@ -107,7 +111,7 @@ export default class RecordTable extends Component<RecordTableProps, RecordTable
 
                     <VirtualTable />
                     <TableHeaderRow showSortingControls/>
-                    <TableGroupRow />
+                    <TableGroupRow/>
                     <TableSummaryRow />
                     <TableColumnVisibility
                         hiddenColumnNames={this.state.hiddenColumns}
@@ -115,7 +119,7 @@ export default class RecordTable extends Component<RecordTableProps, RecordTable
                     />
 
                     <Toolbar />
-                    <GroupingPanel showSortingControls/>
+                    <GroupingPanel showSortingControls emptyMessageComponent={() => <span/>}/>
                     <SearchPanel />
                     <ColumnChooser />
                     <ExportPanel startExport={(options) => this.exporter.current?.exportGrid(options)} />
@@ -131,13 +135,19 @@ export default class RecordTable extends Component<RecordTableProps, RecordTable
     }
 
     private setSorting(newSorting: Sorting[]) {
+        let sorts: Sorting[] = [];
         const oldSorting = this.state.sortingState;
-        if (newSorting.length === 1 && oldSorting.length === 1 &&
-            newSorting[0].columnName === oldSorting[0].columnName &&
-            newSorting[0].direction === "asc" && oldSorting[0].direction === "desc") {
-            this.setState({sortingState: [{ columnName: 'id', direction: 'asc' }]})
-        }
-        else this.setState({sortingState: newSorting})
+        newSorting.forEach(value => {
+            let add = true
+            for (const oldValue of oldSorting) {
+                if (value.columnName === oldValue.columnName && value.direction === "asc" && oldValue.direction === "desc") {
+                    add = false
+                    break
+                }
+            }
+            if (add) sorts.push(value)
+        })
+        this.setState({sortingState: sorts})
     }
 
     private onSave(workbook: Workbook){
