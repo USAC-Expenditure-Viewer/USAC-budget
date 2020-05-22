@@ -10,7 +10,7 @@ import {
     ExportPanel,
     TableColumnVisibility, ColumnChooser, Toolbar, TableColumnResizing, TableGroupRow, GroupingPanel, SearchPanel
 } from "@devexpress/dx-react-grid-material-ui";
-import {DataLoaderProps} from "../models/DataLoader";
+import {Category, DataLoaderProps} from "../models/DataLoader";
 import {
     Column, GroupingState, GroupSummaryItem, IntegratedFiltering, IntegratedGrouping,
     IntegratedSorting,
@@ -42,7 +42,7 @@ interface RecordTableState {
 }
 
 interface RecordTableProps extends DataLoaderProps{
-    groupBy?: string | undefined;
+    groupBy?: Category | undefined;
 }
 
 export default class RecordTable extends Component<RecordTableProps, RecordTableState> {
@@ -70,6 +70,10 @@ export default class RecordTable extends Component<RecordTableProps, RecordTable
 
     private exporter: React.RefObject<{exportGrid: (options?: object) => void}>
 
+    private groupWeight: Map<string, number>
+
+    private integratedSortingColumnExtensions: IntegratedSorting.ColumnExtension[] = []
+
     constructor(props: DataLoaderProps) {
         super(props);
         this.exporter = React.createRef()
@@ -78,10 +82,25 @@ export default class RecordTable extends Component<RecordTableProps, RecordTable
             sortingState: [{ columnName: 'id', direction: 'asc' }],
             hiddenColumns: ['id', 'fund', 'division','event']
         }
+
+        this.groupWeight = new Map<string, number>()
+        if (this.props.groupBy != undefined) {
+            this.integratedSortingColumnExtensions = [
+                { columnName: this.props.groupBy,
+                    compare: (a, b) => (this.groupWeight?.get(a)||0) - (this.groupWeight?.get(b)||0)
+                },
+            ]
+        }
     }
 
     componentDidMount() {
         this.props.dataloader.addChangeCallback(() => {
+            if (this.props.groupBy != undefined) {
+                this.groupWeight.clear()
+                this.props.dataloader.getCategories(this.props.groupBy).forEach(entry => {
+                    this.groupWeight.set(entry.text, entry.value)
+                })
+            }
             this.forceUpdate()
         })
     }
@@ -103,7 +122,7 @@ export default class RecordTable extends Component<RecordTableProps, RecordTable
 
                     <IntegratedGrouping />
                     <IntegratedFiltering />
-                    <IntegratedSorting />
+                    <IntegratedSorting columnExtensions={this.integratedSortingColumnExtensions}/>
                     <IntegratedSummary />
 
                     <DataTypeProvider for={['amount']} formatterComponent={CurrencyFormatter} />
