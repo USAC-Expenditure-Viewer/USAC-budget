@@ -73,9 +73,7 @@ color code table
 tutorial on load
 
 grouping
-export
 column width
-searching
 
 Reflect URL query - router?
 

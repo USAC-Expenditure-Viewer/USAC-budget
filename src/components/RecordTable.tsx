@@ -22,17 +22,18 @@ import {
 import {Paper, Typography} from "@material-ui/core";
 import {DataTypeProvider} from "@devexpress/dx-react-grid";
 import {GridExporter} from "@devexpress/dx-react-grid-export";
-import saveAs from "file-saver";
+import {saveAs} from "file-saver";
 import Datasets from "../models/Datasets";
+import {Workbook} from "exceljs";
 
 const CurrencyFormatter = ({value}: {value: number}) => (
-    <b style={{ color: 'darkblue' }}>
-        {value.toLocaleString('en-US', { style: 'currency', currency: 'USD' })}
-    </b>
+    <span style={{ color: 'darkblue' }}>
+        {value === undefined ? "" : value.toLocaleString('en-US', { style: 'currency', currency: 'USD' })}
+    </span>
 );
 
 const DateFormatter = ({ value }: {value: Date}) => (
-    <span>{value.toDateString()}</span>
+    <span>{value === undefined ? "" : value.toDateString()}</span>
 );
 
 interface RecordTableState {
@@ -63,7 +64,7 @@ export default class RecordTable extends Component<RecordTableProps, RecordTable
         {title: 'GL', name: 'gl'},
     ]
 
-    private exporter: React.RefObject<{exportGrid: ()=> void}>
+    private exporter: React.RefObject<{exportGrid: (options?: object) => void}>
     constructor(props: DataLoaderProps) {
         super(props);
         this.exporter = React.createRef()
@@ -76,11 +77,6 @@ export default class RecordTable extends Component<RecordTableProps, RecordTable
 
     componentDidMount() {
         this.props.dataloader.addChangeCallback(() => {
-            this.setState({
-                sortingState: [{ columnName: 'id', direction: 'asc' }],
-                hiddenColumns: ['id', 'fund', 'division','event'],
-
-            })
             this.forceUpdate()
         })
     }
@@ -98,7 +94,7 @@ export default class RecordTable extends Component<RecordTableProps, RecordTable
                     />
                     <SearchState/>
                     <SummaryState totalItems={this.summaryItems} />
-                    <IntegratedSorting/>
+                    <IntegratedSorting />
                     <IntegratedFiltering />
                     <IntegratedSummary />
                     <VirtualTable />
@@ -111,7 +107,14 @@ export default class RecordTable extends Component<RecordTableProps, RecordTable
                     <Toolbar />
                     <SearchPanel />
                     <ColumnChooser />
+                    <ExportPanel startExport={(options) => this.exporter.current?.exportGrid(options)} />
                 </Grid>
+                <GridExporter
+                    ref={this.exporter}
+                    columns={this.columns}
+                    rows={rows}
+                    onSave={(workbook) => this.onSave(workbook)}
+                />
             </Paper>
         )
     }
@@ -124,6 +127,13 @@ export default class RecordTable extends Component<RecordTableProps, RecordTable
             this.setState({sortingState: [{ columnName: 'id', direction: 'asc' }]})
         }
         else this.setState({sortingState: newSorting})
+    }
+
+    private onSave(workbook: Workbook){
+        workbook.xlsx.writeBuffer().then((buffer) => {
+            saveAs(new Blob([buffer], { type: 'application/octet-stream' }),
+                `Transactions-${Datasets.getInstance().getCurrentDatasetName()}.xlsx` );
+        });
     }
 
 }
