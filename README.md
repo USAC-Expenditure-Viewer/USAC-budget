@@ -72,8 +72,5 @@ TODO
 color code table
 tutorial on load
 
-grouping
-column width
-
 Reflect URL query - router?
 

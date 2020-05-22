@@ -47,32 +47,46 @@ interface RecordTableProps extends DataLoaderProps{
 
 export default class RecordTable extends Component<RecordTableProps, RecordTableState> {
 
-    private summaryItems: SummaryItem[] = [
+    private readonly summaryItems: SummaryItem[] = [
         { columnName: 'date', type: 'count' },
         { columnName: 'amount', type: 'sum'},
     ]
 
-    private columns: Column[] = [
+    private readonly columns: Column[] = [
         {title: 'Row Number', name: 'id'},
         {title: 'Date', name: 'date'},
-        {title: 'Amount', name: 'amount'},
-        {title: 'Description', name: 'description'},
         {title: 'Department', name: 'department'},
         {title: 'Fund', name: 'fund'},
         {title: 'Division', name: 'division'},
         {title: 'Event', name: 'event'},
         {title: 'GL', name: 'gl'},
+        {title: 'Description', name: 'description'},
+        {title: 'Amount', name: 'amount'},
     ]
 
-    private groupSummaryItems: GroupSummaryItem[] = [
-        { columnName: 'amount', type: 'sum', showInGroupFooter: false},
+    private readonly tableColumnExtension: VirtualTable.ColumnExtension[] = [
+        {columnName: 'id',          wordWrapEnabled:true},
+        {columnName: 'date',        wordWrapEnabled:true},
+        {columnName: 'department',  wordWrapEnabled:true},
+        {columnName: 'fund',        wordWrapEnabled:true},
+        {columnName: 'division',    wordWrapEnabled:true},
+        {columnName: 'event',       wordWrapEnabled:true},
+        {columnName: 'gl',          wordWrapEnabled:true},
+        {columnName: 'description', wordWrapEnabled:true},
+        {columnName: 'amount',      wordWrapEnabled:true, align: 'center'},
     ]
 
-    private exporter: React.RefObject<{exportGrid: (options?: object) => void}>
+    private readonly groupSummaryItems: GroupSummaryItem[] = [
+        { columnName: 'amount', type: 'sum', showInGroupFooter: false, alignByColumn: true},
+        { columnName: 'amount', type: 'sum', showInGroupFooter: true},
+        { columnName: 'date', type: 'count', showInGroupFooter: true},
+    ]
+
+    private readonly exporter: React.RefObject<{exportGrid: (options?: object) => void}>
 
     private groupWeight: Map<string, number>
 
-    private integratedSortingColumnExtensions: IntegratedSorting.ColumnExtension[] = []
+    private readonly integratedSortingColumnExtensions: IntegratedSorting.ColumnExtension[] = []
 
     constructor(props: DataLoaderProps) {
         super(props);
@@ -128,7 +142,7 @@ export default class RecordTable extends Component<RecordTableProps, RecordTable
                     <DataTypeProvider for={['amount']} formatterComponent={CurrencyFormatter} />
                     <DataTypeProvider for={['date']} formatterComponent={DateFormatter} />
 
-                    <VirtualTable />
+                    <VirtualTable columnExtensions={this.tableColumnExtension}/>
                     <TableHeaderRow showSortingControls/>
                     <TableGroupRow/>
                     <TableSummaryRow />
