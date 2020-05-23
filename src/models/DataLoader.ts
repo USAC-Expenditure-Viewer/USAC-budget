@@ -179,7 +179,7 @@ export default class DataLoader {
                 words_list.push({text: word, value: val})
         }
 
-        words_list.sort((a, b) => a.value - b.value)
+        words_list.sort((a, b) => b.value - a.value)
 
         return words_list
     }
