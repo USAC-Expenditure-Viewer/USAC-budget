@@ -11,7 +11,8 @@ interface DataEntry {
     event: string,
     description: string,
     amount: number,
-    words: string[]
+    words: string[],
+    id?: number
 }
 
 export interface AmountBin {
@@ -265,7 +266,6 @@ export default class DataLoader {
         }, ['9999-99', '0000-00'])
 
         if (domain === null) domain = [allMin, allMax]
-        console.log(domain)
 
         let bins: Map<string, number> = new Map()
         records.forEach((e) => {
