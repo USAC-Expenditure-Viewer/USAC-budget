@@ -22,7 +22,6 @@
     "d3-zoom": "^1.8.3",
     "exceljs": "^3.9.0",
     "file-saver": "^2.0.2",
-    "material-table": "^1.57.2",
     "papaparse": "^5.2.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
