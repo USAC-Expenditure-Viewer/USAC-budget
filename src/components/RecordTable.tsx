@@ -39,10 +39,14 @@ const DateFormatter = ({ value }: {value: Date}) => (
     <span>{value.toDateString()}</span>
 );
 
-const DateGroupFormatter = ({ row }: TableGroupRowBase.ContentProps) => {
-    row.key.toString()
-    const [year, month] = row.key.toString().split('-');
-    return <span>{month_name[Number.parseInt(month) - 1]} {year}</span>
+const DateGroupFormatter = ({ column, row }: TableGroupRowBase.ContentProps) => {
+    if (column.name === 'date') {
+        row.key.toString()
+        const [year, month] = row.key.toString().split('-');
+        return <span>{month_name[Number.parseInt(month) - 1]} {year}</span>
+    } else return (
+        <span>{row.value}</span>
+    )
 };
 
 const dateToYearMonth = (value: Date) =>
@@ -94,7 +98,7 @@ export default class RecordTable extends Component<RecordTableProps, RecordTable
         { columnName: 'date', type: 'count', showInGroupFooter: true},
     ]
 
-    private readonly groupingColumnExtensions: IntegratedGrouping.ColumnExtension[] = [
+    private groupingColumnExtensions: IntegratedGrouping.ColumnExtension[] = [
         {columnName: 'date', criteria: (value) => {
             if (value instanceof Date) {
                 const key = dateToYearMonth(value)
@@ -107,7 +111,7 @@ export default class RecordTable extends Component<RecordTableProps, RecordTable
 
     private groupWeight: Map<string, number>
 
-    private readonly integratedSortingColumnExtensions: IntegratedSorting.ColumnExtension[] = []
+    private integratedSortingColumnExtensions: IntegratedSorting.ColumnExtension[] = []
 
     constructor(props: DataLoaderProps) {
         super(props);
@@ -119,7 +123,26 @@ export default class RecordTable extends Component<RecordTableProps, RecordTable
         }
 
         this.groupWeight = new Map<string, number>()
-        if (this.props.groupBy != undefined && this.props.groupBy !== 'date') {
+        if (this.props.groupBy !== undefined && this.props.groupBy !== 'date') {
+            this.buildGroupWeightTable()
+        }
+    }
+
+    componentDidMount() {
+        this.props.dataloader.addChangeCallback(() => {
+            this.buildGroupWeightTable();
+            this.forceUpdate()
+        })
+    }
+
+    private buildGroupWeightTable() {
+        if (this.props.groupBy !== undefined && this.props.groupBy !== 'date') {
+            this.groupWeight.clear()
+            this.groupWeight.set(`\nGroupBy${this.props.groupBy}`, 1)
+            this.props.dataloader.getCategories(this.props.groupBy).forEach(entry => {
+                this.groupWeight.set(entry.text, entry.value)
+            })
+
             this.integratedSortingColumnExtensions = [
                 { columnName: this.props.groupBy,
                     compare: (a, b) => (this.groupWeight?.get(a)||0) - (this.groupWeight?.get(b)||0)
@@ -128,20 +151,15 @@ export default class RecordTable extends Component<RecordTableProps, RecordTable
         }
     }
 
-    componentDidMount() {
-        this.props.dataloader.addChangeCallback(() => {
-            if (this.props.groupBy != undefined && this.props.groupBy !== 'date') {
-                this.groupWeight.clear()
-                this.props.dataloader.getCategories(this.props.groupBy).forEach(entry => {
-                    this.groupWeight.set(entry.text, entry.value)
-                })
-            }
-            this.forceUpdate()
-        })
-    }
-
     render() {
         const rows = this.props.dataloader.getRecords().map((e, i) => {e.id = i; return e})
+
+        if (this.props.groupBy !== undefined && this.props.groupBy !== 'date' &&
+            !this.groupWeight.has(`\nGroupBy${this.props.groupBy}`)) {
+            this.buildGroupWeightTable()
+            console.log("built table")
+        }
+
         return (
             <Paper>
                 <Grid rows={rows} columns={this.columns}>
@@ -150,7 +168,7 @@ export default class RecordTable extends Component<RecordTableProps, RecordTable
                         onSortingChange={this.setSorting.bind(this)}
                     />
                     <GroupingState
-                        grouping={this.props.groupBy != undefined ? [{columnName: this.props.groupBy}]:[]}
+                        grouping={this.props.groupBy !== undefined ? [{columnName: this.props.groupBy}]:[]}
                     />
                     <SearchState/>
                     <SummaryState totalItems={this.summaryItems} groupItems={this.groupSummaryItems}/>
@@ -165,10 +183,12 @@ export default class RecordTable extends Component<RecordTableProps, RecordTable
 
                     <VirtualTable columnExtensions={this.tableColumnExtension}/>
                     <TableHeaderRow showSortingControls/>
-                    <TableGroupRow
-                        contentComponent={DateGroupFormatter}
-                        columnExtensions={[{columnName: 'date', showWhenGrouped: true}]}
-                    />
+                    {this.props.groupBy === 'date' ?
+                        <TableGroupRow
+                            contentComponent={DateGroupFormatter}
+                            columnExtensions={[{columnName: 'date', showWhenGrouped: true}]}
+                        /> :
+                        <TableGroupRow />}
                     <TableSummaryRow />
                     <TableColumnVisibility
                         hiddenColumnNames={this.state.hiddenColumns}
