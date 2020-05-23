@@ -92,6 +92,7 @@ export default class DatasetView extends React.Component<DatasetProps, DatasetSt
             case 3: return "department"
             case 4: return "gl"
             case 5: return "event"
+            case 7: return "date"
             default: return undefined
         }
     }
