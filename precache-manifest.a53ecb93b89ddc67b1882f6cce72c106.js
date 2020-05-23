@@ -1,6 +1,6 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "58ba49173f7a8982ad5536f51f50c48b",
+    "revision": "25bdfc53e625e97eee4fe51ec4adc203",
     "url": "/USAC-budget/index.html"
   },
   {
@@ -8,7 +8,7 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/USAC-budget/static/css/2.61a570a4.chunk.css"
   },
   {
-    "revision": "6aedd432475fc74def82",
+    "revision": "6642ed8b07356b0244c4",
     "url": "/USAC-budget/static/css/main.cf2a77c1.chunk.css"
   },
   {
@@ -20,8 +20,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/USAC-budget/static/js/2.e63739c9.chunk.js.LICENSE.txt"
   },
   {
-    "revision": "6aedd432475fc74def82",
-    "url": "/USAC-budget/static/js/main.72baddbb.chunk.js"
+    "revision": "6642ed8b07356b0244c4",
+    "url": "/USAC-budget/static/js/main.d91c0e52.chunk.js"
   },
   {
     "revision": "fdfef08f0811d018f253",
