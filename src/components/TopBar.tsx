@@ -1,21 +1,23 @@
 import {
-    AppBar,
+    AppBar, Button,
     Drawer,
     IconButton,
     List,
     ListItem,
     ListItemIcon,
     ListItemText,
-    Toolbar,
+    Toolbar, Tooltip,
     Typography
 } from "@material-ui/core";
 import MenuIcon from "@material-ui/icons/Menu";
 import ListIcon from "@material-ui/icons/List"
 import React from "react";
 import Datasets from "../models/Datasets";
+import InstructionBackProp from "../Instructions";
 
 interface BarState {
     drawer: boolean
+    backdropOn: boolean
 }
 
 export default class TopBar extends React.Component<{}, BarState> {
@@ -24,7 +26,8 @@ export default class TopBar extends React.Component<{}, BarState> {
         super(props);
 
         this.state = {
-            drawer: false
+            drawer: false,
+            backdropOn: false
         }
     }
 
@@ -34,16 +37,21 @@ export default class TopBar extends React.Component<{}, BarState> {
 
     render() {
         const toggleDrawer = (state: boolean) => () => this.setState({drawer: state})
+        const toggleBackdrop = (state: boolean) => () => this.setState({backdropOn: state})
         const dataset_list: string[] = Datasets.getInstance().getDatasets() || []
         return (
             <AppBar position="sticky">
                 <Toolbar>
-                    <IconButton edge="start" color="inherit" aria-label="menu" onClick={toggleDrawer(true)}>
-                        <MenuIcon/>
-                    </IconButton>
+                    <Tooltip title="Select Dataset">
+                        <IconButton edge="start" color="inherit" aria-label="menu" onClick={toggleDrawer(true)}>
+                            <MenuIcon/>
+                        </IconButton>
+                    </Tooltip>
                     <Typography variant="h6" style={{flexGrow: 1}}>
                         {"ASUCLA budget spending " + Datasets.getInstance().getCurrentDatasetName()}
                     </Typography>
+                    <Button color="inherit" onClick={toggleBackdrop(true)}>Instructions</Button>
+                    <InstructionBackProp open={this.state.backdropOn} onClick={toggleBackdrop(false)}/>
                 </Toolbar>
                 <Drawer anchor={'left'} open={this.state.drawer} onClose={toggleDrawer(false)}>
                     <div onClick={toggleDrawer(false)}>
