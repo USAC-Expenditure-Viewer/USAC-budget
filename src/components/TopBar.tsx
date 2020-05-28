@@ -48,7 +48,7 @@ export default class TopBar extends React.Component<{}, BarState> {
                         </IconButton>
                     </Tooltip>
                     <Typography variant="h6" style={{flexGrow: 1}}>
-                        {"ASUCLA budget spending " + Datasets.getInstance().getCurrentDatasetName()}
+                        {"Undergraduate Student Association budget spending " + Datasets.getInstance().getCurrentDatasetName()}
                     </Typography>
                     <Button color="inherit" onClick={toggleBackdrop(true)}>Instructions</Button>
                     <InstructionBackProp open={this.state.backdropOn} onClick={toggleBackdrop(false)}/>
