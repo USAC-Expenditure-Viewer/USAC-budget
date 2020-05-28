@@ -10,7 +10,8 @@ import {
     Typography
 } from "@material-ui/core";
 import MenuIcon from "@material-ui/icons/Menu";
-import ListIcon from "@material-ui/icons/List"
+import ListIcon from "@material-ui/icons/List";
+import HelpOutlineIcon from '@material-ui/icons/HelpOutline';
 import React from "react";
 import Datasets from "../models/Datasets";
 import InstructionBackProp from "../Instructions";
@@ -50,7 +51,9 @@ export default class TopBar extends React.Component<{}, BarState> {
                     <Typography variant="h6" style={{flexGrow: 1}}>
                         {"Undergraduate Student Association budget spending " + Datasets.getInstance().getCurrentDatasetName()}
                     </Typography>
-                    <Button color="inherit" onClick={toggleBackdrop(true)}>Instructions</Button>
+                    <Button color="inherit" onClick={toggleBackdrop(true)}>
+                        <HelpOutlineIcon />
+                    </Button>
                     <InstructionBackProp open={this.state.backdropOn} onClick={toggleBackdrop(false)}/>
                 </Toolbar>
                 <Drawer anchor={'left'} open={this.state.drawer} onClose={toggleDrawer(false)}>
