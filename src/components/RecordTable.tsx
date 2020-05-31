@@ -59,6 +59,7 @@ interface RecordTableState {
 
 interface RecordTableProps extends DataLoaderProps{
     groupBy?: Category | "date" | undefined;
+    onChange: (value: string) => void;
 }
 
 export default class RecordTable extends Component<RecordTableProps, RecordTableState> {
@@ -113,12 +114,12 @@ export default class RecordTable extends Component<RecordTableProps, RecordTable
 
     private integratedSortingColumnExtensions: IntegratedSorting.ColumnExtension[] = []
 
-    constructor(props: DataLoaderProps) {
+    constructor(props: RecordTableProps) {
         super(props);
         this.exporter = React.createRef()
 
         this.state = {
-            sortingState: [{ columnName: 'id', direction: 'asc' }],
+            sortingState: this.getGroupSortingState(),
             hiddenColumns: ['id', 'fund', 'division','event']
         }
 
@@ -151,14 +152,16 @@ export default class RecordTable extends Component<RecordTableProps, RecordTable
         }
     }
 
-    render() {
-        const rows = this.props.dataloader.getRecords().map((e, i) => {e.id = i; return e})
-
+    componentDidUpdate(prevProps: Readonly<RecordTableProps>, prevState: Readonly<RecordTableState>, snapshot?: any): void {
         if (this.props.groupBy !== undefined && this.props.groupBy !== 'date' &&
             !this.groupWeight.has(`\nGroupBy${this.props.groupBy}`)) {
             this.buildGroupWeightTable()
-            console.log("built table")
+            this.setState({sortingState: this.getGroupSortingState()})
         }
+    }
+
+    render() {
+        const rows = this.props.dataloader.getRecords().map((e, i) => {e.id = i; return e})
 
         return (
             <Paper>
@@ -211,20 +214,15 @@ export default class RecordTable extends Component<RecordTableProps, RecordTable
         )
     }
 
-    private setSorting(newSorting: Sorting[]) {
-        let sorts: Sorting[] = [];
-        const oldSorting = this.state.sortingState;
-        newSorting.forEach(value => {
-            let add = true
-            for (const oldValue of oldSorting) {
-                if (value.columnName === oldValue.columnName && value.direction === "asc" && oldValue.direction === "desc") {
-                    add = false
-                    break
-                }
-            }
-            if (add) sorts.push(value)
-        })
-        this.setState({sortingState: sorts})
+    private setSorting(sorts: Sorting[]) {
+        if (sorts.filter(value => value.columnName !== this.props.groupBy).length === 0)
+            this.setState({sortingState: sorts.filter(value => value.columnName === this.props.groupBy)})
+        else {
+            let new_categories = sorts.filter(value => this.props.groupBy !== value.columnName)
+            console.log(new_categories[0].columnName)
+            this.props.onChange(new_categories[0].columnName)
+            this.setState({sortingState: this.getGroupSortingState(new_categories[0].columnName)})
+        }
     }
 
     private onSave(workbook: Workbook){
@@ -232,6 +230,14 @@ export default class RecordTable extends Component<RecordTableProps, RecordTable
             saveAs(new Blob([buffer], { type: 'application/octet-stream' }),
                 `Transactions-${Datasets.getInstance().getCurrentDatasetName()}.xlsx` );
         });
+    }
+
+    private getGroupSortingState(category: string | undefined = this.props.groupBy): Sorting[] {
+        if (category === 'date')
+            return [{columnName: 'date', direction: "asc"}]
+        else if (category === undefined || category === 'description')
+            return [{columnName: 'id', direction: 'asc'}]
+        else return [{columnName: category, direction: 'desc'}]
     }
 
 }

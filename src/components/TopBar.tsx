@@ -49,7 +49,7 @@ export default class TopBar extends React.Component<{}, BarState> {
                         </IconButton>
                     </Tooltip>
                     <Typography variant="h6" style={{flexGrow: 1}}>
-                        {"Undergraduate Student Association budget spending " + Datasets.getInstance().getCurrentDatasetName()}
+                        {"Undergraduate Student Association Budget Spending " + Datasets.getInstance().getCurrentDatasetName()}
                     </Typography>
                     <Button color="inherit" onClick={toggleBackdrop(true)}>
                         <HelpOutlineIcon />

@@ -1,4 +1,4 @@
-import {Link, Paper, Typography} from "@material-ui/core";
+import {Link, Paper} from "@material-ui/core";
 import ContactSupportIcon from "@material-ui/icons/ContactSupport";
 import EmailIcon from '@material-ui/icons/Email';
 import React from "react";

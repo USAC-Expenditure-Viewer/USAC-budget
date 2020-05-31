@@ -52,15 +52,18 @@ export default class DatasetView extends React.Component<DatasetProps, DatasetSt
 
     render() {
         const loader = this.props.loader
+
+        const onValueChange = (e: any, value: number) => {
+                this.value = value
+                this.setState({value: value})
+                QueryBuilder.getInstance().update()
+        }
+
         return (
             <Paper variant="outlined" style={{margin: '0 10%'}}>
                 <KeywordCrumb style={{margin: 10}} dataloader={loader}/>
                 <Tabs value={this.state.value}
-                      onChange={(e, value) => {
-                          this.value = value
-                          this.setState({value: value})
-                          QueryBuilder.getInstance().update()
-                      }}
+                      onChange={onValueChange}
                       variant="scrollable"
                       indicatorColor="primary" textColor="primary">
                     <Tab label="Keywords"/>
@@ -80,7 +83,7 @@ export default class DatasetView extends React.Component<DatasetProps, DatasetSt
                 <CategoryPie hidden={this.state.value !== 5} category={"event"} dataloader={loader}/>
                 <AmountSlider hidden={this.state.value !== 6} dataloader={loader}/>
                 <DateSlider hidden={this.state.value !== 7} dataloader={loader}/>
-                <RecordTable dataloader={loader} groupBy={this.getCategory(this.state.value)}/>
+                <RecordTable dataloader={loader} groupBy={this.getCategory(this.state.value)} onChange={(value) => onValueChange(this, this.columnToTabID(value))}/>
             </Paper>
         );
     }
@@ -94,6 +97,21 @@ export default class DatasetView extends React.Component<DatasetProps, DatasetSt
             case 5: return "event"
             case 7: return "date"
             default: return undefined
+        }
+    }
+
+    private columnToTabID(column: string) {
+        switch (column) {
+            case "description": return 0
+            case "fund": return 1
+            case "division": return 2
+            case "department": return 3
+            case "gl": return 4
+            case "event": return 5
+            case "amount": return 6
+            case "date": return 7
+            case "id": return 0
+            default: return 0
         }
     }
 }
