@@ -43,9 +43,9 @@ const DateGroupFormatter = ({ column, row }: TableGroupRowBase.ContentProps) => 
     if (column.name === 'date') {
         row.key.toString()
         const [year, month] = row.key.toString().split('-');
-        return <span>{month_name[Number.parseInt(month) - 1]} {year}</span>
+        return <span><strong>Date:</strong> {month_name[Number.parseInt(month) - 1]} {year}</span>
     } else return (
-        <span>{row.value}</span>
+        <span><strong>{column.title}:</strong> {row.value}</span>
     )
 };
 
@@ -54,6 +54,7 @@ const dateToYearMonth = (value: Date) =>
 
 interface RecordTableState {
     sortingState: Sorting[]
+    lastGroupBy: Category | "date" | undefined
 }
 
 interface RecordTableProps extends DataLoaderProps{
@@ -98,6 +99,18 @@ export default class RecordTable extends Component<RecordTableProps, RecordTable
         { columnName: 'date', type: 'count', showInGroupFooter: true},
     ]
 
+    private readonly groupExtension: TableGroupRow.ColumnExtension[] = [
+        {columnName: 'id',          showWhenGrouped:true},
+        {columnName: 'date',        showWhenGrouped:true},
+        {columnName: 'department',  showWhenGrouped:true},
+        {columnName: 'fund',        showWhenGrouped:true},
+        {columnName: 'division',    showWhenGrouped:true},
+        {columnName: 'event',       showWhenGrouped:true},
+        {columnName: 'gl',          showWhenGrouped:true},
+        {columnName: 'description', showWhenGrouped:true},
+        {columnName: 'amount',      showWhenGrouped:true},
+    ]
+
     private groupingColumnExtensions: IntegratedGrouping.ColumnExtension[] = [
         {columnName: 'date', criteria: (value) => {
             if (value instanceof Date) {
@@ -131,6 +144,7 @@ export default class RecordTable extends Component<RecordTableProps, RecordTable
 
         this.state = {
             sortingState: this.getGroupSortingState(),
+            lastGroupBy: this.props.groupBy,
         }
 
         this.groupWeight = new Map<string, number>()
@@ -149,7 +163,6 @@ export default class RecordTable extends Component<RecordTableProps, RecordTable
     private buildGroupWeightTable() {
         if (this.props.groupBy !== undefined && this.props.groupBy !== 'date') {
             this.groupWeight.clear()
-            this.groupWeight.set(`\nGroupBy${this.props.groupBy}`, 1)
             this.props.dataloader.getCategories(this.props.groupBy).forEach(entry => {
                 this.groupWeight.set(entry.text, entry.value)
             })
@@ -163,11 +176,15 @@ export default class RecordTable extends Component<RecordTableProps, RecordTable
     }
 
     componentDidUpdate(prevProps: Readonly<RecordTableProps>, prevState: Readonly<RecordTableState>, snapshot?: any): void {
-        if (this.props.groupBy !== undefined && this.props.groupBy !== 'date' &&
-            !this.groupWeight.has(`\nGroupBy${this.props.groupBy}`)) {
+        if (this.state.lastGroupBy != this.props.groupBy) {
             this.buildGroupWeightTable()
-            this.setState({sortingState: this.getGroupSortingState()})
+            console.log(this.props.groupBy);
+            this.setState({
+                sortingState: this.getGroupSortingState(),
+                lastGroupBy: this.props.groupBy
+            })
         }
+
     }
 
     render() {
@@ -202,12 +219,10 @@ export default class RecordTable extends Component<RecordTableProps, RecordTable
                         defaultHiddenColumnNames={['id']}
                     />
                     <TableHeaderRow showSortingControls/>
-                    {this.props.groupBy === 'date' ?
-                        <TableGroupRow
-                            contentComponent={DateGroupFormatter}
-                            columnExtensions={[{columnName: 'date', showWhenGrouped: true}]}
-                        /> :
-                        <TableGroupRow />}
+                    <TableGroupRow
+                        contentComponent={DateGroupFormatter}
+                        columnExtensions={this.groupExtension}
+                        />
                     <TableSummaryRow />
 
                     <Toolbar />
