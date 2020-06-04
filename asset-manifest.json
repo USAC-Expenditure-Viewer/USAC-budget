@@ -1,25 +1,25 @@
 {
   "files": {
     "main.css": "/USAC-budget/static/css/main.cf2a77c1.chunk.css",
-    "main.js": "/USAC-budget/static/js/main.92fb4c1a.chunk.js",
-    "main.js.map": "/USAC-budget/static/js/main.92fb4c1a.chunk.js.map",
+    "main.js": "/USAC-budget/static/js/main.f4a21342.chunk.js",
+    "main.js.map": "/USAC-budget/static/js/main.f4a21342.chunk.js.map",
     "runtime-main.js": "/USAC-budget/static/js/runtime-main.d708de8d.js",
     "runtime-main.js.map": "/USAC-budget/static/js/runtime-main.d708de8d.js.map",
     "static/css/2.61a570a4.chunk.css": "/USAC-budget/static/css/2.61a570a4.chunk.css",
-    "static/js/2.09411b93.chunk.js": "/USAC-budget/static/js/2.09411b93.chunk.js",
-    "static/js/2.09411b93.chunk.js.map": "/USAC-budget/static/js/2.09411b93.chunk.js.map",
+    "static/js/2.a731b48a.chunk.js": "/USAC-budget/static/js/2.a731b48a.chunk.js",
+    "static/js/2.a731b48a.chunk.js.map": "/USAC-budget/static/js/2.a731b48a.chunk.js.map",
     "index.html": "/USAC-budget/index.html",
-    "precache-manifest.ad3ba1115bb7dcfd75e09856ed4f53be.js": "/USAC-budget/precache-manifest.ad3ba1115bb7dcfd75e09856ed4f53be.js",
+    "precache-manifest.230cab369ebc93ff8ed0402017fc99b6.js": "/USAC-budget/precache-manifest.230cab369ebc93ff8ed0402017fc99b6.js",
     "service-worker.js": "/USAC-budget/service-worker.js",
     "static/css/2.61a570a4.chunk.css.map": "/USAC-budget/static/css/2.61a570a4.chunk.css.map",
     "static/css/main.cf2a77c1.chunk.css.map": "/USAC-budget/static/css/main.cf2a77c1.chunk.css.map",
-    "static/js/2.09411b93.chunk.js.LICENSE.txt": "/USAC-budget/static/js/2.09411b93.chunk.js.LICENSE.txt"
+    "static/js/2.a731b48a.chunk.js.LICENSE.txt": "/USAC-budget/static/js/2.a731b48a.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
     "static/js/runtime-main.d708de8d.js",
     "static/css/2.61a570a4.chunk.css",
-    "static/js/2.09411b93.chunk.js",
+    "static/js/2.a731b48a.chunk.js",
     "static/css/main.cf2a77c1.chunk.css",
-    "static/js/main.92fb4c1a.chunk.js"
+    "static/js/main.f4a21342.chunk.js"
   ]
 }
