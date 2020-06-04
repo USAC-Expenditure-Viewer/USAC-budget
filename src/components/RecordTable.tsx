@@ -8,7 +8,7 @@ import {
     TableHeaderRow,
     TableSummaryRow,
     ExportPanel,
-    TableColumnVisibility, ColumnChooser, Toolbar, TableGroupRow, GroupingPanel, SearchPanel
+    TableColumnVisibility, ColumnChooser, Toolbar, TableGroupRow, GroupingPanel, SearchPanel, TableColumnResizing
 } from "@devexpress/dx-react-grid-material-ui";
 import {Category, DataLoaderProps} from "../models/DataLoader";
 import {
@@ -17,7 +17,7 @@ import {
     IntegratedSummary, SearchState,
     Sorting,
     SortingState, SummaryItem,
-    SummaryState, TableGroupRow as TableGroupRowBase
+    SummaryState, TableColumnWidthInfo, TableGroupRow as TableGroupRowBase
 } from "@devexpress/dx-react-grid";
 import {Paper} from "@material-ui/core";
 import {DataTypeProvider} from "@devexpress/dx-react-grid";
@@ -54,7 +54,6 @@ const dateToYearMonth = (value: Date) =>
 
 interface RecordTableState {
     sortingState: Sorting[]
-    hiddenColumns: string[]
 }
 
 interface RecordTableProps extends DataLoaderProps{
@@ -70,7 +69,7 @@ export default class RecordTable extends Component<RecordTableProps, RecordTable
     ]
 
     private readonly columns: Column[] = [
-        {title: 'Row Number', name: 'id'},
+        {title: 'Row', name: 'id'},
         {title: 'Date', name: 'date'},
         {title: 'Department', name: 'department'},
         {title: 'Fund', name: 'fund'},
@@ -108,6 +107,18 @@ export default class RecordTable extends Component<RecordTableProps, RecordTable
         }}
     ]
 
+    private columnWidth: TableColumnWidthInfo[] = [
+        {columnName: 'id',          width: 70},
+        {columnName: 'date',        width: 120},
+        {columnName: 'department',  width: 150},
+        {columnName: 'fund',        width: 150},
+        {columnName: 'division',    width: 150},
+        {columnName: 'event',       width: 150},
+        {columnName: 'gl',          width: 150},
+        {columnName: 'description', width: 350},
+        {columnName: 'amount',      width: 150},
+    ]
+
     private readonly exporter: React.RefObject<{exportGrid: (options?: object) => void}>
 
     private groupWeight: Map<string, number>
@@ -120,7 +131,6 @@ export default class RecordTable extends Component<RecordTableProps, RecordTable
 
         this.state = {
             sortingState: this.getGroupSortingState(),
-            hiddenColumns: ['id', 'fund', 'division','event']
         }
 
         this.groupWeight = new Map<string, number>()
@@ -185,6 +195,12 @@ export default class RecordTable extends Component<RecordTableProps, RecordTable
                     <DataTypeProvider for={['date']} formatterComponent={DateFormatter} />
 
                     <VirtualTable columnExtensions={this.tableColumnExtension}/>
+                    <TableColumnResizing
+                        defaultColumnWidths={this.columnWidth}
+                    />
+                    <TableColumnVisibility
+                        defaultHiddenColumnNames={['id']}
+                    />
                     <TableHeaderRow showSortingControls/>
                     {this.props.groupBy === 'date' ?
                         <TableGroupRow
@@ -193,15 +209,10 @@ export default class RecordTable extends Component<RecordTableProps, RecordTable
                         /> :
                         <TableGroupRow />}
                     <TableSummaryRow />
-                    <TableColumnVisibility
-                        hiddenColumnNames={this.state.hiddenColumns}
-                        onHiddenColumnNamesChange={(hiddenColumns) => this.setState({hiddenColumns: hiddenColumns})}
-                    />
 
                     <Toolbar />
                     <GroupingPanel showSortingControls emptyMessageComponent={() => <span/>}/>
                     <SearchPanel />
-                    <ColumnChooser />
                     <ExportPanel startExport={(options) => this.exporter.current?.exportGrid(options)} />
                 </Grid>
                 <GridExporter

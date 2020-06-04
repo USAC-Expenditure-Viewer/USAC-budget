@@ -11,7 +11,7 @@ export default function Footer() {
                     <ContactSupportIcon/> Comments
                 </Link>
                 <Link color="textSecondary" href="mailto:vtran@asucla.ucla.edu" style={{padding: 20}}>
-                    <EmailIcon/> ASUCLA Accountant
+                    <EmailIcon/> Professional Accountant
                 </Link>
                 <Link color="textSecondary" href="mailto:usacouncil@asucla.ucla.edu" style={{padding: 20}}>
                     <EmailIcon/> USAC Council
