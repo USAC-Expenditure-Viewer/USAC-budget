@@ -8,6 +8,9 @@ interface CategoryPieProps extends DataLoaderProps {
     hidden?: boolean
 }
 
+/**
+ * Component for a single layer pie Chart.
+ */
 export default class CategoryPie extends Component<CategoryPieProps> {
 
     componentDidMount(): void {
@@ -57,7 +60,7 @@ export default class CategoryPie extends Component<CategoryPieProps> {
             case "gl":
                 return "#26a69a"
             case "event":
-                return "#ffee58"
+                return "#ef6c00"
         }
     }
 }

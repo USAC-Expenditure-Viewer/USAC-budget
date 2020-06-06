@@ -109,9 +109,9 @@ export default class RecordTable extends Component<RecordTableProps, RecordTable
     private columnWidth: TableColumnWidthInfo[] = [
         {columnName: 'id',          width: 70},
         {columnName: 'date',        width: 120},
-        {columnName: 'department',  width: 150},
         {columnName: 'fund',        width: 150},
         {columnName: 'division',    width: 150},
+        {columnName: 'department',  width: 150},
         {columnName: 'event',       width: 150},
         {columnName: 'gl',          width: 150},
         {columnName: 'description', width: 350},
