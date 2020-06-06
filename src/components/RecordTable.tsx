@@ -69,7 +69,7 @@ export default class RecordTable extends Component<RecordTableProps, RecordTable
 
     private readonly columns: Column[] = [
         {title: 'Row', name: 'id'},
-        {title: 'Date', name: 'date'},
+        {title: 'Posted Date', name: 'date'},
         {title: 'Department', name: 'department'},
         {title: 'Fund', name: 'fund'},
         {title: 'Division', name: 'division'},

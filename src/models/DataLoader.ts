@@ -189,8 +189,15 @@ export default class DataLoader {
             return [];
         }
 
+        let records: DataEntry[];
+        if (this.getLastFilter()?.category === category) {
+            records = this.filters.length >= 2 ? this.filters[this.filters.length - 2].index : this.data
+        } else {
+            records = this.getRecords()
+        }
+
         let category_set = new Map<string, number>()
-        this.getRecords().forEach(row => {
+        records.forEach(row => {
             const cate_name = row[category]
             category_set.set(cate_name, (category_set.get(cate_name) || 0) + row.amount);
         })
@@ -300,6 +307,12 @@ export default class DataLoader {
 
     getFilters() {
         return this.filters
+    }
+
+    getLastFilter() {
+        if (this.filters.length === 0)
+            return null;
+        else return this.filters[this.filters.length - 1]
     }
 
     sliceFilter(remaining_length: number) {
