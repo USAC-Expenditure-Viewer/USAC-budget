@@ -14,7 +14,7 @@ import ListIcon from "@material-ui/icons/List";
 import HelpOutlineIcon from '@material-ui/icons/HelpOutline';
 import React from "react";
 import Datasets from "../models/Datasets";
-import InstructionBackProp from "../Instructions";
+import InstructionBackProp from "./Instructions";
 
 interface BarState {
     drawer: boolean

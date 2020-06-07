@@ -64,6 +64,14 @@ interface RecordTableProps extends DataLoaderProps{
 
 export default class RecordTable extends Component<RecordTableProps, RecordTableState> {
 
+    private TableHeaderCell = (props: TableHeaderRow.CellProps) => (
+        <TableHeaderRow.Cell
+            {...props}
+            onClick={() => this.setSorting(props.column)}
+            style={this.props.groupBy === props.column.name ? {color: "#3f51b5"}: {}}
+        />
+    );
+
     private readonly summaryItems: SummaryItem[] = [
         { columnName: 'date', type: 'count' },
         { columnName: 'amount', type: 'sum'},
@@ -195,7 +203,6 @@ export default class RecordTable extends Component<RecordTableProps, RecordTable
                 <Grid rows={rows} columns={this.columns}>
                     <SortingState
                         sorting={this.state.sortingState}
-                        onSortingChange={this.setSorting.bind(this)}
                     />
                     <GroupingState
                         grouping={this.props.groupBy !== undefined ? [{columnName: this.props.groupBy}]:[]}
@@ -218,7 +225,7 @@ export default class RecordTable extends Component<RecordTableProps, RecordTable
                     <TableColumnVisibility
                         defaultHiddenColumnNames={['id']}
                     />
-                    <TableHeaderRow showSortingControls/>
+                    <TableHeaderRow cellComponent={this.TableHeaderCell}/>
                     <TableGroupRow
                         contentComponent={DateGroupFormatter}
                         columnExtensions={this.groupExtension}
@@ -240,14 +247,13 @@ export default class RecordTable extends Component<RecordTableProps, RecordTable
         )
     }
 
-    private setSorting(sorts: Sorting[]) {
-        if (sorts.filter(value => value.columnName !== this.props.groupBy).length === 0)
-            this.setState({sortingState: sorts.filter(value => value.columnName === this.props.groupBy)})
-        else {
-            let new_categories = sorts.filter(value => this.props.groupBy !== value.columnName)
-            console.log(new_categories[0].columnName)
-            this.props.onChange(new_categories[0].columnName)
-            this.setState({sortingState: this.getGroupSortingState(new_categories[0].columnName)})
+    private setSorting(sorts: Column) {
+        if (sorts.name === this.props.groupBy) {
+            this.setState({sortingState: this.state.sortingState.map(
+                value => ({...value, direction: value.direction === "asc" ? "desc" : "asc" }))})
+        } else {
+            this.props.onChange(sorts.name)
+            this.setState({sortingState: this.getGroupSortingState(sorts.name)})
         }
     }
 
