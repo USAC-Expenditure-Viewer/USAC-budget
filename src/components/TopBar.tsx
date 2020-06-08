@@ -44,7 +44,7 @@ export default class TopBar extends React.Component<{}, BarState> {
             <AppBar position="sticky">
                 <Toolbar>
                     <Tooltip title="Select Dataset">
-                        <IconButton edge="start" color="inherit" aria-label="menu" onClick={toggleDrawer(true)}>
+                        <IconButton edge="start" color="inherit" aria-label="dataset menu" onClick={toggleDrawer(true)}>
                             <MenuIcon/>
                         </IconButton>
                     </Tooltip>

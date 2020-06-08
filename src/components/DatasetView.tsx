@@ -60,7 +60,7 @@ export default class DatasetView extends React.Component<DatasetProps, DatasetSt
         }
 
         return (
-            <Paper variant="outlined" style={{margin: '0 10%'}}>
+            <div>
                 <KeywordCrumb style={{margin: 10}} dataloader={loader}/>
                 <Tabs value={this.state.value}
                       onChange={onValueChange}
@@ -75,6 +75,8 @@ export default class DatasetView extends React.Component<DatasetProps, DatasetSt
                     <Tab label="Amount"/>
                     <Tab label="Date"/>
                 </Tabs>
+
+                <Paper elevation={2} style={{padding: 10}}>
                 <WordCloud hidden={this.state.value !== 0} dataloader={loader}/>
                 <CategoryPie hidden={this.state.value !== 1} category={"fund"} dataloader={loader}/>
                 <CategoryPie hidden={this.state.value !== 2} category={"division"} dataloader={loader}/>
@@ -83,8 +85,12 @@ export default class DatasetView extends React.Component<DatasetProps, DatasetSt
                 <CategoryPie hidden={this.state.value !== 5} category={"event"} dataloader={loader}/>
                 <AmountSlider hidden={this.state.value !== 6} dataloader={loader}/>
                 <DateSlider hidden={this.state.value !== 7} dataloader={loader}/>
+                </Paper>
+                <br/>
+                <Paper elevation={2}>
                 <RecordTable dataloader={loader} groupBy={this.getCategory(this.state.value)} onChange={(value) => onValueChange(this, this.columnToTabID(value))}/>
-            </Paper>
+                </Paper>
+            </div>
         );
     }
 

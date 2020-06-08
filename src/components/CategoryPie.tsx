@@ -29,7 +29,6 @@ export default class CategoryPie extends Component<CategoryPieProps> {
                     <ResponsiveContainer height="100%" width="100%">
                         <PieChart>
                             <Pie data={data} dataKey="value" nameKey="text"
-                                 label={({percent, name}) => ((percent || 0) > 0.005 ? name : "")}
                                  labelLine={false}
                                  onClick={(e) => this.props.dataloader.addCategoryFilter(this.props.category, e.text)}>
                                 {
