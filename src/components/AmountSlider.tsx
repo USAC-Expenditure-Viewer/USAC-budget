@@ -76,6 +76,7 @@ export default class AmountSlider extends Component<SliderProps, SliderState> {
                             valueLabelDisplay="auto"
                             valueLabelFormat={(v) => '$' + KMFormat(v)}
                             marks={this.getMarks(domain)}
+                            aria-labelledby="Amount-slider"
                     />
                 </div>
             </div>
