@@ -17,8 +17,6 @@ export default function Footer() {
             <Link color="textSecondary" href="mailto:usacouncil@asucla.ucla.edu" style={{padding: 20}}>
                 <EmailIcon/> USAC Council
             </Link>
-            <br/><br/>
-            <ExplanationText category={'footer'} />
         </footer>
     )
 }

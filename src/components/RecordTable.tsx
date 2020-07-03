@@ -10,7 +10,7 @@ import {
     ExportPanel,
     TableColumnVisibility, Toolbar, TableGroupRow, GroupingPanel, SearchPanel, TableColumnResizing
 } from "@devexpress/dx-react-grid-material-ui";
-import {Category, DataLoaderProps} from "../models/DataLoader";
+import {Category, DataLoaderProps, isOfTypeCategory} from "../models/DataLoader";
 import {
     Column, GroupingState, GroupSummaryItem, IntegratedFiltering, IntegratedGrouping,
     IntegratedSorting,
@@ -54,11 +54,10 @@ const dateToYearMonth = (value: Date) =>
 
 interface RecordTableState {
     sortingState: Sorting[]
-    lastGroupBy: Category | "date" | undefined
+    groupBy: Category | "date" | undefined
 }
 
 interface RecordTableProps extends DataLoaderProps{
-    groupBy?: Category | "date" | undefined;
     hidden?: boolean | undefined;
 }
 
@@ -68,7 +67,7 @@ export default class RecordTable extends Component<RecordTableProps, RecordTable
         <TableHeaderRow.Cell
             {...props}
             onClick={() => this.setSorting(props.column)}
-            style={this.props.groupBy === props.column.name ? {color: "#3f51b5"}: {}}
+            style={this.state.groupBy === props.column.name ? {color: "#3f51b5"}: {}}
         />
     );
 
@@ -151,12 +150,12 @@ export default class RecordTable extends Component<RecordTableProps, RecordTable
         this.exporter = React.createRef()
 
         this.state = {
-            sortingState: this.getGroupSortingState(),
-            lastGroupBy: this.props.groupBy,
+            sortingState: [{columnName: 'id', direction: 'asc'}],
+            groupBy: undefined,
         }
 
         this.groupWeight = new Map<string, number>()
-        if (this.props.groupBy !== undefined && this.props.groupBy !== 'date') {
+        if (this.state.groupBy !== undefined && this.state.groupBy !== 'date') {
             this.buildGroupWeightTable()
         }
     }
@@ -169,14 +168,14 @@ export default class RecordTable extends Component<RecordTableProps, RecordTable
     }
 
     private buildGroupWeightTable() {
-        if (this.props.groupBy !== undefined && this.props.groupBy !== 'date') {
+        if (this.state.groupBy !== undefined && this.state.groupBy !== 'date') {
             this.groupWeight.clear()
-            this.props.dataloader.getCategories(this.props.groupBy).forEach(entry => {
+            this.props.dataloader.getCategories(this.state.groupBy).forEach(entry => {
                 this.groupWeight.set(entry.text, entry.value)
             })
 
             this.integratedSortingColumnExtensions = [
-                { columnName: this.props.groupBy,
+                { columnName: this.state.groupBy,
                     compare: (a, b) => (this.groupWeight?.get(a)||0) - (this.groupWeight?.get(b)||0)
                 },
             ]
@@ -184,12 +183,11 @@ export default class RecordTable extends Component<RecordTableProps, RecordTable
     }
 
     componentDidUpdate(prevProps: Readonly<RecordTableProps>, prevState: Readonly<RecordTableState>, snapshot?: any): void {
-        if (this.state.lastGroupBy != this.props.groupBy) {
+        if (this.state.groupBy != prevState.groupBy) {
             this.buildGroupWeightTable()
-            console.log(this.props.groupBy);
+            console.log(this.state.groupBy);
             this.setState({
                 sortingState: this.getGroupSortingState(),
-                lastGroupBy: this.props.groupBy
             })
         }
 
@@ -200,13 +198,13 @@ export default class RecordTable extends Component<RecordTableProps, RecordTable
         if (this.props.hidden === true)
             return <Paper/>
         else return (
-            <Paper>
+            <Paper elevation={0}>
                 <Grid rows={rows} columns={this.columns}>
                     <SortingState
                         sorting={this.state.sortingState}
                     />
                     <GroupingState
-                        grouping={this.props.groupBy !== undefined ? [{columnName: this.props.groupBy}]:[]}
+                        grouping={this.state.groupBy !== undefined ? [{columnName: this.state.groupBy}]:[]}
                     />
                     <SearchState/>
                     <SummaryState totalItems={this.summaryItems} groupItems={this.groupSummaryItems}/>
@@ -249,12 +247,14 @@ export default class RecordTable extends Component<RecordTableProps, RecordTable
     }
 
     private setSorting(sorts: Column) {
-        if (sorts.name === this.props.groupBy) {
+        if (sorts.name === this.state.groupBy) {
             this.setState({sortingState: this.state.sortingState.map(
                 value => ({...value, direction: value.direction === "asc" ? "desc" : "asc" }))})
         } else {
-            //this.props.onChange(sorts.name)
-            this.setState({sortingState: this.getGroupSortingState(sorts.name)})
+            this.setState({
+                groupBy: isOfTypeCategory(sorts.name) ? sorts.name: undefined,
+                sortingState: this.getGroupSortingState(sorts.name)
+            })
         }
     }
 
@@ -265,7 +265,7 @@ export default class RecordTable extends Component<RecordTableProps, RecordTable
         });
     }
 
-    private getGroupSortingState(category: string | undefined = this.props.groupBy): Sorting[] {
+    private getGroupSortingState(category: string | undefined = this.state.groupBy): Sorting[] {
         if (category === 'date')
             return [{columnName: 'date', direction: "asc"}]
         else if (category === undefined || category === 'description')
