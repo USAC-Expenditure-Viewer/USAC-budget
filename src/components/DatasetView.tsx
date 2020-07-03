@@ -6,10 +6,11 @@ import KeywordCrumb from "./KeywordCrumb";
 import Paper from "@material-ui/core/Paper";
 import DataLoader, {Category, isOfTypeCategory} from "../models/DataLoader";
 import CategoryPie from "./CategoryPie";
-import {Tab, Tabs, Typography} from "@material-ui/core";
+import {Tab, Tabs, withStyles} from "@material-ui/core";
 import AmountSlider from "./AmountSlider";
 import QueryBuilder from "../models/QueryBuilder";
 import DateSlider from "./DateSlider";
+import ExplanationText from "./ExplanationText";
 
 type TabTypes = Category | 'table' | 'keyword' | "amount" | "date";
 
@@ -24,6 +25,20 @@ interface DatasetProps {
 function isOfTypeTabs (input: string): input is TabTypes {
     return isOfTypeCategory(input) || ['table' , 'keyword' , "amount" , "date"].includes(input);
 }
+
+interface StyledTabProps{
+    label?: React.ReactNode;
+    value?: any;
+}
+
+const NarrowTab = withStyles((theme) => ({
+    root: {
+        minWidth: 72,
+        fontWeight: theme.typography.fontWeightRegular,
+    },
+    selected: {},
+}))((props:StyledTabProps) => <Tab {...props} />);
+
 
 export default class DatasetView extends React.Component<DatasetProps, DatasetState> {
     private value: TabTypes = 'table'
@@ -51,8 +66,7 @@ export default class DatasetView extends React.Component<DatasetProps, DatasetSt
         let s = res[0].substr(4)
         if (isOfTypeTabs(s)) {
             return s
-        }
-        else return 'table'
+        } else return 'table'
     }
 
     generateQuery(): string {
@@ -63,14 +77,6 @@ export default class DatasetView extends React.Component<DatasetProps, DatasetSt
         const loader = this.props.loader
         return (
             <div>
-                <Typography color="textSecondary">
-                    <br/>
-                    Below is the raw transaction table of the Undergraduate Student Association.
-                    Click on a column to visualize it.
-                    <br/>
-                    Low on time? Most important is the descriptions column. Everything else is administrative.
-                    <br/><br/>
-                </Typography>
                 <KeywordCrumb style={{margin: 10}} dataloader={loader}/>
                 <Tabs value={this.state.value}
                       onChange={(e, value) => {
@@ -78,37 +84,31 @@ export default class DatasetView extends React.Component<DatasetProps, DatasetSt
                           this.setState({value: value})
                           QueryBuilder.getInstance().update()
                       }}
-                      variant="scrollable"
+                      variant="fullWidth"
                       indicatorColor="primary" textColor="primary">
                     <Tab label="Table" value="table"/>
-                    <Tab label="Keywords" value="keyword"/>
-                    <Tab label="Fund" value="fund"/>
-                    <Tab label="Division" value="division"/>
-                    <Tab label="Department" value="department"/>
-                    <Tab label="GL" value="gl"/>
-                    <Tab label="Event" value="event"/>
-                    <Tab label="Amount" value="amount"/>
-                    <Tab label="Date" value="date"/>
+                    <NarrowTab label="Keywords" value="keyword"/>
+                    <NarrowTab label="Fund" value="fund"/>
+                    <NarrowTab label="Division" value="division"/>
+                    <NarrowTab label="Department" value="department"/>
+                    <NarrowTab label="GL" value="gl"/>
+                    <NarrowTab label="Event" value="event"/>
+                    <NarrowTab label="Amount" value="amount"/>
+                    <NarrowTab label="Date" value="date"/>
                 </Tabs>
-                <Typography color="textSecondary">
-                    <br/>
-                    Below is the raw transaction table of the Undergraduate Student Association.
-                    Click on a column to visualize it.
-                    <br/>
-                    Low on time? Most important is the descriptions column. Everything else is administrative.
-                    <br/><br/>
-                </Typography>
                 <Paper elevation={2} style={{padding: 10}}>
-                <WordCloud hidden={this.state.value !== 'keyword'} dataloader={loader}/>
-                <CategoryPie hidden={this.state.value !== "fund"} category={"fund"} dataloader={loader}/>
-                <CategoryPie hidden={this.state.value !== "division"} category={"division"} dataloader={loader}/>
-                <CategoryPie hidden={this.state.value !== "department"} category={"department"} dataloader={loader}/>
-                <CategoryPie hidden={this.state.value !== "gl"} category={"gl"} dataloader={loader}/>
-                <CategoryPie hidden={this.state.value !== "event"} category={"event"} dataloader={loader}/>
-                <AmountSlider hidden={this.state.value !== "amount"} dataloader={loader}/>
-                <DateSlider hidden={this.state.value !== 'date'} dataloader={loader}/>
-                <RecordTable hidden={this.state.value !== 'table'} dataloader={loader}/>
-            </Paper>
+                    <ExplanationText category={this.state.value}/>
+                    <WordCloud hidden={this.state.value !== 'keyword'} dataloader={loader}/>
+                    <CategoryPie hidden={this.state.value !== "fund"} category={"fund"} dataloader={loader}/>
+                    <CategoryPie hidden={this.state.value !== "division"} category={"division"} dataloader={loader}/>
+                    <CategoryPie hidden={this.state.value !== "department"} category={"department"}
+                                 dataloader={loader}/>
+                    <CategoryPie hidden={this.state.value !== "gl"} category={"gl"} dataloader={loader}/>
+                    <CategoryPie hidden={this.state.value !== "event"} category={"event"} dataloader={loader}/>
+                    <AmountSlider hidden={this.state.value !== "amount"} dataloader={loader}/>
+                    <DateSlider hidden={this.state.value !== 'date'} dataloader={loader}/>
+                    <RecordTable hidden={this.state.value !== 'table'} dataloader={loader}/>
+                </Paper>
             </div>
         );
     }

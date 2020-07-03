@@ -4,8 +4,7 @@ import TopBar from "./components/TopBar";
 import DatasetView from "./components/DatasetView"
 import DataLoader from "./models/DataLoader";
 import Datasets from "./models/Datasets";
-import {Container, CssBaseline, Link, Typography} from "@material-ui/core";
-import ContactSupportIcon from '@material-ui/icons/ContactSupport';
+import {Container} from "@material-ui/core";
 import Footer from "./components/Footer";
 
 interface AppState {

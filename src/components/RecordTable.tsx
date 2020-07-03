@@ -8,7 +8,7 @@ import {
     TableHeaderRow,
     TableSummaryRow,
     ExportPanel,
-    TableColumnVisibility, ColumnChooser, Toolbar, TableGroupRow, GroupingPanel, SearchPanel, TableColumnResizing
+    TableColumnVisibility, Toolbar, TableGroupRow, GroupingPanel, SearchPanel, TableColumnResizing
 } from "@devexpress/dx-react-grid-material-ui";
 import {Category, DataLoaderProps} from "../models/DataLoader";
 import {
@@ -116,7 +116,7 @@ export default class RecordTable extends Component<RecordTableProps, RecordTable
         {columnName: 'event',       width: 150},
         {columnName: 'gl',          width: 150},
         {columnName: 'description', width: 350},
-        {columnName: 'amount',      width: 250},
+        {columnName: 'amount',      width: 150},
     ]
 
     private readonly exporter: React.RefObject<{exportGrid: (options?: object) => void}>
