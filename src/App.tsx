@@ -35,8 +35,8 @@ class App extends React.Component<{}, AppState> {
                 <CssBaseline />
                 <TopBar />
                 <Container maxWidth="lg">
-                <DatasetView loader={this.state.loader} />
-                <Footer />
+                    <DatasetView loader={this.state.loader} />
+                    <Footer />
                 </Container>
             </div>
         );

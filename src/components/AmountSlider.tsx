@@ -32,7 +32,7 @@ export default class AmountSlider extends Component<SliderProps, SliderState> {
     }
 
     updateState() {
-        const {data, domain} = this.props.dataloader.getAmountBins(20)
+        const {data, domain} = this.props.dataloader.getAmountBins(40)
         this.setState({
             data: data,
             value: domain,

@@ -8,7 +8,7 @@ import {
     TableHeaderRow,
     TableSummaryRow,
     ExportPanel,
-    TableColumnVisibility, ColumnChooser, Toolbar, TableGroupRow, GroupingPanel, SearchPanel, TableColumnResizing
+    TableColumnVisibility, Toolbar, TableGroupRow, GroupingPanel, SearchPanel, TableColumnResizing
 } from "@devexpress/dx-react-grid-material-ui";
 import {Category, DataLoaderProps} from "../models/DataLoader";
 import {
@@ -30,7 +30,7 @@ const month_name = ['January', 'February', 'March', 'April', 'May', 'June',
     'July', 'August', 'September', 'October', 'November', 'December']
 
 const CurrencyFormatter = ({value}: {value: number}) => (
-    <span style={{ color: 'darkblue' }}>
+    <span style={{ color: 'blue'}}>
         {value.toLocaleString('en-US', { style: 'currency', currency: 'USD' })}
     </span>
 );
@@ -59,7 +59,7 @@ interface RecordTableState {
 
 interface RecordTableProps extends DataLoaderProps{
     groupBy?: Category | "date" | undefined;
-    onChange: (value: string) => void;
+    hidden?: boolean | undefined;
 }
 
 export default class RecordTable extends Component<RecordTableProps, RecordTableState> {
@@ -80,13 +80,13 @@ export default class RecordTable extends Component<RecordTableProps, RecordTable
     private readonly columns: Column[] = [
         {title: 'Row', name: 'id'},
         {title: 'Posted Date', name: 'date'},
-        {title: 'Department', name: 'department'},
-        {title: 'Fund', name: 'fund'},
-        {title: 'Division', name: 'division'},
-        {title: 'Event', name: 'event'},
-        {title: 'GL', name: 'gl'},
         {title: 'Description', name: 'description'},
         {title: 'Amount', name: 'amount'},
+        {title: 'Fund', name: 'fund'},
+        {title: 'Division', name: 'division'},
+        {title: 'Department', name: 'department'},
+        {title: 'Event', name: 'event'},
+        {title: 'GL', name: 'gl'},
     ]
 
     private readonly tableColumnExtension: VirtualTable.ColumnExtension[] = [
@@ -98,7 +98,7 @@ export default class RecordTable extends Component<RecordTableProps, RecordTable
         {columnName: 'event',       wordWrapEnabled:true},
         {columnName: 'gl',          wordWrapEnabled:true},
         {columnName: 'description', wordWrapEnabled:true},
-        {columnName: 'amount',      wordWrapEnabled:true, align: 'center'},
+        {columnName: 'amount',      wordWrapEnabled:true},
     ]
 
     private readonly groupSummaryItems: GroupSummaryItem[] = [
@@ -197,8 +197,9 @@ export default class RecordTable extends Component<RecordTableProps, RecordTable
 
     render() {
         const rows = this.props.dataloader.getRecords().map((e, i) => {e.id = i; return e})
-
-        return (
+        if (this.props.hidden === true)
+            return <Paper/>
+        else return (
             <Paper>
                 <Grid rows={rows} columns={this.columns}>
                     <SortingState
@@ -252,7 +253,7 @@ export default class RecordTable extends Component<RecordTableProps, RecordTable
             this.setState({sortingState: this.state.sortingState.map(
                 value => ({...value, direction: value.direction === "asc" ? "desc" : "asc" }))})
         } else {
-            this.props.onChange(sorts.name)
+            //this.props.onChange(sorts.name)
             this.setState({sortingState: this.getGroupSortingState(sorts.name)})
         }
     }
