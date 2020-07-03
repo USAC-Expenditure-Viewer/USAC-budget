@@ -30,7 +30,7 @@ const month_name = ['January', 'February', 'March', 'April', 'May', 'June',
     'July', 'August', 'September', 'October', 'November', 'December']
 
 const CurrencyFormatter = ({value}: {value: number}) => (
-    <span style={{ color: 'darkblue' }}>
+    <span style={{ color: 'blue'}}>
         {value.toLocaleString('en-US', { style: 'currency', currency: 'USD' })}
     </span>
 );
@@ -58,6 +58,7 @@ interface RecordTableState {
 
 interface RecordTableProps extends DataLoaderProps{
     groupBy?: Category | "date" | undefined;
+    hidden?: boolean | undefined;
 }
 
 export default class RecordTable extends Component<RecordTableProps, RecordTableState> {
@@ -70,13 +71,13 @@ export default class RecordTable extends Component<RecordTableProps, RecordTable
     private readonly columns: Column[] = [
         {title: 'Row', name: 'id'},
         {title: 'Posted Date', name: 'date'},
-        {title: 'Department', name: 'department'},
-        {title: 'Fund', name: 'fund'},
-        {title: 'Division', name: 'division'},
-        {title: 'Event', name: 'event'},
-        {title: 'GL', name: 'gl'},
         {title: 'Description', name: 'description'},
         {title: 'Amount', name: 'amount'},
+        {title: 'Fund', name: 'fund'},
+        {title: 'Division', name: 'division'},
+        {title: 'Department', name: 'department'},
+        {title: 'Event', name: 'event'},
+        {title: 'GL', name: 'gl'},
     ]
 
     private readonly tableColumnExtension: VirtualTable.ColumnExtension[] = [
@@ -88,7 +89,7 @@ export default class RecordTable extends Component<RecordTableProps, RecordTable
         {columnName: 'event',       wordWrapEnabled:true},
         {columnName: 'gl',          wordWrapEnabled:true},
         {columnName: 'description', wordWrapEnabled:true},
-        {columnName: 'amount',      wordWrapEnabled:true, align: 'center'},
+        {columnName: 'amount',      wordWrapEnabled:true},
     ]
 
     private readonly groupSummaryItems: GroupSummaryItem[] = [
@@ -115,7 +116,7 @@ export default class RecordTable extends Component<RecordTableProps, RecordTable
         {columnName: 'event',       width: 150},
         {columnName: 'gl',          width: 150},
         {columnName: 'description', width: 350},
-        {columnName: 'amount',      width: 150},
+        {columnName: 'amount',      width: 250},
     ]
 
     private readonly exporter: React.RefObject<{exportGrid: (options?: object) => void}>
@@ -170,56 +171,61 @@ export default class RecordTable extends Component<RecordTableProps, RecordTable
             console.log("built table")
         }
 
-        return (
-            <Paper>
-                <Grid rows={rows} columns={this.columns}>
-                    <SortingState
-                        sorting={this.state.sortingState}
-                        onSortingChange={this.setSorting.bind(this)}
-                    />
-                    <GroupingState
-                        grouping={this.props.groupBy !== undefined ? [{columnName: this.props.groupBy}]:[]}
-                    />
-                    <SearchState/>
-                    <SummaryState totalItems={this.summaryItems} groupItems={this.groupSummaryItems}/>
+        if (this.props.hidden === true)
+            return <Paper/>
+        else
+        {
+            return (
+                <Paper>
+                    <Grid rows={rows} columns={this.columns}>
+                        <SortingState
+                            sorting={this.state.sortingState}
+                            onSortingChange={this.setSorting.bind(this)}
+                        />
+                        <GroupingState
+                            grouping={this.props.groupBy !== undefined ? [{columnName: this.props.groupBy}] : []}
+                        />
+                        <SearchState/>
+                        <SummaryState totalItems={this.summaryItems} groupItems={this.groupSummaryItems}/>
 
-                    <IntegratedGrouping columnExtensions={this.groupingColumnExtensions}/>
-                    <IntegratedFiltering />
-                    <IntegratedSorting columnExtensions={this.integratedSortingColumnExtensions}/>
-                    <IntegratedSummary />
+                        <IntegratedGrouping columnExtensions={this.groupingColumnExtensions}/>
+                        <IntegratedFiltering/>
+                        <IntegratedSorting columnExtensions={this.integratedSortingColumnExtensions}/>
+                        <IntegratedSummary/>
 
-                    <DataTypeProvider for={['amount']} formatterComponent={CurrencyFormatter} />
-                    <DataTypeProvider for={['date']} formatterComponent={DateFormatter} />
+                        <DataTypeProvider for={['amount']} formatterComponent={CurrencyFormatter}/>
+                        <DataTypeProvider for={['date']} formatterComponent={DateFormatter}/>
 
-                    <VirtualTable columnExtensions={this.tableColumnExtension}/>
-                    <TableColumnResizing
-                        defaultColumnWidths={this.columnWidth}
+                        <VirtualTable columnExtensions={this.tableColumnExtension}/>
+                        <TableColumnResizing
+                            defaultColumnWidths={this.columnWidth}
+                        />
+                        <TableColumnVisibility
+                            defaultHiddenColumnNames={['id']}
+                        />
+                        <TableHeaderRow showSortingControls/>
+                        {this.props.groupBy === 'date' ?
+                            <TableGroupRow
+                                contentComponent={DateGroupFormatter}
+                                columnExtensions={[{columnName: 'date', showWhenGrouped: true}]}
+                            /> :
+                            <TableGroupRow/>}
+                        <TableSummaryRow/>
+
+                        <Toolbar/>
+                        <GroupingPanel showSortingControls emptyMessageComponent={() => <span/>}/>
+                        <SearchPanel/>
+                        <ExportPanel startExport={(options) => this.exporter.current?.exportGrid(options)}/>
+                    </Grid>
+                    <GridExporter
+                        ref={this.exporter}
+                        columns={this.columns}
+                        rows={rows}
+                        onSave={(workbook) => this.onSave(workbook)}
                     />
-                    <TableColumnVisibility
-                        defaultHiddenColumnNames={['id']}
-                    />
-                    <TableHeaderRow showSortingControls/>
-                    {this.props.groupBy === 'date' ?
-                        <TableGroupRow
-                            contentComponent={DateGroupFormatter}
-                            columnExtensions={[{columnName: 'date', showWhenGrouped: true}]}
-                        /> :
-                        <TableGroupRow />}
-                    <TableSummaryRow />
-
-                    <Toolbar />
-                    <GroupingPanel showSortingControls emptyMessageComponent={() => <span/>}/>
-                    <SearchPanel />
-                    <ExportPanel startExport={(options) => this.exporter.current?.exportGrid(options)} />
-                </Grid>
-                <GridExporter
-                    ref={this.exporter}
-                    columns={this.columns}
-                    rows={rows}
-                    onSave={(workbook) => this.onSave(workbook)}
-                />
-            </Paper>
-        )
+                </Paper>
+            )
+        }
     }
 
     private setSorting(newSorting: Sorting[]) {

@@ -4,24 +4,29 @@ import WordCloud from "./WordCloud";
 import RecordTable from "./RecordTable";
 import KeywordCrumb from "./KeywordCrumb";
 import Paper from "@material-ui/core/Paper";
-import DataLoader from "../models/DataLoader";
+import DataLoader, {Category, isOfTypeCategory} from "../models/DataLoader";
 import CategoryPie from "./CategoryPie";
-import {Tab, Tabs} from "@material-ui/core";
+import {Tab, Tabs, Typography} from "@material-ui/core";
 import AmountSlider from "./AmountSlider";
 import QueryBuilder from "../models/QueryBuilder";
 import DateSlider from "./DateSlider";
 
-interface DatasetState {
-    value: number
+type TabTypes = Category | 'table' | 'keyword' | "amount" | "date";
 
+interface DatasetState {
+    value: TabTypes;
 }
 
 interface DatasetProps {
     loader: DataLoader
 }
 
+function isOfTypeTabs (input: string): input is TabTypes {
+    return isOfTypeCategory(input) || ['table' , 'keyword' , "amount" , "date"].includes(input);
+}
+
 export default class DatasetView extends React.Component<DatasetProps, DatasetState> {
-    private value: number = 0
+    private value: TabTypes = 'table'
 
     constructor(props: DatasetProps) {
         super(props);
@@ -39,11 +44,15 @@ export default class DatasetView extends React.Component<DatasetProps, DatasetSt
         this.props.loader.addChangeCallback(() => this.forceUpdate())
     }
 
-    parseQuery(query: string): number {
+    parseQuery(query: string): TabTypes {
         if (query[0] === '?') query = query.slice(1)
         const res = query.split('&').filter((e) => e.startsWith('tab='))
-        if (res.length === 0) return 0
-        return Number.parseInt(res[0].substr(4))
+        if (res.length === 0) return 'table'
+        let s = res[0].substr(4)
+        if (isOfTypeTabs(s)) {
+            return s
+        }
+        else return 'table'
     }
 
     generateQuery(): string {
@@ -53,7 +62,15 @@ export default class DatasetView extends React.Component<DatasetProps, DatasetSt
     render() {
         const loader = this.props.loader
         return (
-            <Paper variant="outlined" style={{margin: '0 10%'}}>
+            <div>
+                <Typography color="textSecondary">
+                    <br/>
+                    Below is the raw transaction table of the Undergraduate Student Association.
+                    Click on a column to visualize it.
+                    <br/>
+                    Low on time? Most important is the descriptions column. Everything else is administrative.
+                    <br/><br/>
+                </Typography>
                 <KeywordCrumb style={{margin: 10}} dataloader={loader}/>
                 <Tabs value={this.state.value}
                       onChange={(e, value) => {
@@ -63,37 +80,36 @@ export default class DatasetView extends React.Component<DatasetProps, DatasetSt
                       }}
                       variant="scrollable"
                       indicatorColor="primary" textColor="primary">
-                    <Tab label="Keywords"/>
-                    <Tab label="Fund"/>
-                    <Tab label="Division"/>
-                    <Tab label="Department"/>
-                    <Tab label="GL"/>
-                    <Tab label="Event"/>
-                    <Tab label="Amount"/>
-                    <Tab label="Date"/>
+                    <Tab label="Table" value="table"/>
+                    <Tab label="Keywords" value="keyword"/>
+                    <Tab label="Fund" value="fund"/>
+                    <Tab label="Division" value="division"/>
+                    <Tab label="Department" value="department"/>
+                    <Tab label="GL" value="gl"/>
+                    <Tab label="Event" value="event"/>
+                    <Tab label="Amount" value="amount"/>
+                    <Tab label="Date" value="date"/>
                 </Tabs>
-                <WordCloud hidden={this.state.value !== 0} dataloader={loader}/>
-                <CategoryPie hidden={this.state.value !== 1} category={"fund"} dataloader={loader}/>
-                <CategoryPie hidden={this.state.value !== 2} category={"division"} dataloader={loader}/>
-                <CategoryPie hidden={this.state.value !== 3} category={"department"} dataloader={loader}/>
-                <CategoryPie hidden={this.state.value !== 4} category={"gl"} dataloader={loader}/>
-                <CategoryPie hidden={this.state.value !== 5} category={"event"} dataloader={loader}/>
-                <AmountSlider hidden={this.state.value !== 6} dataloader={loader}/>
-                <DateSlider hidden={this.state.value !== 7} dataloader={loader}/>
-                <RecordTable dataloader={loader} groupBy={this.getCategory(this.state.value)}/>
+                <Typography color="textSecondary">
+                    <br/>
+                    Below is the raw transaction table of the Undergraduate Student Association.
+                    Click on a column to visualize it.
+                    <br/>
+                    Low on time? Most important is the descriptions column. Everything else is administrative.
+                    <br/><br/>
+                </Typography>
+                <Paper elevation={2} style={{padding: 10}}>
+                <WordCloud hidden={this.state.value !== 'keyword'} dataloader={loader}/>
+                <CategoryPie hidden={this.state.value !== "fund"} category={"fund"} dataloader={loader}/>
+                <CategoryPie hidden={this.state.value !== "division"} category={"division"} dataloader={loader}/>
+                <CategoryPie hidden={this.state.value !== "department"} category={"department"} dataloader={loader}/>
+                <CategoryPie hidden={this.state.value !== "gl"} category={"gl"} dataloader={loader}/>
+                <CategoryPie hidden={this.state.value !== "event"} category={"event"} dataloader={loader}/>
+                <AmountSlider hidden={this.state.value !== "amount"} dataloader={loader}/>
+                <DateSlider hidden={this.state.value !== 'date'} dataloader={loader}/>
+                <RecordTable hidden={this.state.value !== 'table'} dataloader={loader}/>
             </Paper>
+            </div>
         );
-    }
-
-    private getCategory(index: number) {
-        switch (index) {
-            case 1: return "fund"
-            case 2: return "division"
-            case 3: return "department"
-            case 4: return "gl"
-            case 5: return "event"
-            case 7: return "date"
-            default: return undefined
-        }
     }
 }

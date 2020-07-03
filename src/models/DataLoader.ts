@@ -23,6 +23,9 @@ export interface AmountBin {
 }
 
 export type Category = 'fund' | 'division' | 'department' | 'gl' | 'event'
+export function isOfTypeCategory (input: string): input is Category {
+    return ['fund', 'division', 'department', 'gl', 'event'].includes(input);
+}
 
 export interface WordEntry {
     text: string,
