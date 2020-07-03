@@ -60,7 +60,7 @@ export default function ExplanationText(props: ExpProps) {
                 <Typography color="textSecondary">
                     Histogram of the individual transaction amounts.
                     <br/>
-                    Use the slider below to filter the dates of the transactions.
+                    Use the slider below to filter the amount of the transactions.
                 </Typography>
             )
         case 'table':

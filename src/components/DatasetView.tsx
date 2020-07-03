@@ -99,12 +99,8 @@ export default class DatasetView extends React.Component<DatasetProps, DatasetSt
                 <Paper elevation={2} style={{padding: 10}}>
                     <ExplanationText category={this.state.value}/>
                     <WordCloud hidden={this.state.value !== 'keyword'} dataloader={loader}/>
-                    <CategoryPie hidden={this.state.value !== "fund"} category={"fund"} dataloader={loader}/>
-                    <CategoryPie hidden={this.state.value !== "division"} category={"division"} dataloader={loader}/>
-                    <CategoryPie hidden={this.state.value !== "department"} category={"department"}
-                                 dataloader={loader}/>
-                    <CategoryPie hidden={this.state.value !== "gl"} category={"gl"} dataloader={loader}/>
-                    <CategoryPie hidden={this.state.value !== "event"} category={"event"} dataloader={loader}/>
+                    <CategoryPie hidden={!isOfTypeCategory(this.state.value)}
+                                 category={isOfTypeCategory(this.state.value) ? this.state.value : "fund"} dataloader={loader}/>
                     <AmountSlider hidden={this.state.value !== "amount"} dataloader={loader}/>
                     <DateSlider hidden={this.state.value !== 'date'} dataloader={loader}/>
                     <RecordTable hidden={this.state.value !== 'table'} dataloader={loader}/>
