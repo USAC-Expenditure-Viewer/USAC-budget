@@ -22,7 +22,7 @@ export default class WordCloud extends Component<WordCloudProps> {
 
     private options: OptionsProp = {
         fontFamily: 'impact',
-        fontSizes: [5, 60],
+        fontSizes: [12, 60],
         fontStyle: 'normal',
         fontWeight: 'normal',
         scale: 'log',

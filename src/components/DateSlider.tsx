@@ -103,6 +103,7 @@ export default class DateSlider extends Component<SliderProps, SliderState> {
                             valueLabelDisplay="off"
                             marks={this.getMarks(this.state.data)}
                             step={null}
+                            aria-labelledby="Date-slider"
                     />
                 </div>
             </div>

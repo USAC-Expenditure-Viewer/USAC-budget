@@ -10,7 +10,7 @@ import {
     ExportPanel,
     TableColumnVisibility, Toolbar, TableGroupRow, GroupingPanel, SearchPanel, TableColumnResizing
 } from "@devexpress/dx-react-grid-material-ui";
-import {Category, DataLoaderProps} from "../models/DataLoader";
+import {Category, DataLoaderProps, isOfTypeCategory} from "../models/DataLoader";
 import {
     Column, GroupingState, GroupSummaryItem, IntegratedFiltering, IntegratedGrouping,
     IntegratedSorting,
@@ -25,6 +25,7 @@ import {GridExporter} from "@devexpress/dx-react-grid-export";
 import {saveAs} from "file-saver";
 import Datasets from "../models/Datasets";
 import {Workbook} from "exceljs";
+import {isOfTypeTabs, TabTypes} from "./DatasetView";
 
 const month_name = ['January', 'February', 'March', 'April', 'May', 'June',
     'July', 'August', 'September', 'October', 'November', 'December']
@@ -43,9 +44,9 @@ const DateGroupFormatter = ({ column, row }: TableGroupRowBase.ContentProps) => 
     if (column.name === 'date') {
         row.key.toString()
         const [year, month] = row.key.toString().split('-');
-        return <span>{month_name[Number.parseInt(month) - 1]} {year}</span>
+        return <span><strong>Date:</strong> {month_name[Number.parseInt(month) - 1]} {year}</span>
     } else return (
-        <span>{row.value}</span>
+        <span><strong>{column.title}:</strong> {row.value}</span>
     )
 };
 
@@ -54,14 +55,23 @@ const dateToYearMonth = (value: Date) =>
 
 interface RecordTableState {
     sortingState: Sorting[]
+    groupBy: Category | "date" | undefined
 }
 
 interface RecordTableProps extends DataLoaderProps{
-    groupBy?: Category | "date" | undefined;
     hidden?: boolean | undefined;
+    onChange: (a: TabTypes) => void;
 }
 
 export default class RecordTable extends Component<RecordTableProps, RecordTableState> {
+
+    private TableHeaderCell = (props: TableHeaderRow.CellProps) => (
+        <TableHeaderRow.Cell
+            {...props}
+            onClick={() => this.setSorting(props.column)}
+            style={this.state.groupBy === props.column.name ? {color: "#3f51b5"}: {}}
+        />
+    );
 
     private readonly summaryItems: SummaryItem[] = [
         { columnName: 'date', type: 'count' },
@@ -98,6 +108,18 @@ export default class RecordTable extends Component<RecordTableProps, RecordTable
         { columnName: 'date', type: 'count', showInGroupFooter: true},
     ]
 
+    private readonly groupExtension: TableGroupRow.ColumnExtension[] = [
+        {columnName: 'id',          showWhenGrouped:true},
+        {columnName: 'date',        showWhenGrouped:true},
+        {columnName: 'department',  showWhenGrouped:true},
+        {columnName: 'fund',        showWhenGrouped:true},
+        {columnName: 'division',    showWhenGrouped:true},
+        {columnName: 'event',       showWhenGrouped:true},
+        {columnName: 'gl',          showWhenGrouped:true},
+        {columnName: 'description', showWhenGrouped:true},
+        {columnName: 'amount',      showWhenGrouped:true},
+    ]
+
     private groupingColumnExtensions: IntegratedGrouping.ColumnExtension[] = [
         {columnName: 'date', criteria: (value) => {
             if (value instanceof Date) {
@@ -125,16 +147,17 @@ export default class RecordTable extends Component<RecordTableProps, RecordTable
 
     private integratedSortingColumnExtensions: IntegratedSorting.ColumnExtension[] = []
 
-    constructor(props: DataLoaderProps) {
+    constructor(props: RecordTableProps) {
         super(props);
         this.exporter = React.createRef()
 
         this.state = {
-            sortingState: [{ columnName: 'id', direction: 'asc' }],
+            sortingState: [{columnName: 'id', direction: 'asc'}],
+            groupBy: undefined,
         }
 
         this.groupWeight = new Map<string, number>()
-        if (this.props.groupBy !== undefined && this.props.groupBy !== 'date') {
+        if (this.state.groupBy !== undefined && this.state.groupBy !== 'date') {
             this.buildGroupWeightTable()
         }
     }
@@ -147,101 +170,90 @@ export default class RecordTable extends Component<RecordTableProps, RecordTable
     }
 
     private buildGroupWeightTable() {
-        if (this.props.groupBy !== undefined && this.props.groupBy !== 'date') {
+        if (this.state.groupBy !== undefined && this.state.groupBy !== 'date') {
             this.groupWeight.clear()
-            this.groupWeight.set(`\nGroupBy${this.props.groupBy}`, 1)
-            this.props.dataloader.getCategories(this.props.groupBy).forEach(entry => {
+            this.props.dataloader.getCategories(this.state.groupBy).forEach(entry => {
                 this.groupWeight.set(entry.text, entry.value)
             })
 
             this.integratedSortingColumnExtensions = [
-                { columnName: this.props.groupBy,
+                { columnName: this.state.groupBy,
                     compare: (a, b) => (this.groupWeight?.get(a)||0) - (this.groupWeight?.get(b)||0)
                 },
             ]
         }
     }
 
-    render() {
-        const rows = this.props.dataloader.getRecords().map((e, i) => {e.id = i; return e})
-
-        if (this.props.groupBy !== undefined && this.props.groupBy !== 'date' &&
-            !this.groupWeight.has(`\nGroupBy${this.props.groupBy}`)) {
+    componentDidUpdate(prevProps: Readonly<RecordTableProps>, prevState: Readonly<RecordTableState>, snapshot?: any): void {
+        if (this.state.groupBy != prevState.groupBy) {
             this.buildGroupWeightTable()
-            console.log("built table")
+            console.log(this.state.groupBy);
+            this.setState({
+                sortingState: this.getGroupSortingState(),
+            })
         }
 
-        if (this.props.hidden === true)
-            return <Paper/>
-        else
-        {
-            return (
-                <Paper>
-                    <Grid rows={rows} columns={this.columns}>
-                        <SortingState
-                            sorting={this.state.sortingState}
-                            onSortingChange={this.setSorting.bind(this)}
-                        />
-                        <GroupingState
-                            grouping={this.props.groupBy !== undefined ? [{columnName: this.props.groupBy}] : []}
-                        />
-                        <SearchState/>
-                        <SummaryState totalItems={this.summaryItems} groupItems={this.groupSummaryItems}/>
-
-                        <IntegratedGrouping columnExtensions={this.groupingColumnExtensions}/>
-                        <IntegratedFiltering/>
-                        <IntegratedSorting columnExtensions={this.integratedSortingColumnExtensions}/>
-                        <IntegratedSummary/>
-
-                        <DataTypeProvider for={['amount']} formatterComponent={CurrencyFormatter}/>
-                        <DataTypeProvider for={['date']} formatterComponent={DateFormatter}/>
-
-                        <VirtualTable columnExtensions={this.tableColumnExtension}/>
-                        <TableColumnResizing
-                            defaultColumnWidths={this.columnWidth}
-                        />
-                        <TableColumnVisibility
-                            defaultHiddenColumnNames={['id']}
-                        />
-                        <TableHeaderRow showSortingControls/>
-                        {this.props.groupBy === 'date' ?
-                            <TableGroupRow
-                                contentComponent={DateGroupFormatter}
-                                columnExtensions={[{columnName: 'date', showWhenGrouped: true}]}
-                            /> :
-                            <TableGroupRow/>}
-                        <TableSummaryRow/>
-
-                        <Toolbar/>
-                        <GroupingPanel showSortingControls emptyMessageComponent={() => <span/>}/>
-                        <SearchPanel/>
-                        <ExportPanel startExport={(options) => this.exporter.current?.exportGrid(options)}/>
-                    </Grid>
-                    <GridExporter
-                        ref={this.exporter}
-                        columns={this.columns}
-                        rows={rows}
-                        onSave={(workbook) => this.onSave(workbook)}
-                    />
-                </Paper>
-            )
-        }
     }
 
-    private setSorting(newSorting: Sorting[]) {
-        let sorts: Sorting[] = [];
-        const oldSorting = this.state.sortingState;
-        newSorting.forEach(value => {
-            let add = true
-            for (const oldValue of oldSorting) {
-                if (value.columnName === oldValue.columnName && value.direction === "asc" && oldValue.direction === "desc") {
-                    add = false
-                    break
-                }
-            }
-            if (add) sorts.push(value)
-        })
-        this.setState({sortingState: sorts})
+    render() {
+        const rows = this.props.dataloader.getRecords().map((e, i) => {e.id = i; return e})
+        if (this.props.hidden === true)
+            return <Paper/>
+        else return (
+            <Paper elevation={0}>
+                <Grid rows={rows} columns={this.columns}>
+                    <SortingState
+                        sorting={this.state.sortingState}
+                    />
+                    <GroupingState
+                        grouping={this.state.groupBy !== undefined ? [{columnName: this.state.groupBy}]:[]}
+                    />
+                    <SearchState/>
+                    <SummaryState totalItems={this.summaryItems} groupItems={this.groupSummaryItems}/>
+
+                    <IntegratedGrouping columnExtensions={this.groupingColumnExtensions}/>
+                    <IntegratedFiltering />
+                    <IntegratedSorting columnExtensions={this.integratedSortingColumnExtensions}/>
+                    <IntegratedSummary />
+
+                    <DataTypeProvider for={['amount']} formatterComponent={CurrencyFormatter} />
+                    <DataTypeProvider for={['date']} formatterComponent={DateFormatter} />
+
+                    <VirtualTable columnExtensions={this.tableColumnExtension}/>
+                    <TableColumnResizing
+                        defaultColumnWidths={this.columnWidth}
+                    />
+                    <TableColumnVisibility
+                        defaultHiddenColumnNames={['id']}
+                    />
+                    <TableHeaderRow cellComponent={this.TableHeaderCell}/>
+                    <TableGroupRow
+                        contentComponent={DateGroupFormatter}
+                        columnExtensions={this.groupExtension}
+                        />
+                    <TableSummaryRow />
+
+                    <Toolbar />
+                    <GroupingPanel showSortingControls emptyMessageComponent={() => <span/>}/>
+                    <SearchPanel />
+                    <ExportPanel startExport={(options) => this.exporter.current?.exportGrid(options)} />
+                </Grid>
+                <GridExporter
+                    ref={this.exporter}
+                    columns={this.columns}
+                    rows={rows}
+                    onSave={(workbook) => this.onSave(workbook)}
+                />
+            </Paper>
+        )
+    }
+
+    private setSorting(sorts: Column) {
+        if (isOfTypeTabs(sorts.name)) {
+            this.props.onChange(sorts.name);
+        } else if (sorts.name == 'description') {
+            this.props.onChange('keyword');
+        }
     }
 
     private onSave(workbook: Workbook){
@@ -249,6 +261,14 @@ export default class RecordTable extends Component<RecordTableProps, RecordTable
             saveAs(new Blob([buffer], { type: 'application/octet-stream' }),
                 `Transactions-${Datasets.getInstance().getCurrentDatasetName()}.xlsx` );
         });
+    }
+
+    private getGroupSortingState(category: string | undefined = this.state.groupBy): Sorting[] {
+        if (category === 'date')
+            return [{columnName: 'date', direction: "asc"}]
+        else if (category === undefined || category === 'description')
+            return [{columnName: 'id', direction: 'asc'}]
+        else return [{columnName: category, direction: 'desc'}]
     }
 
 }

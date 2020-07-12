@@ -14,7 +14,7 @@ import ListIcon from "@material-ui/icons/List";
 import HelpOutlineIcon from '@material-ui/icons/HelpOutline';
 import React from "react";
 import Datasets from "../models/Datasets";
-import InstructionBackProp from "../Instructions";
+import InstructionBackProp from "./Instructions";
 
 interface BarState {
     drawer: boolean
@@ -44,7 +44,7 @@ export default class TopBar extends React.Component<{}, BarState> {
             <AppBar position="sticky">
                 <Toolbar>
                     <Tooltip title="Select Dataset">
-                        <IconButton edge="start" color="inherit" aria-label="menu" onClick={toggleDrawer(true)}>
+                        <IconButton edge="start" color="inherit" aria-label="dataset menu" onClick={toggleDrawer(true)}>
                             <MenuIcon/>
                         </IconButton>
                     </Tooltip>
