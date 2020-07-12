@@ -25,6 +25,7 @@ import {GridExporter} from "@devexpress/dx-react-grid-export";
 import {saveAs} from "file-saver";
 import Datasets from "../models/Datasets";
 import {Workbook} from "exceljs";
+import {isOfTypeTabs, TabTypes} from "./DatasetView";
 
 const month_name = ['January', 'February', 'March', 'April', 'May', 'June',
     'July', 'August', 'September', 'October', 'November', 'December']
@@ -59,6 +60,7 @@ interface RecordTableState {
 
 interface RecordTableProps extends DataLoaderProps{
     hidden?: boolean | undefined;
+    onChange: (a: TabTypes) => void;
 }
 
 export default class RecordTable extends Component<RecordTableProps, RecordTableState> {
@@ -247,14 +249,10 @@ export default class RecordTable extends Component<RecordTableProps, RecordTable
     }
 
     private setSorting(sorts: Column) {
-        if (sorts.name === this.state.groupBy) {
-            this.setState({sortingState: this.state.sortingState.map(
-                value => ({...value, direction: value.direction === "asc" ? "desc" : "asc" }))})
-        } else {
-            this.setState({
-                groupBy: isOfTypeCategory(sorts.name) ? sorts.name: undefined,
-                sortingState: this.getGroupSortingState(sorts.name)
-            })
+        if (isOfTypeTabs(sorts.name)) {
+            this.props.onChange(sorts.name);
+        } else if (sorts.name == 'description') {
+            this.props.onChange('keyword');
         }
     }
 

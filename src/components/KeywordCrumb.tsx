@@ -17,9 +17,10 @@ export default class KeywordCrumb extends Component<DataLoaderProps> {
         let list = this.props.dataloader.getFilters()
         return (
             <Breadcrumbs separator=">" style={this.props.style}>
+                <Typography>Fliters Applied:</Typography>
                 <Tooltip title="Remove All Filters">
                     <Link key={-1} color="textPrimary"
-                        onClick={() => this.props.dataloader.sliceFilter(0)}>Transactions [${KMFormat(this.props.dataloader.getDatasetTotal())}]</Link>
+                        onClick={() => this.props.dataloader.sliceFilter(0)}>Expenses [${KMFormat(this.props.dataloader.getDatasetTotal())}]</Link>
                 </Tooltip>
                 {list.slice(0, -1).map((filter, index) => (
                     <Tooltip title="View This Filter">
