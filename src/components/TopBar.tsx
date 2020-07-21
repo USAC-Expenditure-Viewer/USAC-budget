@@ -36,6 +36,21 @@ export default class TopBar extends React.Component<{}, BarState> {
         Datasets.getInstance().addChangeCallback(() => this.forceUpdate())
     }
 
+    copyURL() {
+        const selBox = document.createElement('textarea');
+        selBox.style.position = 'fixed';
+        selBox.style.left = '0';
+        selBox.style.top = '0';
+        selBox.style.opacity = '0';
+        selBox.value = window.location.href;
+        document.body.appendChild(selBox);
+        selBox.focus();
+        selBox.select();
+        document.execCommand('copy');
+        document.body.removeChild(selBox);
+        alert('Link copied to clipboard!');
+    }
+
     render() {
         const toggleDrawer = (state: boolean) => () => this.setState({drawer: state})
         const toggleBackdrop = (state: boolean) => () => this.setState({backdropOn: state})
@@ -51,6 +66,9 @@ export default class TopBar extends React.Component<{}, BarState> {
                     <Typography variant="h6" style={{flexGrow: 1}}>
                         {"UCLA USA Expense " + Datasets.getInstance().getCurrentDatasetName()}
                     </Typography>
+                    <Button color="inherit" onClick={this.copyURL} aria-label="share">
+                        Share
+                    </Button>
                     <Button color="inherit" onClick={toggleBackdrop(true)} aria-label="help">
                         <HelpOutlineIcon />
                     </Button>
