@@ -56,6 +56,8 @@ const dateToYearMonth = (value: Date) =>
 interface RecordTableState {
     sortingState: Sorting[]
     groupBy: Category | "date" | undefined
+    dataHeight: number
+    selectedColumn: string
 }
 
 interface RecordTableProps extends DataLoaderProps{
@@ -68,8 +70,8 @@ export default class RecordTable extends Component<RecordTableProps, RecordTable
     private TableHeaderCell = (props: TableHeaderRow.CellProps) => (
         <TableHeaderRow.Cell
             {...props}
-            onClick={() => this.setSorting(props.column)}
-            style={this.state.groupBy === props.column.name ? {color: "#3f51b5"}: {}}
+            onClick={() => this.setHighlight(props.column)}
+            style={props.column.name === this.state.selectedColumn ? {backgroundColor: "#376cf2"} : {backgroundColor: "#fcfcfc"}}
         />
     );
 
@@ -154,6 +156,8 @@ export default class RecordTable extends Component<RecordTableProps, RecordTable
         this.state = {
             sortingState: [{columnName: 'id', direction: 'asc'}],
             groupBy: undefined,
+            dataHeight: 500,
+            selectedColumn: ''
         }
 
         this.groupWeight = new Map<string, number>()
@@ -200,7 +204,11 @@ export default class RecordTable extends Component<RecordTableProps, RecordTable
         if (this.props.hidden === true)
             return <Paper/>
         else return (
-            <Paper elevation={0}>
+            <Paper 
+                elevation={0}
+                onMouseEnter={() => this.setState({dataHeight: 500})}
+                onMouseLeave={() => this.setState({dataHeight: 110})}
+            >
                 <Grid rows={rows} columns={this.columns}>
                     <SortingState
                         sorting={this.state.sortingState}
@@ -219,10 +227,10 @@ export default class RecordTable extends Component<RecordTableProps, RecordTable
                     <DataTypeProvider for={['amount']} formatterComponent={CurrencyFormatter} />
                     <DataTypeProvider for={['date']} formatterComponent={DateFormatter} />
 
-                    <VirtualTable columnExtensions={this.tableColumnExtension}/>
-                    <TableColumnResizing
+                    <VirtualTable columnExtensions={this.tableColumnExtension} height={this.state.dataHeight}/>
+                    {/* <TableColumnResizing
                         defaultColumnWidths={this.columnWidth}
-                    />
+                    /> */}
                     <TableColumnVisibility
                         defaultHiddenColumnNames={['id']}
                     />
@@ -246,6 +254,13 @@ export default class RecordTable extends Component<RecordTableProps, RecordTable
                 />
             </Paper>
         )
+    }
+
+    private setHighlight(sorts: Column) {
+        this.setState({
+            selectedColumn: sorts.name
+        })
+        this.setSorting(sorts)
     }
 
     private setSorting(sorts: Column) {

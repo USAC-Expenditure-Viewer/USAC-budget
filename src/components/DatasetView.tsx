@@ -84,7 +84,7 @@ export default class DatasetView extends React.Component<DatasetProps, DatasetSt
         return (
             <div>
                 <KeywordCrumb style={{margin: 10}} dataloader={loader}/>
-                <Tabs value={this.state.value}
+                {/* <Tabs value={this.state.value}
                       onChange={(e, value) => this.onTabChange(value)}
                       variant="fullWidth"
                       indicatorColor="primary" textColor="primary">
@@ -97,15 +97,15 @@ export default class DatasetView extends React.Component<DatasetProps, DatasetSt
                     <NarrowTab label="Event" value="event"/>
                     <NarrowTab label="Amount" value="amount"/>
                     <NarrowTab label="Date" value="date"/>
-                </Tabs>
+                </Tabs> */}
                 <Paper elevation={2} style={{padding: 10}}>
+                    <RecordTable hidden={false} dataloader={loader} onChange={this.onTabChange.bind(this)}/>
                     <ExplanationText category={this.state.value}/>
                     <WordCloud hidden={this.state.value !== 'keyword'} dataloader={loader}/>
                     <CategoryPie hidden={!isOfTypeCategory(this.state.value)}
                                  category={isOfTypeCategory(this.state.value) ? this.state.value : "fund"} dataloader={loader}/>
                     <AmountSlider hidden={this.state.value !== "amount"} dataloader={loader}/>
                     <DateSlider hidden={this.state.value !== 'date'} dataloader={loader}/>
-                    <RecordTable hidden={this.state.value !== 'table'} dataloader={loader} onChange={this.onTabChange.bind(this)}/>
                 </Paper>
             </div>
         );
