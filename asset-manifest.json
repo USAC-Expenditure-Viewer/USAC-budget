@@ -1,25 +1,26 @@
 {
   "files": {
-    "main.css": "/USAC-budget/static/css/main.cf2a77c1.chunk.css",
-    "main.js": "/USAC-budget/static/js/main.0f3cbcf5.chunk.js",
-    "main.js.map": "/USAC-budget/static/js/main.0f3cbcf5.chunk.js.map",
+    "main.css": "/USAC-budget/static/css/main.296075a4.chunk.css",
+    "main.js": "/USAC-budget/static/js/main.4be6c604.chunk.js",
+    "main.js.map": "/USAC-budget/static/js/main.4be6c604.chunk.js.map",
     "runtime-main.js": "/USAC-budget/static/js/runtime-main.d708de8d.js",
     "runtime-main.js.map": "/USAC-budget/static/js/runtime-main.d708de8d.js.map",
-    "static/css/2.61a570a4.chunk.css": "/USAC-budget/static/css/2.61a570a4.chunk.css",
-    "static/js/2.3d2e4bc5.chunk.js": "/USAC-budget/static/js/2.3d2e4bc5.chunk.js",
-    "static/js/2.3d2e4bc5.chunk.js.map": "/USAC-budget/static/js/2.3d2e4bc5.chunk.js.map",
+    "static/css/2.cb076601.chunk.css": "/USAC-budget/static/css/2.cb076601.chunk.css",
+    "static/js/2.caf9b68b.chunk.js": "/USAC-budget/static/js/2.caf9b68b.chunk.js",
+    "static/js/2.caf9b68b.chunk.js.map": "/USAC-budget/static/js/2.caf9b68b.chunk.js.map",
     "index.html": "/USAC-budget/index.html",
-    "precache-manifest.ea049c880bb6296b0ed93f492e2f0fbe.js": "/USAC-budget/precache-manifest.ea049c880bb6296b0ed93f492e2f0fbe.js",
+    "precache-manifest.35956a8459e1d9b6d479a27b79f16d18.js": "/USAC-budget/precache-manifest.35956a8459e1d9b6d479a27b79f16d18.js",
     "service-worker.js": "/USAC-budget/service-worker.js",
-    "static/css/2.61a570a4.chunk.css.map": "/USAC-budget/static/css/2.61a570a4.chunk.css.map",
-    "static/css/main.cf2a77c1.chunk.css.map": "/USAC-budget/static/css/main.cf2a77c1.chunk.css.map",
-    "static/js/2.3d2e4bc5.chunk.js.LICENSE.txt": "/USAC-budget/static/js/2.3d2e4bc5.chunk.js.LICENSE.txt"
+    "static/css/2.cb076601.chunk.css.map": "/USAC-budget/static/css/2.cb076601.chunk.css.map",
+    "static/css/main.296075a4.chunk.css.map": "/USAC-budget/static/css/main.296075a4.chunk.css.map",
+    "static/js/2.caf9b68b.chunk.js.LICENSE.txt": "/USAC-budget/static/js/2.caf9b68b.chunk.js.LICENSE.txt",
+    "static/media/index.css": "/USAC-budget/static/media/roboto-latin-900-normal.bb1e4dc6.woff"
   },
   "entrypoints": [
     "static/js/runtime-main.d708de8d.js",
-    "static/css/2.61a570a4.chunk.css",
-    "static/js/2.3d2e4bc5.chunk.js",
-    "static/css/main.cf2a77c1.chunk.css",
-    "static/js/main.0f3cbcf5.chunk.js"
+    "static/css/2.cb076601.chunk.css",
+    "static/js/2.caf9b68b.chunk.js",
+    "static/css/main.296075a4.chunk.css",
+    "static/js/main.4be6c604.chunk.js"
   ]
 }
