@@ -66,7 +66,7 @@ export default function ExplanationText(props: ExpProps) {
         case 'table':
             return (
                 <Typography color="textSecondary">
-                    Below is the raw transaction table of the Undergraduate Student Association.
+                    Above is the raw transaction table of the Undergraduate Student Association.
                     Click on a column to visualize it.
                     <br/>
                     Low on time? Most important is the descriptions column. Everything else is administrative.
