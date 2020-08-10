@@ -50,14 +50,20 @@ export default class DataLoader {
     private filters: Filter[] = []
     private dataChangeCallbacks: (() => void)[] = []
     private total_amount: number = 0
+    private dataset : string | null = null
 
     constructor(dataset: string | null) {
+        this.dataset = dataset
         this.setDataset(dataset)
     }
 
     setDataset(dataset: string | null) {
         this.sliceFilter(0)
         this.loadDataset(dataset)
+    }
+
+    getDataset(): string | null {
+        return this.dataset
     }
 
     private loadDataset(dataset: string | null) {
@@ -347,7 +353,69 @@ export default class DataLoader {
         this.listChangeCallback()
     }
 
+    // addCategoryFilter(category: Category, value: string) {
+    //     if (this.data.length === 0) return
+    //     if (this.filters.reduce((prev, curr) => prev || (curr.category === category && curr.name === value), false))
+    //         return
+
+    //     if (this.getLastFilter()?.category === category) {
+    //         this.filters = this.filters.slice(0, -1)
+    //     }
+
+    //     let new_index: DataEntry[]
+    //     if (this.filters.length !== 0) {
+    //         const last_index = this.filters[this.filters.length - 1].index
+    //         // @ts-ignore
+    //         new_index = last_index.filter((e) => (e[category] === value))
+    //     } else {
+    //         // @ts-ignore
+    //         new_index = this.data.filter(e => (e[category] === value))
+    //     }
+
+    //     this.filters.push({
+    //         category: category,
+    //         name: value,
+    //         index: new_index,
+    //         amount: new_index.reduce((prev, curr) => prev + curr.amount, 0)
+    //     })
+
+    //     this.listChangeCallback()
+    // }
+
+
+    
     addCategoryFilter(category: Category, value: string) {
+        if (this.data.length === 0) return
+        if (this.filters.reduce((prev, curr) => prev || (curr.category === category && curr.name === value), false))
+            return
+
+        // if (this.getLastFilter()?.category === category) {
+        //     this.filters = this.filters.slice(0, -1)
+        // }
+
+        let new_index: DataEntry[]
+        if (this.filters.length !== 0) {
+            const last_index = this.filters[this.filters.length - 1].index
+            // @ts-ignore
+            new_index = last_index.filter((e) => (e[category] === value))
+        } else {
+            // @ts-ignore
+            new_index = this.data.filter(e => (e[category] === value))
+        }
+
+        this.filters.push({
+            category: category,
+            name: value,
+            index: new_index,
+            amount: new_index.reduce((prev, curr) => prev + curr.amount, 0)
+        })
+
+        console.log("filters", this.filters)
+        this.listChangeCallback()
+    }
+
+    
+    removeCategoryFilter(category: Category, value: string) {
         if (this.data.length === 0) return
         if (this.filters.reduce((prev, curr) => prev || (curr.category === category && curr.name === value), false))
             return
@@ -375,6 +443,7 @@ export default class DataLoader {
 
         this.listChangeCallback()
     }
+
 
     addAmountFilter(low: number, high: number) {
         if (this.data.length === 0) return

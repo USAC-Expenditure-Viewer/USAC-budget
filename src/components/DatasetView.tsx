@@ -6,7 +6,7 @@ import KeywordCrumb from "./KeywordCrumb";
 import Paper from "@material-ui/core/Paper";
 import DataLoader, {Category, isOfTypeCategory} from "../models/DataLoader";
 import CategoryPie from "./CategoryPie";
-import {Tab, Tabs, withStyles} from "@material-ui/core";
+import {Container, Tab, Tabs, withStyles, Typography} from "@material-ui/core";
 import AmountSlider from "./AmountSlider";
 import QueryBuilder from "../models/QueryBuilder";
 import DateSlider from "./DateSlider";
@@ -40,12 +40,13 @@ const NarrowTab = withStyles((theme) => ({
 }))((props:StyledTabProps) => <Tab {...props} />);
 
 export default class DatasetView extends React.Component<DatasetProps, DatasetState> {
-    private value: TabTypes = 'table'
+    private value: TabTypes = 'keyword'
 
     constructor(props: DatasetProps) {
         super(props);
 
-        this.value = this.parseQuery(QueryBuilder.getInstance().getQuery())
+        this.value = 'keyword'
+        // this.parseQuery(QueryBuilder.getInstance().getQuery())
 
         this.state = {
             value: this.value,
@@ -80,34 +81,28 @@ export default class DatasetView extends React.Component<DatasetProps, DatasetSt
 
     render() {
         const loader = this.props.loader
-
+        const tableElement = <RecordTable dataloader={loader} onChange={this.onTabChange.bind(this)} style={{
+            zIndex: 2,
+            backgroundColor: "lightblue",
+        }}/>
         return (
-            <div>
-                <KeywordCrumb style={{margin: 10}} dataloader={loader}/>
-                {/* <Tabs value={this.state.value}
-                      onChange={(e, value) => this.onTabChange(value)}
-                      variant="fullWidth"
-                      indicatorColor="primary" textColor="primary">
-                    <Tab label="Table" value="table"/>
-                    <NarrowTab label="Keywords" value="keyword"/>
-                    <NarrowTab label="Fund" value="fund"/>
-                    <NarrowTab label="Division" value="division"/>
-                    <NarrowTab label="Department" value="department"/>
-                    <NarrowTab label="GL" value="gl"/>
-                    <NarrowTab label="Event" value="event"/>
-                    <NarrowTab label="Amount" value="amount"/>
-                    <NarrowTab label="Date" value="date"/>
-                </Tabs> */}
-                <Paper elevation={2} style={{padding: 10}}>
-                    <RecordTable hidden={false} dataloader={loader} onChange={this.onTabChange.bind(this)}/>
+            <>
+                {tableElement}
+                <Paper elevation={2} style={{
+                    position: "absolute",
+                    zIndex: -1,
+                    bottom: 0,
+                    width: 1200
+                }}>
                     <ExplanationText category={this.state.value}/>
                     <WordCloud hidden={this.state.value !== 'keyword'} dataloader={loader}/>
                     <CategoryPie hidden={!isOfTypeCategory(this.state.value)}
-                                 category={isOfTypeCategory(this.state.value) ? this.state.value : "fund"} dataloader={loader}/>
+                                category={isOfTypeCategory(this.state.value) ? this.state.value : "fund"} dataloader={loader}/>
                     <AmountSlider hidden={this.state.value !== "amount"} dataloader={loader}/>
                     <DateSlider hidden={this.state.value !== 'date'} dataloader={loader}/>
                 </Paper>
-            </div>
+                <KeywordCrumb style={{position: "absolute", bottom: 0}} dataloader={loader}/>
+            </>
         );
     }
 }
