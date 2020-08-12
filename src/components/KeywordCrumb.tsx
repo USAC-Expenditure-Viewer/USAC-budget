@@ -21,6 +21,11 @@ export default class KeywordCrumb extends Component<DataLoaderProps> {
         }
     }
 
+    private setYear() {
+        this.props.dataloader.sliceFilter(0)
+        window.location.reload(false)
+    }
+
     componentDidMount() {
         this.props.dataloader.addChangeCallback(() => this.forceUpdate())
     }
@@ -32,7 +37,7 @@ export default class KeywordCrumb extends Component<DataLoaderProps> {
                 <Typography>Fliters Applied:</Typography>
                 <Tooltip title="Remove All Filters">
                     <Link key={-1} color="textPrimary"
-                      onClick={() => this.props.dataloader.sliceFilter(0)}>
+                      onClick={() => this.setYear()}>
                         <Typography align="center">
                             <div style={{backgroundColor: "DodgerBlue"}}>
                                 year: {this.props.dataloader.getDataset()}-{(Number(this.props.dataloader.getDataset())+1).toString()}

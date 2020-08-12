@@ -43,6 +43,7 @@ class App extends React.Component<{}, AppState> {
                         <ListItem alignItems="center" button key={text} onClick={() => {
                             Datasets.getInstance().setCurrentDataset(text)
                             this.setState({yearSelected: true})
+                            this.forceUpdate()
                         }}>
                         {/* <ListItemIcon><ListIcon/></ListItemIcon> */}
                         <ListItemText primary={"Budget " + Datasets.getDatasetTitle(text)}
