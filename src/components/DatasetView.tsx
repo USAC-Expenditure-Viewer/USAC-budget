@@ -92,7 +92,7 @@ export default class DatasetView extends React.Component<DatasetProps, DatasetSt
                     position: "absolute",
                     zIndex: -1,
                     bottom: 0,
-                    width: 1200
+                    width: 1230
                 }}>
                     <ExplanationText category={this.state.value}/>
                     <WordCloud hidden={this.state.value !== 'keyword'} dataloader={loader}/>

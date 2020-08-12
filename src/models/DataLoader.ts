@@ -389,9 +389,9 @@ export default class DataLoader {
         if (this.filters.reduce((prev, curr) => prev || (curr.category === category && curr.name === value), false))
             return
 
-        // if (this.getLastFilter()?.category === category) {
-        //     this.filters = this.filters.slice(0, -1)
-        // }
+        if (this.getLastFilter()?.category === category) {
+            this.filters = this.filters.slice(0, -1)
+        }
 
         let new_index: DataEntry[]
         if (this.filters.length !== 0) {
@@ -410,7 +410,7 @@ export default class DataLoader {
             amount: new_index.reduce((prev, curr) => prev + curr.amount, 0)
         })
 
-        console.log("filters", this.filters)
+        // console.log("filters", this.filters)
         this.listChangeCallback()
     }
 

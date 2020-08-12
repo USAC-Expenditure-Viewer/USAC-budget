@@ -266,20 +266,19 @@ export default class RecordTable extends Component<RecordTableProps, RecordTable
                     />
                     <TableSummaryRow />
 
-                    <Toolbar>
-                        <Link color="textSecondary" href="https://forms.google.com" style={{padding: 20}}>
-                            <ContactSupportIcon/> Comments
-                        </Link>
-                        <Link color="textSecondary" href="mailto:vtran@asucla.ucla.edu" style={{padding: 20}}>
-                            <EmailIcon/> Professional Accountant
-                        </Link>
-                        <Link color="textSecondary" href="mailto:usacouncil@asucla.ucla.edu" style={{padding: 20}}>
-                            <EmailIcon/> USAC Council
-                        </Link>
-                        <Button color="inherit" onClick={this.copyURL} aria-label="share">
-                            Share
-                        </Button>
-                    </Toolbar>
+                    <Toolbar />
+                    <Link color="textSecondary" href="https://forms.google.com" style={{padding: 20}}>
+                        <ContactSupportIcon/> Comments
+                    </Link>
+                    <Link color="textSecondary" href="mailto:vtran@asucla.ucla.edu" style={{padding: 20}}>
+                        <EmailIcon/> Professional Accountant
+                    </Link>
+                    <Link color="textSecondary" href="mailto:usacouncil@asucla.ucla.edu" style={{padding: 20}}>
+                        <EmailIcon/> USAC Council
+                    </Link>
+                    <Button color="inherit" onClick={this.copyURL} aria-label="share">
+                        Share
+                    </Button>
                     <GroupingPanel showSortingControls emptyMessageComponent={() => <span />} />
                     <ExportPanel startExport={(options) => this.exporter.current?.exportGrid(options)} />
                     <SearchPanel />
