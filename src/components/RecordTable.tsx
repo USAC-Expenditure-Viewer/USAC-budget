@@ -63,6 +63,7 @@ interface RecordTableState {
     selectedColumn: string
     isOpening: Boolean
     isClosing: Boolean
+    searchValue: string
 }
 
 interface RecordTableProps extends DataLoaderProps {
@@ -154,6 +155,8 @@ export default class RecordTable extends Component<RecordTableProps, RecordTable
 
     private groupWeight: Map<string, number>
 
+    private searchValue: string = ''
+
     private integratedSortingColumnExtensions: IntegratedSorting.ColumnExtension[] = []
 
     constructor(props: RecordTableProps) {
@@ -166,7 +169,8 @@ export default class RecordTable extends Component<RecordTableProps, RecordTable
             dataHeight: 110,
             selectedColumn: '',
             isOpening: false,
-            isClosing: false
+            isClosing: false,
+            searchValue: ''
         }
 
         this.groupWeight = new Map<string, number>()
@@ -213,6 +217,15 @@ export default class RecordTable extends Component<RecordTableProps, RecordTable
         alert('Link copied to clipboard! Sharing this link will save all applied filters.');
     }
 
+    private searchLock(value : string) {
+        this.searchValue = value
+        if (value) {
+            this.expandTable(this)
+        } else {
+            this.collapseTable(this)
+        }
+    }
+
     componentDidUpdate(prevProps: Readonly<RecordTableProps>, prevState: Readonly<RecordTableState>, snapshot?: any): void {
         if (this.state.groupBy != prevState.groupBy) {
             this.buildGroupWeightTable()
@@ -241,7 +254,7 @@ export default class RecordTable extends Component<RecordTableProps, RecordTable
                     <GroupingState
                         grouping={this.state.groupBy !== undefined ? [{ columnName: this.state.groupBy }] : []}
                     />
-                    <SearchState />
+                    <SearchState onValueChange={(value) => this.searchLock(value)}/>
                     <SummaryState totalItems={this.summaryItems} groupItems={this.groupSummaryItems} />
 
                     <IntegratedGrouping columnExtensions={this.groupingColumnExtensions} />
@@ -334,7 +347,7 @@ export default class RecordTable extends Component<RecordTableProps, RecordTable
     }
 
     collapseTable(table : RecordTable) : void {
-        if (!table.state.isClosing) {
+        if (!table.state.isClosing && this.searchValue == '') {
             table.setState({ isClosing: true })
             var collapseTimer = setInterval(() => {
                 var decHeight = table.state.dataHeight - 70

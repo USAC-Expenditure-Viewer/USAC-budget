@@ -34,6 +34,7 @@ class App extends React.Component<{}, AppState> {
     }
 
     render() {
+        console.log("Select?")
         if (!this.state.yearSelected) {
             const dataset_list: string[] = Datasets.getInstance().getDatasets() || []
             return(
@@ -43,7 +44,7 @@ class App extends React.Component<{}, AppState> {
                         <ListItem alignItems="center" button key={text} onClick={() => {
                             Datasets.getInstance().setCurrentDataset(text)
                             this.setState({yearSelected: true})
-                            this.forceUpdate()
+                            //this.forceUpdate()
                         }}>
                         {/* <ListItemIcon><ListIcon/></ListItemIcon> */}
                         <ListItemText primary={"Budget " + Datasets.getDatasetTitle(text)}
@@ -54,6 +55,7 @@ class App extends React.Component<{}, AppState> {
                 </>
             );
         } else {
+            console.log("Selected!")
             return (
                 <>
                     <CssBaseline />
