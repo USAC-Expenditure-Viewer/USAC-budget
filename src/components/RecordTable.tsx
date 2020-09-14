@@ -77,9 +77,28 @@ export default class RecordTable extends Component<RecordTableProps, RecordTable
         <TableHeaderRow.Cell
             {...props}
             onClick={() => this.setHighlight(props.column)}
-            style={props.column.name === this.state.selectedColumn ? { backgroundColor: "#376cf2" } : { backgroundColor: "#fcfcfc" }}
+            style={props.column.name === this.state.selectedColumn ? 
+                {fontWeight: "bold", backgroundColor: this.getColor(props.column.name), color: "Black"} : 
+                {fontWeight: "bold", backgroundColor: "White", color: this.getColor(props.column.name)}}
         />
     );
+
+    private getColor(category: string): string {
+        switch (category) {
+            case "fund":
+                return "Red"
+            case "division":
+                return "Orange"
+            case "department":
+                return "Green"
+            case "gl":
+                return "Blue"
+            case "event":
+                return "Purple"
+            default:
+                return "Gray"
+        }
+    }
 
     private readonly summaryItems: SummaryItem[] = [
         { columnName: 'date', type: 'count' },
@@ -220,6 +239,7 @@ export default class RecordTable extends Component<RecordTableProps, RecordTable
     private searchLock(value : string) {
         this.searchValue = value
         if (value) {
+            this.setState({isClosing: false})
             this.expandTable(this)
         } else {
             this.collapseTable(this)
@@ -229,7 +249,6 @@ export default class RecordTable extends Component<RecordTableProps, RecordTable
     componentDidUpdate(prevProps: Readonly<RecordTableProps>, prevState: Readonly<RecordTableState>, snapshot?: any): void {
         if (this.state.groupBy != prevState.groupBy) {
             this.buildGroupWeightTable()
-            console.log(this.state.groupBy);
             this.setState({
                 sortingState: this.getGroupSortingState(),
             })
@@ -352,7 +371,7 @@ export default class RecordTable extends Component<RecordTableProps, RecordTable
             var collapseTimer = setInterval(() => {
                 var decHeight = table.state.dataHeight - 70
                 table.setState({dataHeight: decHeight})
-                if (table.state.dataHeight <= 110) {
+                if (table.state.dataHeight <= 110 || !this.state.isClosing) {
                     table.setState({ 
                         dataHeight: 110,
                         isClosing: false

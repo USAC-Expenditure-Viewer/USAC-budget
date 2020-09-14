@@ -87,6 +87,7 @@ export default class DatasetView extends React.Component<DatasetProps, DatasetSt
         }}/>
         return (
             <>
+                <KeywordCrumb dataloader={loader}/>
                 {tableElement}
                 <Paper elevation={2} style={{
                     position: "absolute",
@@ -101,7 +102,6 @@ export default class DatasetView extends React.Component<DatasetProps, DatasetSt
                     <AmountSlider hidden={this.state.value !== "amount"} dataloader={loader}/>
                     <DateSlider hidden={this.state.value !== 'date'} dataloader={loader}/>
                 </Paper>
-                <KeywordCrumb style={{position: "absolute", bottom: 0}} dataloader={loader}/>
             </>
         );
     }

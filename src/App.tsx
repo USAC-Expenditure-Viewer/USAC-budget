@@ -34,37 +34,37 @@ class App extends React.Component<{}, AppState> {
     }
 
     render() {
-        console.log("Select?")
-        if (!this.state.yearSelected) {
-            const dataset_list: string[] = Datasets.getInstance().getDatasets() || []
-            return(
-                <>
-                <List>
-                    {dataset_list.map(text => (
-                        <ListItem alignItems="center" button key={text} onClick={() => {
-                            Datasets.getInstance().setCurrentDataset(text)
-                            this.setState({yearSelected: true})
-                            //this.forceUpdate()
-                        }}>
-                        {/* <ListItemIcon><ListIcon/></ListItemIcon> */}
-                        <ListItemText primary={"Budget " + Datasets.getDatasetTitle(text)}
-                            style={{textAlign: "center"}}/>
-                        </ListItem>
-                    ))}
-                </List>
-                </>
-            );
-        } else {
-            console.log("Selected!")
+        // if (!this.state.yearSelected) {
+        //     const dataset_list: string[] = Datasets.getInstance().getDatasets() || []
+        //     return(
+        //         <>
+        //         <List>
+        //             {dataset_list.map(text => (
+        //                 <ListItem alignItems="center" button key={text} onClick={() => {
+        //                     console.log("Year selected: ", text)
+        //                     Datasets.getInstance().setCurrentDataset(text)
+        //                     this.setState({yearSelected: true})
+        //                     //this.forceUpdate()
+        //                 }}>
+        //                 {/* <ListItemIcon><ListIcon/></ListItemIcon> */}
+        //                 <ListItemText primary={"Budget " + Datasets.getDatasetTitle(text)}
+        //                     style={{textAlign: "center"}}/>
+        //                 </ListItem>
+        //             ))}
+        //         </List>
+        //         </>
+        //     );
+        // } else {
             return (
                 <>
                     <CssBaseline />
                     <Container maxWidth="lg">
                         <DatasetView loader={this.state.loader} />
+                        {/* <Footer /> */}
                     </Container>
                 </>
             );
-        }
+        // }
     }
 }
 
