@@ -26,9 +26,6 @@ import { saveAs } from "file-saver";
 import Datasets from "../models/Datasets";
 import { Workbook } from "exceljs";
 import { isOfTypeTabs, TabTypes } from "./DatasetView";
-import ContactSupportIcon from "@material-ui/icons/ContactSupport";
-import EmailIcon from '@material-ui/icons/Email';
-import HelpOutlineIcon from '@material-ui/icons/HelpOutline';
 
 const month_name = ['January', 'February', 'March', 'April', 'May', 'June',
     'July', 'August', 'September', 'October', 'November', 'December']
@@ -221,21 +218,6 @@ export default class RecordTable extends Component<RecordTableProps, RecordTable
         }
     }
 
-    private copyURL() {
-        const selBox = document.createElement('textarea');
-        selBox.style.position = 'fixed';
-        selBox.style.left = '0';
-        selBox.style.top = '0';
-        selBox.style.opacity = '0';
-        selBox.value = window.location.href;
-        document.body.appendChild(selBox);
-        selBox.focus();
-        selBox.select();
-        document.execCommand('copy');
-        document.body.removeChild(selBox);
-        alert('Link copied to clipboard! Sharing this link will save all applied filters.');
-    }
-
     private searchLock(value : string) {
         this.searchValue = value
         if (value) {
@@ -253,10 +235,15 @@ export default class RecordTable extends Component<RecordTableProps, RecordTable
                 sortingState: this.getGroupSortingState(),
             })
         }
-
+        
     }
 
     render() {
+        if (this.props.dataloader.getPeekTable()) {
+            this.props.dataloader.setPeekTable(false)
+            this.peekTable(this)
+        }
+
         const rows = this.props.dataloader.getRecords().map((e, i) => { e.id = i; return e })
         if (this.props.hidden === true)
             return <Paper />
@@ -299,18 +286,6 @@ export default class RecordTable extends Component<RecordTableProps, RecordTable
                     <TableSummaryRow />
 
                     <Toolbar />
-                    <Link color="textSecondary" href="https://forms.google.com" style={{padding: 20}}>
-                        <ContactSupportIcon/> Comments
-                    </Link>
-                    <Link color="textSecondary" href="mailto:vtran@asucla.ucla.edu" style={{padding: 20}}>
-                        <EmailIcon/> Professional Accountant
-                    </Link>
-                    <Link color="textSecondary" href="mailto:usacouncil@asucla.ucla.edu" style={{padding: 20}}>
-                        <EmailIcon/> USAC Council
-                    </Link>
-                    <Button color="inherit" onClick={this.copyURL} aria-label="share">
-                        Share
-                    </Button>
                     <GroupingPanel showSortingControls emptyMessageComponent={() => <span />} />
                     <ExportPanel startExport={(options) => this.exporter.current?.exportGrid(options)} />
                     <SearchPanel />
@@ -326,20 +301,18 @@ export default class RecordTable extends Component<RecordTableProps, RecordTable
     }
 
     peekTable(table : RecordTable) : void {
-        if (!table.state.isOpening) {
-            table.setState({ isOpening: true })
+        if (table.state.dataHeight < 200 && !table.state.isClosing && !table.state.isOpening && this.searchValue == '') {
+            table.setState({isOpening: true, isClosing: true})
             var peekTimer = setInterval(() => {
                 var incHeight = table.state.dataHeight + 70
                 table.setState({dataHeight: incHeight})
                 if (table.state.dataHeight >= 200) {
-                    table.setState({ 
-                        dataHeight: 200,
-                        isOpening: false
-                    })
                     clearInterval(peekTimer)
-                } else if (table.state.isClosing) {
-                    table.setState({ isOpening: false })
-                    clearInterval(peekTimer)
+                    var pauseTimer = setInterval(() => {
+                        table.setState({ isOpening: false, isClosing: false, dataHeight: 200 })
+                        table.collapseTable(table)
+                        clearInterval(pauseTimer)
+                    }, 3000)
                 }
             }, 10)
         }

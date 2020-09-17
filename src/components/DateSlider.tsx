@@ -129,7 +129,7 @@ export default class DateSlider extends Component<SliderProps, SliderState> {
     }
 
     getColor(): string {
-        return "#009688"
+        return "Gray"
     }
 
     getOpacity(index: number): number {

@@ -52,6 +52,49 @@ export default class AmountSlider extends Component<SliderProps, SliderState> {
                         <BarChart data={data} barCategoryGap={0} margin={{bottom: 0, left: 0, right: 0}}>
                             <CartesianGrid strokeDasharray="3 3"/>
                             <XAxis dataKey="name" domain={domain} hide orientation="top"/>
+                            <YAxis domain={[0, 'dataMax']} tickFormatter={(v) => Math.round(v / this.props.dataloader.getTotal() * 100) + '%'}
+                                   width={AmountSlider.getYAxisWidth()}>
+                                <Label angle={270} position="insideLeft" style={{textAnchor: 'middle'}}>
+                                    Percent of Total Transaction Amount (%)
+                                </Label>
+                            </YAxis>
+                            <ReferenceLine y={0} label="" stroke="black"/>
+                            <Bar dataKey={"value"} fill={this.getColor()}>
+                                {data.map((value, index) => (
+                                    <Cell key={`cell-${index}`} fill={this.getColor()}
+                                          opacity={this.getOpacity(value.low, value.high)}/>
+                                ))}
+                            </Bar>
+                        </BarChart>
+                    </ResponsiveContainer>
+                )}
+                <div style={{paddingLeft: AmountSlider.getYAxisWidth()}}>
+                    <Slider value={this.state.value}
+                            min={domain[0]} max={domain[1]}
+                            onChange={this.onRangeChange.bind(this)}
+                            onChangeCommitted={this.onRangeChangeCommitted.bind(this)}
+                            valueLabelDisplay="auto"
+                            valueLabelFormat={(v) => '$' + KMFormat(v)}
+                            marks={this.getMarks(domain)}
+                            aria-labelledby="Amount-slider"
+                    />
+                </div>
+            </div>
+        )
+        
+        
+        // const data = this.state.data
+        // const domain: [number, number] = data.length === 0 ? [0, 1] : [data[0].low, data[data.length - 1].high]
+        return (
+            <div style={{
+                paddingLeft: '5%', paddingRight: `calc(5% + ${AmountSlider.getYAxisWidth()}px)`,
+                height: '80vh', margin: "auto"
+            }} hidden={this.props.hidden || false}>
+                {(this.props.hidden || false) ? null : (
+                    <ResponsiveContainer height="90%" width="100%">
+                        <BarChart data={data} barCategoryGap={0} margin={{bottom: 0, left: 0, right: 0}}>
+                            <CartesianGrid strokeDasharray="3 3"/>
+                            <XAxis dataKey="name" domain={domain} hide orientation="top"/>
                             <YAxis domain={[0, 'dataMax']} tickFormatter={(v) => '$' + KMFormat(v)}
                                    width={AmountSlider.getYAxisWidth()}>
                                 <Label angle={270} position="insideLeft" style={{textAnchor: 'middle'}}>
@@ -101,7 +144,7 @@ export default class AmountSlider extends Component<SliderProps, SliderState> {
     }
 
     getColor(): string {
-        return "#29b6f6"
+        return "Gray"
     }
 
     getOpacity(low: number, high: number): number {
