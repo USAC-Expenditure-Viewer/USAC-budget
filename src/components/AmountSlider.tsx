@@ -55,7 +55,7 @@ export default class AmountSlider extends Component<SliderProps, SliderState> {
                             <YAxis domain={[0, 'dataMax']} tickFormatter={(v) => Math.round(v / this.props.dataloader.getTotal() * 100) + '%'}
                                    width={AmountSlider.getYAxisWidth()}>
                                 <Label angle={270} position="insideLeft" style={{textAnchor: 'middle'}}>
-                                    Percent of Total Transaction Amount (%)
+                                    Percent of USAC Budget
                                 </Label>
                             </YAxis>
                             <ReferenceLine y={0} label="" stroke="black"/>

@@ -75,25 +75,42 @@ export default class RecordTable extends Component<RecordTableProps, RecordTable
             {...props}
             onClick={() => this.setHighlight(props.column)}
             style={props.column.name === this.state.selectedColumn ? 
-                {fontWeight: "bold", backgroundColor: this.getColor(props.column.name), color: "Black"} : 
-                {fontWeight: "bold", backgroundColor: "White", color: this.getColor(props.column.name)}}
+                {fontWeight: "bold", backgroundColor: this.getSelectedBackgroundColor(props.column.name), color: "White"} : 
+                {fontWeight: "bold", backgroundColor: this.getBackgroundColor(props.column.name), color: "Black"}}
         />
     );
 
-    private getColor(category: string): string {
+    private getBackgroundColor(category: string): string {
         switch (category) {
             case "fund":
-                return "Red"
+                return "#FFE5E5" // Red
             case "division":
-                return "Orange"
+                return "#FFEAD6" // Orange
             case "department":
-                return "Green"
+                return "#E6FFD6" // Green
             case "gl":
-                return "Blue"
+                return "#E6E7FF" // Blue
             case "event":
-                return "Purple"
+                return "#F8E6FF" // Purple
             default:
-                return "Gray"
+                return "#E2E2E2" // Gray
+        }
+    }
+
+    private getSelectedBackgroundColor(category: string): string {
+        switch (category) {
+            case "fund":
+                return "#620000" // Red
+            case "division":
+                return "#8E4200" // Orange
+            case "department":
+                return "#0C5700" // Green
+            case "gl":
+                return "#001457" // Blue
+            case "event":
+                return "#48005A" // Purple
+            default:
+                return "#2F2F2F" // Gray
         }
     }
 

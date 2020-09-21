@@ -12,7 +12,7 @@ ReactDOM.render(
     document.getElementById('root')
 );
 
-document.body.style.zoom = "90%"
+document.body.style.zoom = "80%"
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.

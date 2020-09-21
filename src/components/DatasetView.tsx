@@ -94,7 +94,7 @@ export default class DatasetView extends React.Component<DatasetProps, DatasetSt
         selBox.select();
         document.execCommand('copy');
         document.body.removeChild(selBox);
-        alert('Link copied to clipboard! Sharing this link will save all applied filters.');
+        alert('Link Copied to Clipboard! (filters saved)');
     }
 
     render() {
@@ -112,12 +112,12 @@ export default class DatasetView extends React.Component<DatasetProps, DatasetSt
                     bottom: 0,
                     width: 1230
                 }}>
+                    <ExplanationText category={this.state.value}/>
                     <WordCloud hidden={this.state.value !== 'keyword'} dataloader={loader}/>
                     <CategoryPie hidden={!isOfTypeCategory(this.state.value)}
                                 category={isOfTypeCategory(this.state.value) ? this.state.value : "fund"} dataloader={loader}/>
                     <AmountSlider hidden={this.state.value !== "amount"} dataloader={loader}/>
                     <DateSlider hidden={this.state.value !== 'date'} dataloader={loader}/>
-                    <ExplanationText category={this.state.value}/>
                     <Link color="textSecondary" href="https://forms.google.com" style={{padding: 20}}>
                         <ContactSupportIcon/> Comments
                     </Link>
