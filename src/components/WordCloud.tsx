@@ -14,7 +14,7 @@ interface WordCloudProps extends DataLoaderProps {
 
 export default class WordCloud extends Component<WordCloudProps> {
     private callbacks: Callbacks = {
-        getWordTooltip: (word: Word) => `${word.text} has $${KMFormat(word.value)} in the category.`,
+        getWordTooltip: (word: Word) => `Descriptions containing "${word.text}" total $${KMFormat(word.value)}`,
         onWordClick: this.getCallback('onWordClick').bind(this),
         onWordMouseOut: this.getCallback('onWordMouseOut').bind(this),
         onWordMouseOver: this.getCallback('onWordMouseOver').bind(this),

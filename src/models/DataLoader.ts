@@ -50,14 +50,23 @@ export default class DataLoader {
     private filters: Filter[] = []
     private dataChangeCallbacks: (() => void)[] = []
     private total_amount: number = 0
+    private dataset : string | null = null
+    private otherDepth : number = 0
+    private otherCategory : Category = "fund"
+    private peekTable : boolean = false
 
     constructor(dataset: string | null) {
+        this.dataset = dataset
         this.setDataset(dataset)
     }
 
     setDataset(dataset: string | null) {
         this.sliceFilter(0)
         this.loadDataset(dataset)
+    }
+
+    getDataset(): string | null {
+        return this.dataset
     }
 
     private loadDataset(dataset: string | null) {
@@ -148,6 +157,33 @@ export default class DataLoader {
 
     addChangeCallback(callback: () => void) {
         this.dataChangeCallbacks.push(callback)
+    }
+
+    getOtherDepth(): number {
+        return this.otherDepth
+    }
+
+    setOtherDepth(depth: number) {
+        this.otherDepth = depth
+        this.listChangeCallback()
+    }
+
+    getOtherCategory(): Category {
+        return this.otherCategory
+    }
+
+    setOtherCategory(category : Category) {
+        this.otherCategory = category
+        this.listChangeCallback()
+    }
+
+    setPeekTable(active : boolean) {
+        this.peekTable = active
+        this.listChangeCallback()
+    }
+
+    getPeekTable() : boolean {
+        return this.peekTable
     }
 
     getRecords(): DataEntry[] {
@@ -319,6 +355,7 @@ export default class DataLoader {
     }
 
     sliceFilter(remaining_length: number) {
+        this.otherDepth = 0
         this.filters = this.filters.slice(0, remaining_length)
         this.listChangeCallback()
     }
@@ -346,7 +383,7 @@ export default class DataLoader {
 
         this.listChangeCallback()
     }
-
+    
     addCategoryFilter(category: Category, value: string) {
         if (this.data.length === 0) return
         if (this.filters.reduce((prev, curr) => prev || (curr.category === category && curr.name === value), false))
@@ -375,6 +412,37 @@ export default class DataLoader {
 
         this.listChangeCallback()
     }
+
+    
+    removeCategoryFilter(category: Category, value: string) {
+        if (this.data.length === 0) return
+        if (this.filters.reduce((prev, curr) => prev || (curr.category === category && curr.name === value), false))
+            return
+
+        if (this.getLastFilter()?.category === category) {
+            this.filters = this.filters.slice(0, -1)
+        }
+
+        let new_index: DataEntry[]
+        if (this.filters.length !== 0) {
+            const last_index = this.filters[this.filters.length - 1].index
+            // @ts-ignore
+            new_index = last_index.filter((e) => (e[category] === value))
+        } else {
+            // @ts-ignore
+            new_index = this.data.filter(e => (e[category] === value))
+        }
+
+        this.filters.push({
+            category: category,
+            name: value,
+            index: new_index,
+            amount: new_index.reduce((prev, curr) => prev + curr.amount, 0)
+        })
+
+        this.listChangeCallback()
+    }
+
 
     addAmountFilter(low: number, high: number) {
         if (this.data.length === 0) return

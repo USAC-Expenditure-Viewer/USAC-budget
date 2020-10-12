@@ -12,55 +12,51 @@ export default function ExplanationText(props: ExpProps) {
         case 'date':
             return (
                 <Typography color="textSecondary">
-                    Date that the transaction was entered into the system,
-                    which is dependent on when people complete their paperwork.
-                    <br/>
-                    Use the slider below to filter the dates of the transactions.
+                    Date transaction entered. (purchases occur beforehand)
                 </Typography>
             )
         case 'fund':
             return (
                 <Typography color="textSecondary">
-                    The source of the money. Not all are from student fees.
+                    Source of money (includes student fees and other income)
                 </Typography>
             )
         case 'division':
             return (
                 <Typography color="textSecondary">
-                    Who allocated the money to a department.
+                    Allocates money to departments.
                 </Typography>
             )
         case 'department':
             return (
                 <Typography color="textSecondary">
-                    Who spends the money. Includes student groups.
+                    Spends money (includes student groups)
                 </Typography>
             )
         case 'gl':
             return (
                 <Typography color="textSecondary">
-                    General Ledger are rules on how a particular pile of money can be spent. Operating expenses is the generic label.
+                    Rules for how each $ can be spent.
                 </Typography>
             )
         case 'event':
             return (
                 <Typography color="textSecondary">
-                    The occasion/reason for the transaction. Commission/Dept related is the generic label.
+                    Occasion/reason for transaction. ( generic label is “Commission/Dept related”)
                 </Typography>
             )
         case 'keyword':
             return (
                 <Typography color="textSecondary">
-                    The spender writes how they spent $, and the accountant abbreviates it (due to character limit).
-                    Wordcloud de-abbreviates, and font size represents the total $ of all descriptions containing the word. (tell us if de-abreviation has bugs)
+                    Spender documents where money is spent.
+                    Accountant abreviates. Wordcloud deabreviates.
+                    Font size of word represents total $ for all descriptions that include word.
                 </Typography>
             )
         case 'amount':
             return (
                 <Typography color="textSecondary">
-                    Histogram of the individual transaction amounts.
-                    <br/>
-                    Use the slider below to filter the amount of the transactions.
+                    Size of each transaction. (may include several purchases)
                 </Typography>
             )
         case 'table':
