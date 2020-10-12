@@ -83,17 +83,17 @@ export default class RecordTable extends Component<RecordTableProps, RecordTable
     private getBackgroundColor(category: string): string {
         switch (category) {
             case "fund":
-                return "#FFE5E5" // Red
+                return "#FFF5F5" // Red
             case "division":
-                return "#FFEAD6" // Orange
+                return "#FFF9F0" // Orange
             case "department":
-                return "#E6FFD6" // Green
-            case "gl":
-                return "#E6E7FF" // Blue
+                return "#F9FFF6" // Green
             case "event":
-                return "#F8E6FF" // Purple
+                return "#FBFAFF" // Blue
+            case "gl":
+                return "#FFF9FF" // Purple
             default:
-                return "#E2E2E2" // Gray
+                return "#F6F6F6" // Gray
         }
     }
 
@@ -105,9 +105,9 @@ export default class RecordTable extends Component<RecordTableProps, RecordTable
                 return "#8E4200" // Orange
             case "department":
                 return "#0C5700" // Green
-            case "gl":
-                return "#001457" // Blue
             case "event":
+                return "#001457" // Blue
+            case "gl":
                 return "#48005A" // Purple
             default:
                 return "#2F2F2F" // Gray

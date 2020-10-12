@@ -40,9 +40,9 @@ export default class KeywordCrumb extends Component<DataLoaderProps, KeywordCrum
             case "department":
                 return "#A4F997" // Green
             case "gl":
-                return "#A2B8FF" // Blue
+                return "#F0B6FF" // Blue
             case "event":
-                return "#F0B6FF" // Purple
+                return "#A2B8FF" // Purple
             default:
                 return "#D0D0D0" // Gray
         }
@@ -96,7 +96,7 @@ export default class KeywordCrumb extends Component<DataLoaderProps, KeywordCrum
                     {list.slice(0, -1).map((filter, index) => (
                         <div style={{ backgroundColor: this.getColor(filter.category) }}>
                             <Typography align="center">
-                                <Tooltip title="View This Filter">
+                                <Tooltip title="Go Back To This Filter">
                                     <Link key={index} color="textSecondary" align="center"
                                         onClick={() => loader.sliceFilter(index + 1)}>
                                         {filter.category}: {filter.name}
