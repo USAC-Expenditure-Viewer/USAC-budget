@@ -245,11 +245,7 @@ export default class RecordTable extends Component<RecordTableProps, RecordTable
     }
 
   }
-
-  doSum() {
-    return
-  }
-
+  
   render() {
     if (this.props.dataloader.getPeekTable()) {
       this.props.dataloader.setPeekTable(false)
@@ -260,7 +256,7 @@ export default class RecordTable extends Component<RecordTableProps, RecordTable
     if (this.props.hidden === true)
       return <Paper />
     else return (<>
-      <VideoModal open={true} close={() => this.doSum()} />
+      {/* <VideoModal open={true} close={() => this.doSum()} /> */}
       <Paper
         elevation={0}
         onMouseEnter={() => this.expandTable(this)}

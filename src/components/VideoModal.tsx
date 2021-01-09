@@ -22,7 +22,7 @@ export default class VideoModal extends React.Component<VideoModalProps> {
         <Modal
           toggle={this.props.close}
           isOpen={this.props.open}
-          style={{border: 'groove', backgroundColor: 'lightblue', width: 900, height: 600, position: 'absolute', top: 40}}
+          style={{border: 'groove', backgroundColor: 'lightblue', width: 1200, height: 860, position: 'absolute', top: 40}}
         >
           <Card>
             <CardHeader>
@@ -32,13 +32,13 @@ export default class VideoModal extends React.Component<VideoModalProps> {
             </CardHeader>
             <CardBody>
               <div style={{margin: 'auto', marginLeft: 100}}>
-                <iframe width="660" height="460" 
+                <iframe width="960" height="700" 
                   src="https://www.youtube.com/embed/PwSO7l-iRLQ">
                 </iframe>
               </div>
             </CardBody>
             <CardFooter>
-              <div style={{margin: 'auto', marginLeft: 390}}>
+              <div style={{margin: 'auto', marginLeft: 525}}>
                 <Button 
                   onClick={this.props.close}
                   type="button"

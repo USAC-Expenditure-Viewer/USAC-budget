@@ -101,7 +101,7 @@ export default class DatasetView extends React.Component<DatasetProps, DatasetSt
     return (
       <>
         <div style={{alignContent: 'center', zIndex: 9, position: 'absolute', margin: 'auto', width: '50%'}}>
-          {/* <VideoModal open={this.state.modalOpen} close={() => this.closeModal()} /> */}
+          <VideoModal open={this.state.modalOpen} close={() => this.closeModal()} />
         </div>
         {/* <div style={{zIndex: 3}}> */}
           <KeywordCrumb dataloader={loader} />
