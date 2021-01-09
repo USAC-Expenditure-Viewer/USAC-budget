@@ -8,9 +8,9 @@ export default function Footer() {
     return (
         <footer>
             <br/>
-            <Link color="textSecondary" href="https://forms.google.com" style={{padding: 20}}>
+            {/* <Link color="textSecondary" href="https://forms.google.com" style={{padding: 20}}>
                 <ContactSupportIcon/> Comments
-            </Link>
+            </Link> */}
             <Link color="textSecondary" href="mailto:vtran@asucla.ucla.edu" style={{padding: 20}}>
                 <EmailIcon/> Professional Accountant
             </Link>
