@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import '../App.css';
 import WordCloud from "./WordCloud";
 import RecordTable from "./RecordTable";
@@ -6,20 +7,18 @@ import KeywordCrumb from "./KeywordCrumb";
 import Paper from "@material-ui/core/Paper";
 import DataLoader, { Category, isOfTypeCategory } from "../models/DataLoader";
 import CategoryPie from "./CategoryPie";
-import { Button, Link } from "@material-ui/core";
+import { Button, } from "@material-ui/core";
 import AmountSlider from "./AmountSlider";
 import QueryBuilder from "../models/QueryBuilder";
 import DateSlider from "./DateSlider";
 import ExplanationText from "./ExplanationText";
 import ContactSupportIcon from "@material-ui/icons/ContactSupport";
 import EmailIcon from '@material-ui/icons/Email';
-import VideoModal from './VideoModal';
 
 export type TabTypes = Category | 'table' | 'keyword' | "amount" | "date";
 
 interface DatasetState {
   value: TabTypes
-  modalOpen: boolean
   width: string
 }
 
@@ -44,7 +43,6 @@ export default class DatasetView extends React.Component<DatasetProps, DatasetSt
 
     this.state = {
       value: this.value,
-      modalOpen: false,
       width: '45%'
     }
 
@@ -73,15 +71,6 @@ export default class DatasetView extends React.Component<DatasetProps, DatasetSt
     this.value = isOfTypeTabs(value) ? value : 'table'
     this.setState({ value: this.value })
     QueryBuilder.getInstance().update()
-  }
-
-  closeModal() {
-    this.setState({ modalOpen: false })
-  }
-
-  toggleModal() {
-    alert("Scroll down to view the USAC Budget Viewer Tutorial video.");
-    this.setState({modalOpen: true});
   }
 
   fullScreen() {
@@ -113,9 +102,6 @@ export default class DatasetView extends React.Component<DatasetProps, DatasetSt
     graphicTitle = graphicTitle.charAt(0).toUpperCase() + graphicTitle.slice(1)
     return (
       <>
-        <div style={{alignContent: 'center', zIndex: 9, position: 'absolute', margin: 'auto', width: '50%'}}>
-          <VideoModal open={this.state.modalOpen} close={() => this.closeModal()} />
-        </div>
         <br /><br />
         <div style={{marginLeft: 30, marginRight: 30}}>
           <KeywordCrumb dataloader={loader} />
@@ -138,19 +124,21 @@ export default class DatasetView extends React.Component<DatasetProps, DatasetSt
           <DateSlider hidden={this.state.value !== 'date'} dataloader={loader} />
         </div>
         : null}
-        <div style={{marginTop: 750}}>
-          <Link color="textSecondary" href="mailto:vtran@asucla.ucla.edu" style={{ padding: 20 }}>
+        <div style={{marginTop: 750, color: 'black'}}>
+          <a href="mailto:vtran@asucla.ucla.edu" style={{ padding: 20, color: 'black' }}>
             <EmailIcon /> Professional Accountant
-          </Link>
-          <Link color="textSecondary" href="mailto:usacouncil@asucla.ucla.edu" style={{ padding: 20 }}>
+          </a>
+          <a href="mailto:usacouncil@asucla.ucla.edu" style={{ padding: 20, color: 'black' }}>
             <EmailIcon /> USAC Council
-          </Link>
-          <Button color="inherit" onClick={this.copyURL} aria-label="share">
+          </a>
+          <Button style={{color: 'black', textDecoration: 'underline'}} onClick={this.copyURL} aria-label="share">
             Copy link
           </Button>
-          <Button color="inherit" onClick={() => this.toggleModal()} aria-label="share">
-            <ContactSupportIcon />Help
-          </Button>
+          <Link to="help-page" style={{color: 'black'}}>
+            <Button aria-label="share">
+              <ContactSupportIcon />Help
+            </Button>
+          </Link>
         </div>
       </>
     );

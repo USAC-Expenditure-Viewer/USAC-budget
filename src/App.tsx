@@ -3,7 +3,6 @@ import './App.css';
 import DatasetView from "./components/DatasetView"
 import DataLoader from "./models/DataLoader";
 import Datasets from "./models/Datasets";
-import VideoModal from './components/VideoModal';
 import { Container, CssBaseline } from "@material-ui/core";
 
 interface AppState {
@@ -21,12 +20,18 @@ class App extends React.Component<{}, AppState> {
     }
   }
 
+  componentWillMount() {
+    if (window.location.pathname === 'USAC-budget')
+      window.location.pathname = 'USAC-budget?'
+  }
+
   componentDidMount(): void {
     Datasets.getInstance().addChangeCallback(() => {
       this.setState({
         loader: Datasets.getInstance().getDataLoader()
       })
     })
+    alert("Please adjust your screen's zoom so it fits the entire budget viewer.")
   }
 
   toggleModal() {

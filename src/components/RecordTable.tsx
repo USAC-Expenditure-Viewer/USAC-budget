@@ -26,8 +26,6 @@ import { saveAs } from "file-saver";
 import Datasets from "../models/Datasets";
 import { Workbook } from "exceljs";
 import { isOfTypeTabs, TabTypes } from "./DatasetView";
-import VideoModal from './VideoModal';
-
 
 const month_name = ['January', 'February', 'March', 'April', 'May', 'June',
   'July', 'August', 'September', 'October', 'November', 'December']
@@ -60,8 +58,6 @@ interface RecordTableState {
   groupBy: Category | "date" | undefined
   dataHeight: number
   selectedColumn: string
-  isOpening: Boolean
-  isClosing: Boolean
   searchValue: string
 }
 
@@ -79,8 +75,8 @@ export default class RecordTable extends Component<RecordTableProps, RecordTable
       {...props}
       onClick={() => this.setHighlight(props.column)}
       style={props.column.name === this.state.selectedColumn ?
-        { fontWeight: "bold", backgroundColor: this.getSelectedBackgroundColor(props.column.name), color: "White" } :
-        { fontWeight: "bold", backgroundColor: this.getBackgroundColor(props.column.name), color: "Black" }}
+        { cursor: 'pointer', textDecoration: 'underline', fontWeight: "bold", backgroundColor: this.getSelectedBackgroundColor(props.column.name), color: "White" } :
+        { cursor: 'pointer', fontWeight: "bold", backgroundColor: this.getBackgroundColor(props.column.name), color: "Black" }}
     />
   );
 
@@ -194,8 +190,6 @@ export default class RecordTable extends Component<RecordTableProps, RecordTable
       groupBy: undefined,
       dataHeight: 110,
       selectedColumn: 'description',
-      isOpening: false,
-      isClosing: false,
       searchValue: ''
     }
 
@@ -257,13 +251,7 @@ export default class RecordTable extends Component<RecordTableProps, RecordTable
     if (this.props.hidden === true)
       return <Paper />
     else return (<>
-      {/* <VideoModal open={true} close={() => this.doSum()} /> */}
-      <Paper
-        elevation={0}
-        // style={{width:500}}
-        // onMouseEnter={() => this.expandTable(this)}
-        // onMouseLeave={() => this.collapseTable(this)}
-      >
+      <Paper elevation={0}>
         <Grid rows={rows} columns={this.columns}>
           <SortingState
             sorting={this.state.sortingState}
@@ -309,61 +297,6 @@ export default class RecordTable extends Component<RecordTableProps, RecordTable
     </>)
   }
 
-  // peekTable(table: RecordTable): void {
-  //   if (table.state.dataHeight < 200 && !table.state.isClosing && !table.state.isOpening && this.searchValue == '') {
-  //     table.setState({ isOpening: true, isClosing: true })
-  //     var peekTimer = setInterval(() => {
-  //       var incHeight = table.state.dataHeight + 70
-  //       table.setState({ dataHeight: incHeight })
-  //       if (table.state.dataHeight >= 200) {
-  //         clearInterval(peekTimer)
-  //         var pauseTimer = setInterval(() => {
-  //           table.setState({ isOpening: false, isClosing: false, dataHeight: 200 })
-  //           table.collapseTable(table)
-  //           clearInterval(pauseTimer)
-  //         }, 3000)
-  //       }
-  //     }, 10)
-  //   }
-  // }
-
-  // expandTable(table: RecordTable): void {
-  //   if (!table.state.isOpening) {
-  //     table.setState({ isOpening: true })
-  //     var expandTimer = setInterval(() => {
-  //       var incHeight = table.state.dataHeight + 70
-  //       table.setState({ dataHeight: incHeight })
-  //       if (table.state.dataHeight >= 500) {
-  //         table.setState({
-  //           dataHeight: 500,
-  //           isOpening: false
-  //         })
-  //         clearInterval(expandTimer)
-  //       } else if (table.state.isClosing) {
-  //         table.setState({ isOpening: false })
-  //         clearInterval(expandTimer)
-  //       }
-  //     }, 10)
-  //   }
-  // }
-
-  // collapseTable(table: RecordTable): void {
-  //   if (!table.state.isClosing && this.searchValue == '') {
-  //     table.setState({ isClosing: true })
-  //     var collapseTimer = setInterval(() => {
-  //       var decHeight = table.state.dataHeight - 70
-  //       table.setState({ dataHeight: decHeight })
-  //       if (table.state.dataHeight <= 110 || !this.state.isClosing) {
-  //         table.setState({
-  //           dataHeight: 110,
-  //           isClosing: false
-  //         })
-  //         clearInterval(collapseTimer)
-  //       }
-  //     }, 10)
-  //   }
-  // }
-
   private setHighlight(sorts: Column) {
     this.setState({
       selectedColumn: sorts.name
@@ -393,5 +326,4 @@ export default class RecordTable extends Component<RecordTableProps, RecordTable
       return [{ columnName: 'id', direction: 'asc' }]
     else return [{ columnName: category, direction: 'desc' }]
   }
-
 }
