@@ -15,8 +15,8 @@ import {
   Column, GroupingState, GroupSummaryItem, IntegratedFiltering, IntegratedGrouping,
   IntegratedSorting,
   IntegratedSummary, SearchState,
-  Sorting,
-  SortingState, SummaryItem,
+  Sorting, TableColumnResizing,
+  SortingState, SummaryItem,TableColumnWidthInfo,
   SummaryState, TableGroupRow as TableGroupRowBase
 } from "@devexpress/dx-react-grid";
 import { Paper } from "@material-ui/core";
@@ -85,32 +85,32 @@ export default class RecordTable extends Component<RecordTableProps, RecordTable
   private getBackgroundColor(category: string): string {
     switch (category) {
       case "fund":
-        return "#FFF5F5" // Red
+        return "#FFCCCC" // Red
       case "division":
-        return "#FFF9F0" // Orange
+        return "#FFE6CC" // Orange
       case "department":
-        return "#F9FFF6" // Green
+        return "#E6FFCC" // Green
       case "event":
-        return "#FBFAFF" // Blue
+        return "#E6F7FF" // Blue
       case "gl":
-        return "#FFF9FF" // Purple
+        return "#FFE6FF" // Purple
       default:
-        return "#F6F6F6" // Gray
+        return "#D6D6D6" // Gray
     }
   }
 
   private getSelectedBackgroundColor(category: string): string {
     switch (category) {
       case "fund":
-        return "#620000" // Red
+        return "#FF3333" // Red
       case "division":
-        return "#8E4200" // Orange
+        return "#FF7733" // Orange
       case "department":
-        return "#0C5700" // Green
+        return "#44CC00" // Green
       case "event":
-        return "#001457" // Blue
+        return "#1940FF" // Blue
       case "gl":
-        return "#48005A" // Purple
+        return "#800080" // Purple
       default:
         return "#2F2F2F" // Gray
     }
@@ -191,7 +191,7 @@ export default class RecordTable extends Component<RecordTableProps, RecordTable
       sortingState: [{ columnName: 'id', direction: 'asc' }],
       groupBy: undefined,
       dataHeight: 110,
-      selectedColumn: '',
+      selectedColumn: 'description',
       isOpening: false,
       isClosing: false,
       searchValue: ''
@@ -230,9 +230,9 @@ export default class RecordTable extends Component<RecordTableProps, RecordTable
     this.searchValue = value
     if (value) {
       this.setState({ isClosing: false })
-      this.expandTable(this)
+      // this.expandTable(this)
     } else {
-      this.collapseTable(this)
+      // this.collapseTable(this)
     }
   }
 
@@ -249,9 +249,9 @@ export default class RecordTable extends Component<RecordTableProps, RecordTable
   render() {
     if (this.props.dataloader.getPeekTable()) {
       this.props.dataloader.setPeekTable(false)
-      this.peekTable(this)
+      // this.peekTable(this)
     }
-
+    console.log(this.state.selectedColumn)
     const rows = this.props.dataloader.getRecords().map((e, i) => { e.id = i; return e })
     if (this.props.hidden === true)
       return <Paper />
@@ -259,8 +259,9 @@ export default class RecordTable extends Component<RecordTableProps, RecordTable
       {/* <VideoModal open={true} close={() => this.doSum()} /> */}
       <Paper
         elevation={0}
-        onMouseEnter={() => this.expandTable(this)}
-        onMouseLeave={() => this.collapseTable(this)}
+        // style={{width:500}}
+        // onMouseEnter={() => this.expandTable(this)}
+        // onMouseLeave={() => this.collapseTable(this)}
       >
         <Grid rows={rows} columns={this.columns}>
           <SortingState
@@ -280,10 +281,8 @@ export default class RecordTable extends Component<RecordTableProps, RecordTable
           <DataTypeProvider for={['amount']} formatterComponent={CurrencyFormatter} />
           <DataTypeProvider for={['date']} formatterComponent={DateFormatter} />
 
-          <VirtualTable columnExtensions={this.tableColumnExtension} height={this.state.dataHeight} />
-          {/* <TableColumnResizing
-                        defaultColumnWidths={this.columnWidth}
-                    /> */}
+          <VirtualTable columnExtensions={this.tableColumnExtension} height={650} />
+
           <TableColumnVisibility
             defaultHiddenColumnNames={['id']}
           />
@@ -309,60 +308,60 @@ export default class RecordTable extends Component<RecordTableProps, RecordTable
     </>)
   }
 
-  peekTable(table: RecordTable): void {
-    if (table.state.dataHeight < 200 && !table.state.isClosing && !table.state.isOpening && this.searchValue == '') {
-      table.setState({ isOpening: true, isClosing: true })
-      var peekTimer = setInterval(() => {
-        var incHeight = table.state.dataHeight + 70
-        table.setState({ dataHeight: incHeight })
-        if (table.state.dataHeight >= 200) {
-          clearInterval(peekTimer)
-          var pauseTimer = setInterval(() => {
-            table.setState({ isOpening: false, isClosing: false, dataHeight: 200 })
-            table.collapseTable(table)
-            clearInterval(pauseTimer)
-          }, 3000)
-        }
-      }, 10)
-    }
-  }
+  // peekTable(table: RecordTable): void {
+  //   if (table.state.dataHeight < 200 && !table.state.isClosing && !table.state.isOpening && this.searchValue == '') {
+  //     table.setState({ isOpening: true, isClosing: true })
+  //     var peekTimer = setInterval(() => {
+  //       var incHeight = table.state.dataHeight + 70
+  //       table.setState({ dataHeight: incHeight })
+  //       if (table.state.dataHeight >= 200) {
+  //         clearInterval(peekTimer)
+  //         var pauseTimer = setInterval(() => {
+  //           table.setState({ isOpening: false, isClosing: false, dataHeight: 200 })
+  //           table.collapseTable(table)
+  //           clearInterval(pauseTimer)
+  //         }, 3000)
+  //       }
+  //     }, 10)
+  //   }
+  // }
 
-  expandTable(table: RecordTable): void {
-    if (!table.state.isOpening) {
-      table.setState({ isOpening: true })
-      var expandTimer = setInterval(() => {
-        var incHeight = table.state.dataHeight + 70
-        table.setState({ dataHeight: incHeight })
-        if (table.state.dataHeight >= 500) {
-          table.setState({
-            dataHeight: 500,
-            isOpening: false
-          })
-          clearInterval(expandTimer)
-        } else if (table.state.isClosing) {
-          table.setState({ isOpening: false })
-          clearInterval(expandTimer)
-        }
-      }, 10)
-    }
-  }
+  // expandTable(table: RecordTable): void {
+  //   if (!table.state.isOpening) {
+  //     table.setState({ isOpening: true })
+  //     var expandTimer = setInterval(() => {
+  //       var incHeight = table.state.dataHeight + 70
+  //       table.setState({ dataHeight: incHeight })
+  //       if (table.state.dataHeight >= 500) {
+  //         table.setState({
+  //           dataHeight: 500,
+  //           isOpening: false
+  //         })
+  //         clearInterval(expandTimer)
+  //       } else if (table.state.isClosing) {
+  //         table.setState({ isOpening: false })
+  //         clearInterval(expandTimer)
+  //       }
+  //     }, 10)
+  //   }
+  // }
 
-  collapseTable(table: RecordTable): void {
-    if (!table.state.isClosing && this.searchValue == '') {
-      table.setState({ isClosing: true })
-      var collapseTimer = setInterval(() => {
-        var decHeight = table.state.dataHeight - 70
-        table.setState({ dataHeight: decHeight })
-        if (table.state.dataHeight <= 110 || !this.state.isClosing) {
-          table.setState({
-            dataHeight: 110,
-            isClosing: false
-          })
-          clearInterval(collapseTimer)
-        }
-      }, 10)
-    }
-  }
+  // collapseTable(table: RecordTable): void {
+  //   if (!table.state.isClosing && this.searchValue == '') {
+  //     table.setState({ isClosing: true })
+  //     var collapseTimer = setInterval(() => {
+  //       var decHeight = table.state.dataHeight - 70
+  //       table.setState({ dataHeight: decHeight })
+  //       if (table.state.dataHeight <= 110 || !this.state.isClosing) {
+  //         table.setState({
+  //           dataHeight: 110,
+  //           isClosing: false
+  //         })
+  //         clearInterval(collapseTimer)
+  //       }
+  //     }, 10)
+  //   }
+  // }
 
   private setHighlight(sorts: Column) {
     this.setState({

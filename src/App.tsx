@@ -39,9 +39,9 @@ class App extends React.Component<{}, AppState> {
       <>
         <CssBaseline />
         {/* <VideoModal open={true} close={() => this.toggleModal()} /> */}
-        <Container maxWidth="lg">
+        {/* <Container maxWidth="lg"> */}
           <DatasetView loader={this.state.loader} />
-        </Container>
+        {/* </Container> */}
       </>
     );
   }

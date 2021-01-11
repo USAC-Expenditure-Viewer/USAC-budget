@@ -1,7 +1,9 @@
 import React, { Component } from "react";
-import { Category, DataLoaderProps } from "../models/DataLoader";
+import { Category, DataLoaderProps, WordEntry } from "../models/DataLoader";
 import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from 'recharts';
 import { KMFormat } from "../util";
+import { Word } from "react-wordcloud";
+import { Filter } from "@devexpress/dx-react-grid";
 
 interface CategoryPieProps extends DataLoaderProps {
   category: Category
@@ -45,9 +47,11 @@ export default class CategoryPie extends Component<CategoryPieProps, CategoryPie
 
     const data = this.props.dataloader.getCategories(this.props.category)
     const lastFilter = this.props.dataloader.getLastFilter()
+    const selected = lastFilter == null ? undefined :
+      (lastFilter.category === this.props.category ? lastFilter.name : undefined)
 
     return (
-      <div style={{ height: '80vh' }} hidden={this.props.hidden || false}>
+      <div style={{ height: '60vh' }} hidden={this.props.hidden || false}>
         {(this.props.hidden || false) ? null : (
           <ResponsiveContainer height="100%" width="100%">
             <PieChart>

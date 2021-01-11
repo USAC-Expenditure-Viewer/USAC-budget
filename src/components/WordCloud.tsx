@@ -49,7 +49,7 @@ export default class WordCloud extends Component<WordCloudProps> {
 
   render() {
     return (
-      <div style={{ height: '80vh' }} hidden={this.props.hidden}>
+      <div style={{ height: '60vh' }} hidden={this.props.hidden}>
         {(this.props.hidden || false) ? null : (
           <ReactWordcloud callbacks={this.callbacks} words={this.props.dataloader.getWordList().slice(0, 80)}
             options={this.options} />

@@ -37,7 +37,6 @@ export default class DateSlider extends Component<SliderProps, SliderState> {
     }
   }
 
-
   componentDidMount(): void {
     this.props.dataloader.addChangeCallback(() =>
       this.updateState()
@@ -59,7 +58,7 @@ export default class DateSlider extends Component<SliderProps, SliderState> {
     return (
       <div style={{
         paddingLeft: '5%', paddingRight: `calc(5% + ${DateSlider.getYAxisWidth()}px)`,
-        height: '80vh', margin: "auto"
+        height: '65vh', margin: "auto"
       }} hidden={this.props.hidden || false}>
         {(this.props.hidden || false) ? null : (
           <ResponsiveContainer height="90%" width="100%">
@@ -84,8 +83,8 @@ export default class DateSlider extends Component<SliderProps, SliderState> {
               <XAxis dataKey="text" hide orientation="top" scale="band" />
               <YAxis tickFormatter={(v) => '$' + KMFormat(v)} width={DateSlider.getYAxisWidth()}>
                 <Label angle={270} position="insideLeft" style={{ textAnchor: 'middle' }}>
-                  Monthly Expense($)
-                                </Label>
+                  Monthly Expense ($)
+                </Label>
               </YAxis>
               <Tooltip formatter={(value) => "$" + KMFormat(value as number)}
                 contentStyle={{ display: 'none' }} />

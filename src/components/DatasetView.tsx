@@ -78,7 +78,8 @@ export default class DatasetView extends React.Component<DatasetProps, DatasetSt
   }
 
   toggleModal() {
-    this.state.modalOpen === true ? this.setState({ modalOpen: false}) : this.setState({modalOpen: true})
+    alert("Scroll down to view the USAC Budget Viewer Tutorial video.");
+    this.setState({modalOpen: true});
   }
 
   private copyURL() {
@@ -97,47 +98,48 @@ export default class DatasetView extends React.Component<DatasetProps, DatasetSt
   }
 
   render() {
-    const loader = this.props.loader
+    const loader = this.props.loader;
+    var graphicTitle = this.state.value === 'keyword' ? 'description' : this.state.value;
+    graphicTitle = graphicTitle.charAt(0).toUpperCase() + graphicTitle.slice(1)
     return (
       <>
         <div style={{alignContent: 'center', zIndex: 9, position: 'absolute', margin: 'auto', width: '50%'}}>
           <VideoModal open={this.state.modalOpen} close={() => this.closeModal()} />
         </div>
-        {/* <div style={{zIndex: 3}}> */}
+        <br /><br />
+        <div style={{marginLeft: 30, marginRight: 30}}>
           <KeywordCrumb dataloader={loader} />
+        </div>
+        <br /><br /><br />
+        <div style={{float: 'left', width : '45%', marginLeft: 40, height: 600}}>
           <RecordTable dataloader={loader} onChange={this.onTabChange.bind(this)} style={{
-            zIndex: 2,
+            // zIndex: 2,
             backgroundColor: "lightblue",
           }} />
-          <Paper elevation={2} style={{
-            position: "absolute",
-            zIndex: -1,
-            bottom: 0,
-            width: 1230
-          }}>
-            <ExplanationText category={this.state.value} />
-            <WordCloud hidden={this.state.value !== 'keyword'} dataloader={loader} />
-            <CategoryPie hidden={!isOfTypeCategory(this.state.value)}
-              category={isOfTypeCategory(this.state.value) ? this.state.value : "fund"} dataloader={loader} />
-            <AmountSlider hidden={this.state.value !== "amount"} dataloader={loader} />
-            <DateSlider hidden={this.state.value !== 'date'} dataloader={loader} />
-            {/* <Link color="textSecondary" href="https://forms.google.com" style={{ padding: 20 }}>
-              <ContactSupportIcon /> Comments
-            </Link> */}
-            <Link color="textSecondary" href="mailto:vtran@asucla.ucla.edu" style={{ padding: 20 }}>
-              <EmailIcon /> Professional Accountant
-            </Link>
-            <Link color="textSecondary" href="mailto:usacouncil@asucla.ucla.edu" style={{ padding: 20 }}>
-              <EmailIcon /> USAC Council
-            </Link>
-            <Button color="inherit" onClick={this.copyURL} aria-label="share">
-              Copy link
-            </Button>
-            <Button color="inherit" onClick={() => this.toggleModal()} aria-label="share">
-              <ContactSupportIcon />Help
-            </Button>
-          </Paper>
-        {/* </div> */}
+        </div>
+        <div style={{float: 'right', width : '45%', marginRight: 40}}>
+          <h1>{graphicTitle}</h1>
+          <ExplanationText category={this.state.value} />
+          <WordCloud hidden={this.state.value !== 'keyword'} dataloader={loader} />
+          <CategoryPie hidden={!isOfTypeCategory(this.state.value)}
+            category={isOfTypeCategory(this.state.value) ? this.state.value : "fund"} dataloader={loader} />
+          <AmountSlider hidden={this.state.value !== "amount"} dataloader={loader} />
+          <DateSlider hidden={this.state.value !== 'date'} dataloader={loader} />
+        </div>
+        <div style={{marginTop: 750}}>
+          <Link color="textSecondary" href="mailto:vtran@asucla.ucla.edu" style={{ padding: 20 }}>
+            <EmailIcon /> Professional Accountant
+          </Link>
+          <Link color="textSecondary" href="mailto:usacouncil@asucla.ucla.edu" style={{ padding: 20 }}>
+            <EmailIcon /> USAC Council
+          </Link>
+          <Button color="inherit" onClick={this.copyURL} aria-label="share">
+            Copy link
+          </Button>
+          <Button color="inherit" onClick={() => this.toggleModal()} aria-label="share">
+            <ContactSupportIcon />Help
+          </Button>
+        </div>
       </>
     );
   }

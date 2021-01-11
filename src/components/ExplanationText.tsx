@@ -11,43 +11,43 @@ export default function ExplanationText(props: ExpProps) {
   switch (props.category) {
     case 'date':
       return (
-        <Typography color="textSecondary">
+        <Typography color="textSecondary" style={{fontSize: 16}}>
           Date transaction entered. (purchases occur beforehand)
         </Typography>
       )
     case 'fund':
       return (
-        <Typography color="textSecondary">
+        <Typography color="textSecondary" style={{fontSize: 16}}>
           Source of money (includes student fees and other income)
         </Typography>
       )
     case 'division':
       return (
-        <Typography color="textSecondary">
+        <Typography color="textSecondary" style={{fontSize: 16}}>
           Allocates money to departments.
         </Typography>
       )
     case 'department':
       return (
-        <Typography color="textSecondary">
+        <Typography color="textSecondary" style={{fontSize: 16}}>
           Spends money (includes student groups)
         </Typography>
       )
     case 'gl':
       return (
-        <Typography color="textSecondary">
+        <Typography color="textSecondary" style={{fontSize: 16}}>
           Rules for how each $ can be spent.
         </Typography>
       )
     case 'event':
       return (
-        <Typography color="textSecondary">
+        <Typography color="textSecondary" style={{fontSize: 16}}>
           Occasion/reason for transaction. ( generic label is “Commission/Dept related”)
         </Typography>
       )
     case 'keyword':
       return (
-        <Typography color="textSecondary">
+        <Typography color="textSecondary" style={{fontSize: 16}}>
           How the departments said they spent money.
           Accountant abreviates. Wordcloud deabreviates.
           Font size of word represents total $ for all descriptions that include word.
@@ -55,13 +55,13 @@ export default function ExplanationText(props: ExpProps) {
       )
     case 'amount':
       return (
-        <Typography color="textSecondary">
+        <Typography color="textSecondary" style={{fontSize: 16}}>
           Size of each transaction. (may include several purchases)
         </Typography>
       )
     case 'table':
       return (
-        <Typography color="textSecondary">
+        <Typography color="textSecondary" style={{fontSize: 16}}>
           Above is the raw transaction table of the Undergraduate Student Association.
           Click on a column to visualize it.
           <br />
@@ -70,7 +70,7 @@ export default function ExplanationText(props: ExpProps) {
       )
     case 'footer':
       return (
-        <Typography color="textSecondary">
+        <Typography color="textSecondary" style={{fontSize: 16}}>
           We had to de-abbreviate them, but sometimes did that incorrectly,
           so please comment at the bottom of the page if you see that.
           <br />

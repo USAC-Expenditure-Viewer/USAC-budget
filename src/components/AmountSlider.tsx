@@ -45,7 +45,7 @@ export default class AmountSlider extends Component<SliderProps, SliderState> {
         return (
             <div style={{
                 paddingLeft: '5%', paddingRight: `calc(5% + ${AmountSlider.getYAxisWidth()}px)`,
-                height: '80vh', margin: "auto"
+                height: '65vh', margin: "auto"
             }} hidden={this.props.hidden || false}>
                 {(this.props.hidden || false) ? null : (
                     <ResponsiveContainer height="90%" width="100%">
@@ -88,7 +88,7 @@ export default class AmountSlider extends Component<SliderProps, SliderState> {
         return (
             <div style={{
                 paddingLeft: '5%', paddingRight: `calc(5% + ${AmountSlider.getYAxisWidth()}px)`,
-                height: '80vh', margin: "auto"
+                height: '65vh', margin: "auto"
             }} hidden={this.props.hidden || false}>
                 {(this.props.hidden || false) ? null : (
                     <ResponsiveContainer height="90%" width="100%">
