@@ -31,7 +31,9 @@ class App extends React.Component<{}, AppState> {
         loader: Datasets.getInstance().getDataLoader()
       })
     })
-    alert("Please adjust your screen's zoom so it fits the entire budget viewer.")
+    setTimeout(() => {
+      alert("Please adjust your screen's zoom so it fits the entire budget viewer.");
+    }, 3000);
   }
 
   toggleModal() {
