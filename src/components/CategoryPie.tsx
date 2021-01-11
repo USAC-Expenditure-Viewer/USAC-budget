@@ -77,7 +77,7 @@ export default class CategoryPie extends Component<CategoryPieProps, CategoryPie
     if (entry.value < totalValue * 0.01)
       return null
     return (
-      <text x={entry.x} y={entry.y} fill="Black" textAnchor={entry.x > entry.cx ? 'start' : 'end'} dominantBaseline="central">
+      <text fontSize={10} x={entry.x} y={entry.y} fill="Black" textAnchor={entry.x > entry.cx ? 'start' : 'end'} dominantBaseline="central">
         {entry.name}
       </text>
     )

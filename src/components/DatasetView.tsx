@@ -43,7 +43,7 @@ export default class DatasetView extends React.Component<DatasetProps, DatasetSt
 
     this.state = {
       value: this.value,
-      width: '45%'
+      width: '43%'
     }
 
     QueryBuilder.getInstance().addGenerator(this.generateQuery.bind(this), 1)
@@ -78,7 +78,7 @@ export default class DatasetView extends React.Component<DatasetProps, DatasetSt
   }
 
   halfScreen() {
-    this.setState({width: '45%'});
+    this.setState({width: '43%'});
   }
 
   private copyURL() {
@@ -113,8 +113,8 @@ export default class DatasetView extends React.Component<DatasetProps, DatasetSt
             backgroundColor: "lightblue",
           }} fullScreen={() => this.fullScreen()} halfScreen={() => this.halfScreen()} />
         </div>
-        {this.state.width === '45%' ? 
-        <div style={{float: 'right', width : '45%', marginRight: 40}}>
+        {this.state.width === '43%' ? 
+        <div style={{float: 'right', width : '43%', marginRight: 40}}>
           <h1>{graphicTitle}</h1>
           <ExplanationText category={this.state.value} />
           <WordCloud hidden={this.state.value !== 'keyword'} dataloader={loader} />
