@@ -6,11 +6,9 @@ import HelpPage from './components/HelpPage';
 import * as serviceWorker from './serviceWorker';
 import $ from 'jquery';
 import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom';
-import { createBrowserHistory } from 'history';
-const hist = createBrowserHistory();
 
 ReactDOM.render(
-  <BrowserRouter history={hist}>
+  <BrowserRouter>
     <Switch>
       <Switch>
         <Route path="/index" render={(props: any) => <App {...props} />} />
