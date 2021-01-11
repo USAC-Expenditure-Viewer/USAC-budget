@@ -62,17 +62,19 @@ export default class KeywordCrumb extends Component<DataLoaderProps, KeywordCrum
           <Typography align="center">
             <Tooltip title="Choose new year">
               <Link key={-1} color="textPrimary"
-                onClick={() => this.setYear()}>
-                USAC Budget Filters: <br />
-                Remove all filters
+                //onClick={() => this.setYear()}
+              >
+                <div style={{fontWeight: 'bold'}}>
+                  USAC Budget Filters
+                </div>
               </Link>
             </Tooltip>
           </Typography>
           <div style={{ backgroundColor: "#D0D0D0" }}>
             <Typography align="center">
-              <Tooltip title="Remove All Filters">
+              <Tooltip title="Remove This Filter">
                 <Link key={-1} color="textPrimary"
-                  onClick={() => loader.sliceFilter(0)}>
+                  onClick={() => this.setYear()}>
                   year: {Datasets.getInstance().getCurrentDatasetName()}
                   <br />
                   ${KMFormat(loader.getDatasetTotal())}
@@ -83,9 +85,9 @@ export default class KeywordCrumb extends Component<DataLoaderProps, KeywordCrum
           {list.slice(0, -1).map((filter, index) => (
             <div style={{ backgroundColor: this.getColor(filter.category) }}>
               <Typography align="center">
-                <Tooltip title="Go Back To This Filter">
+                <Tooltip title="Remove This Filter">
                   <Link key={index} color="textSecondary" align="center"
-                    onClick={() => loader.sliceFilter(index + 1)}>
+                    onClick={() => loader.sliceFilter(index)}>
                     {filter.category}: {filter.name}
                     <br />
                     ${KMFormat(filter.amount)}
@@ -96,7 +98,12 @@ export default class KeywordCrumb extends Component<DataLoaderProps, KeywordCrum
           ))}
           {list.length > 0 ? (<div style={{ backgroundColor: this.getColor(list[list.length - 1].category) }}>
             <Typography color="textPrimary" align="center" key={list.length - 1}>
-              {list[list.length - 1].category}: {list[list.length - 1].name}<br />${KMFormat(list[list.length - 1].amount)}
+              <Tooltip title="Remove This Filter">
+                <Link color="textSecondary" align="center"
+                  onClick={() => loader.sliceFilter(list.length - 1)}>
+                  {list[list.length - 1].category}: {list[list.length - 1].name}<br />${KMFormat(list[list.length - 1].amount)}
+                </Link>
+              </Tooltip>
             </Typography>
           </div>) : null}
         </Breadcrumbs>
