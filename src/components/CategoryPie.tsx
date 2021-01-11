@@ -94,22 +94,22 @@ export default class CategoryPie extends Component<CategoryPieProps, CategoryPie
       if (this.state.selectedSlices.get(this.props.category) == entry.text) {
         switch (this.props.category) {
           case "fund":
-            return "#620000" // Red
+            return "#9E0000" // Red
           case "division":
-            return "#8E4200" // Orange
+            return "#C25A00" // Orange
           case "department":
             return "#0C5700" // Green
           case "event":
-            return "#001457" // Blue
+            return "#001E85" // Blue
           case "gl":
-            return "#48005A" // Purple
+            return "#600078" // Purple
           default:
             return "#2F2F2F" // Gray
         }
       } else {
         switch (this.props.category) {
           case "fund":
-            return "#FFC3C3"
+            return "#FFB3B3"
           case "division":
             return "#FFD9C3"
           case "department":

@@ -20,6 +20,7 @@ export type TabTypes = Category | 'table' | 'keyword' | "amount" | "date";
 interface DatasetState {
   value: TabTypes
   modalOpen: boolean
+  width: string
 }
 
 interface DatasetProps {
@@ -43,7 +44,8 @@ export default class DatasetView extends React.Component<DatasetProps, DatasetSt
 
     this.state = {
       value: this.value,
-      modalOpen: false
+      modalOpen: false,
+      width: '45%'
     }
 
     QueryBuilder.getInstance().addGenerator(this.generateQuery.bind(this), 1)
@@ -82,6 +84,14 @@ export default class DatasetView extends React.Component<DatasetProps, DatasetSt
     this.setState({modalOpen: true});
   }
 
+  fullScreen() {
+    this.setState({width: '90%'});
+  }
+
+  halfScreen() {
+    this.setState({width: '45%'});
+  }
+
   private copyURL() {
     const selBox = document.createElement('textarea');
     selBox.style.position = 'fixed';
@@ -111,12 +121,13 @@ export default class DatasetView extends React.Component<DatasetProps, DatasetSt
           <KeywordCrumb dataloader={loader} />
         </div>
         <br /><br /><br />
-        <div style={{float: 'left', width : '45%', marginLeft: 40, height: 600}}>
+        <div style={{float: 'left', width : this.state.width, marginLeft: 40, height: 600, marginRight: 40}}>
           <RecordTable dataloader={loader} onChange={this.onTabChange.bind(this)} style={{
             // zIndex: 2,
             backgroundColor: "lightblue",
-          }} />
+          }} fullScreen={() => this.fullScreen()} halfScreen={() => this.halfScreen()} />
         </div>
+        {this.state.width === '45%' ? 
         <div style={{float: 'right', width : '45%', marginRight: 40}}>
           <h1>{graphicTitle}</h1>
           <ExplanationText category={this.state.value} />
@@ -126,6 +137,7 @@ export default class DatasetView extends React.Component<DatasetProps, DatasetSt
           <AmountSlider hidden={this.state.value !== "amount"} dataloader={loader} />
           <DateSlider hidden={this.state.value !== 'date'} dataloader={loader} />
         </div>
+        : null}
         <div style={{marginTop: 750}}>
           <Link color="textSecondary" href="mailto:vtran@asucla.ucla.edu" style={{ padding: 20 }}>
             <EmailIcon /> Professional Accountant

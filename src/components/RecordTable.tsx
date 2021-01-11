@@ -68,6 +68,8 @@ interface RecordTableState {
 interface RecordTableProps extends DataLoaderProps {
   hidden?: boolean | undefined;
   onChange: (a: TabTypes) => void;
+  fullScreen: () => void;
+  halfScreen: () => void;
 }
 
 export default class RecordTable extends Component<RecordTableProps, RecordTableState> {
@@ -85,9 +87,9 @@ export default class RecordTable extends Component<RecordTableProps, RecordTable
   private getBackgroundColor(category: string): string {
     switch (category) {
       case "fund":
-        return "#FFCCCC" // Red
+        return "#FFDBDB" // Red
       case "division":
-        return "#FFE6CC" // Orange
+        return "#FFEFD4" // Orange
       case "department":
         return "#E6FFCC" // Green
       case "event":
@@ -95,22 +97,22 @@ export default class RecordTable extends Component<RecordTableProps, RecordTable
       case "gl":
         return "#FFE6FF" // Purple
       default:
-        return "#D6D6D6" // Gray
+        return "#E6E6E6" // Gray
     }
   }
 
   private getSelectedBackgroundColor(category: string): string {
     switch (category) {
       case "fund":
-        return "#FF3333" // Red
+        return "#9E0000" // Red
       case "division":
-        return "#FF7733" // Orange
+        return "#C25A00" // Orange
       case "department":
-        return "#44CC00" // Green
+        return "#0C5700" // Green
       case "event":
-        return "#1940FF" // Blue
+        return "#001E85" // Blue
       case "gl":
-        return "#800080" // Purple
+        return "#600078" // Purple
       default:
         return "#2F2F2F" // Gray
     }
@@ -229,10 +231,9 @@ export default class RecordTable extends Component<RecordTableProps, RecordTable
   private searchLock(value: string) {
     this.searchValue = value
     if (value) {
-      this.setState({ isClosing: false })
-      // this.expandTable(this)
+      this.props.fullScreen();
     } else {
-      // this.collapseTable(this)
+      this.props.halfScreen();
     }
   }
 
