@@ -51,9 +51,9 @@ export default class DatasetView extends React.Component<DatasetProps, DatasetSt
 
   componentDidMount(): void {
     this.props.loader.addChangeCallback(() => this.forceUpdate());
-    // setTimeout(() => {
-    //   alert("Please adjust your screen's zoom so it fits the entire budget viewer.");
-    // }, 2000);
+    setTimeout(() => {
+      alert("Please adjust your screen's zoom so it fits the entire budget viewer.");
+    }, 2000);
   }
 
   parseQuery(query: string): TabTypes {

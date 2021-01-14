@@ -31,7 +31,7 @@ export default class HelpPage extends React.Component {
           </div>
           <br /><br /><br />
           <iframe width="960" height="600" style={{marginLeft: 20, marginRight: 20}} 
-            src="https://www.youtube.com/embed/PwSO7l-iRLQ">
+            src="https://www.youtube.com/embed/1Bm70HP0zmM">
           </iframe>
           <br /><br />
         </Container>
