@@ -67,12 +67,14 @@ export default class KeywordCrumb extends Component<DataLoaderProps, KeywordCrum
           <Typography align="center">
             <Tooltip title="Remove This Filter">
               <div
-                style={{ backgroundColor: "#D0D0D0", cursor: 'pointer', color: 'black' }}
+                style={{ backgroundColor: "#D0D0D0", cursor: 'pointer', color: 'black', borderRadius: 15 }}
                 onClick={() => this.setYear()}
               >
-                year: {Datasets.getInstance().getCurrentDatasetName()}
-                <br />
-                ${KMFormat(loader.getDatasetTotal())}
+                <div style={{marginLeft: 10, marginRight: 10}}>
+                  year: {Datasets.getInstance().getCurrentDatasetName()}
+                  <br />
+                  ${KMFormat(loader.getDatasetTotal())}
+                </div>
               </div>
             </Tooltip>
           </Typography>
@@ -80,12 +82,15 @@ export default class KeywordCrumb extends Component<DataLoaderProps, KeywordCrum
             <Typography align="center">
               <Tooltip title="Remove This Filter">
                 <div
-                  style={{ backgroundColor: this.getColor(filter.category), cursor: 'pointer', color: 'black' }} 
+                  style={{ backgroundColor: this.getColor(filter.category), cursor: 'pointer', 
+                    color: 'black', borderRadius: 15 }} 
                   onClick={() => loader.sliceFilter(index)}
                 >
-                  {filter.category}: {filter.name}
-                  <br />
-                  ${KMFormat(filter.amount)}
+                  <div style={{marginLeft: 10, marginRight: 10}}>
+                    {filter.category}: {filter.name}
+                    <br />
+                    ${KMFormat(filter.amount)}
+                  </div>
                 </div>
               </Tooltip>
             </Typography>
@@ -95,9 +100,11 @@ export default class KeywordCrumb extends Component<DataLoaderProps, KeywordCrum
               <Tooltip title="Remove This Filter">
                 <div
                   onClick={() => loader.sliceFilter(list.length - 1)}
-                  style={{ backgroundColor: this.getColor(list[list.length - 1].category), cursor: 'pointer' }}
+                  style={{ backgroundColor: this.getColor(list[list.length - 1].category), cursor: 'pointer', borderRadius: 15 }}
                 >
-                  {list[list.length - 1].category}: {list[list.length - 1].name}<br />${KMFormat(list[list.length - 1].amount)}
+                  <div style={{marginLeft: 10, marginRight: 10}}>
+                    {list[list.length - 1].category}: {list[list.length - 1].name}<br />${KMFormat(list[list.length - 1].amount)}
+                  </div>
                 </div>
               </Tooltip>
             </Typography>
