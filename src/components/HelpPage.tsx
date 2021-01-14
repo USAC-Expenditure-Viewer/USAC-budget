@@ -24,7 +24,7 @@ export default class HelpPage extends React.Component {
               pathname: '/USAC-budget/',
               search: '?d=2019&tab=keyword&'
             }}>
-              <Button style={{backgroundColor: 'red', color: 'black', fontWeight: 'bold'}}>
+              <Button style={{backgroundColor: 'red', color: 'black', fontWeight: 'bold', cursor: 'pointer'}}>
                 X
               </Button>
             </Link>
