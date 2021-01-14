@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 importScripts(
-  "/USAC-budget/precache-manifest.a91ad8b628f55b969beafb998c05e177.js"
+  "/USAC-budget/precache-manifest.5d868310b95069bec2902ac929f2c109.js"
 );
 
 self.addEventListener('message', (event) => {
