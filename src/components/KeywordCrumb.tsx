@@ -64,42 +64,44 @@ export default class KeywordCrumb extends Component<DataLoaderProps, KeywordCrum
               USAC Budget Filters
             </div>
           </Typography>
-          <div style={{ backgroundColor: "#D0D0D0" }}>
+          <Typography align="center">
+            <Tooltip title="Remove This Filter">
+              <div
+                style={{ backgroundColor: "#D0D0D0", cursor: 'pointer', color: 'black' }}
+                onClick={() => this.setYear()}
+              >
+                year: {Datasets.getInstance().getCurrentDatasetName()}
+                <br />
+                ${KMFormat(loader.getDatasetTotal())}
+              </div>
+            </Tooltip>
+          </Typography>
+          {list.slice(0, -1).map((filter, index) => (
             <Typography align="center">
               <Tooltip title="Remove This Filter">
-                <Link key={-1} color="textPrimary"
-                  onClick={() => this.setYear()}>
-                  year: {Datasets.getInstance().getCurrentDatasetName()}
+                <div
+                  style={{ backgroundColor: this.getColor(filter.category), cursor: 'pointer', color: 'black' }} 
+                  onClick={() => loader.sliceFilter(index)}
+                >
+                  {filter.category}: {filter.name}
                   <br />
-                  ${KMFormat(loader.getDatasetTotal())}
-                </Link>
+                  ${KMFormat(filter.amount)}
+                </div>
               </Tooltip>
             </Typography>
-          </div>
-          {list.slice(0, -1).map((filter, index) => (
-            <div style={{ backgroundColor: this.getColor(filter.category) }}>
-              <Typography align="center">
-                <Tooltip title="Remove This Filter">
-                  <Link key={index} color="textSecondary" align="center"
-                    onClick={() => loader.sliceFilter(index)}>
-                    {filter.category}: {filter.name}
-                    <br />
-                    ${KMFormat(filter.amount)}
-                  </Link>
-                </Tooltip>
-              </Typography>
-            </div>
           ))}
-          {list.length > 0 ? (<div style={{ backgroundColor: this.getColor(list[list.length - 1].category) }}>
+          {list.length > 0 ? (
             <Typography color="textPrimary" align="center" key={list.length - 1}>
               <Tooltip title="Remove This Filter">
-                <Link color="textSecondary" align="center"
-                  onClick={() => loader.sliceFilter(list.length - 1)}>
+                <div
+                  onClick={() => loader.sliceFilter(list.length - 1)}
+                  style={{ backgroundColor: this.getColor(list[list.length - 1].category), cursor: 'pointer' }}
+                >
                   {list[list.length - 1].category}: {list[list.length - 1].name}<br />${KMFormat(list[list.length - 1].amount)}
-                </Link>
+                </div>
               </Tooltip>
             </Typography>
-          </div>) : null}
+          ) : null}
         </Breadcrumbs>
         <Drawer
           anchor={'left'}
