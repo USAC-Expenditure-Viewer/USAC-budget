@@ -60,15 +60,9 @@ export default class KeywordCrumb extends Component<DataLoaderProps, KeywordCrum
       <>
         <Breadcrumbs separator=">" style={this.props.style}>
           <Typography align="center">
-            <Tooltip title="Choose new year">
-              <Link key={-1} color="textPrimary"
-                //onClick={() => this.setYear()}
-              >
-                <div style={{fontWeight: 'bold'}}>
-                  USAC Budget Filters
-                </div>
-              </Link>
-            </Tooltip>
+            <div style={{fontWeight: 'bold', color: 'black'}}>
+              USAC Budget Filters
+            </div>
           </Typography>
           <div style={{ backgroundColor: "#D0D0D0" }}>
             <Typography align="center">
@@ -107,7 +101,11 @@ export default class KeywordCrumb extends Component<DataLoaderProps, KeywordCrum
             </Typography>
           </div>) : null}
         </Breadcrumbs>
-        <Drawer anchor={'left'} open={this.state.drawer} onClose={() => this.setState({ drawer: false })}>
+        <Drawer
+          anchor={'left'}
+          open={this.state.drawer}
+          onClose={() => this.setState({ drawer: false })}
+        >
           <div onClick={() => this.setState({ drawer: false })}>
             <List>
               {dataset_list.map(text => (

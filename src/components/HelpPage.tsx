@@ -20,7 +20,10 @@ export default class HelpPage extends React.Component {
         <Container style={{border: 'groove', margin: 'auto', width: 1000, backgroundColor: 'lightgray'}}>
           <br />
           <div style={{float: 'right', marginRight: 20}}>
-            <Link to="/USAC-budget">
+            <Link to={{
+              pathname: '/USAC-budget/',
+              search: '?d=2019&tab=keyword&'
+            }}>
               <Button style={{backgroundColor: 'red', color: 'black', fontWeight: 'bold'}}>
                 X
               </Button>

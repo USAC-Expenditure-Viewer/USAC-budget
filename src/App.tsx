@@ -4,10 +4,11 @@ import DatasetView from "./components/DatasetView"
 import DataLoader from "./models/DataLoader";
 import Datasets from "./models/Datasets";
 import { Container, CssBaseline } from "@material-ui/core";
+import YearSelect from './components/YearSelect';
 
 interface AppState {
-  loader: DataLoader,
-  yearSelected: Boolean
+  loader: DataLoader
+  yearSelected: boolean
 }
 
 class App extends React.Component<{}, AppState> {
@@ -20,35 +21,24 @@ class App extends React.Component<{}, AppState> {
     }
   }
 
-  componentWillMount() {
-    if (window.location.pathname === 'USAC-budget')
-      window.location.pathname = 'USAC-budget?'
-  }
-
   componentDidMount(): void {
     Datasets.getInstance().addChangeCallback(() => {
       this.setState({
         loader: Datasets.getInstance().getDataLoader()
       })
     })
-    setTimeout(() => {
-      alert("Please adjust your screen's zoom so it fits the entire budget viewer.");
-    }, 3000);
   }
 
-  toggleModal() {
-    // this.state.modalOpen === true ? this.setState({ modalOpen: false}) : this.setState({modalOpen: true})
-    return
+  selectYear = () => {
+    this.setState({yearSelected: true})
   }
 
   render() {
     return (
       <>
-        <CssBaseline />
-        {/* <VideoModal open={true} close={() => this.toggleModal()} /> */}
-        {/* <Container maxWidth="lg"> */}
+        {this.state.yearSelected === true ? 
           <DatasetView loader={this.state.loader} />
-        {/* </Container> */}
+        : <YearSelect close={this.selectYear} />}
       </>
     );
   }

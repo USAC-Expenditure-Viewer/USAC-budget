@@ -50,7 +50,10 @@ export default class DatasetView extends React.Component<DatasetProps, DatasetSt
   }
 
   componentDidMount(): void {
-    this.props.loader.addChangeCallback(() => this.forceUpdate())
+    this.props.loader.addChangeCallback(() => this.forceUpdate());
+    setTimeout(() => {
+      alert("Please adjust your screen's zoom so it fits the entire budget viewer.");
+    }, 3000);
   }
 
   parseQuery(query: string): TabTypes {
@@ -134,7 +137,7 @@ export default class DatasetView extends React.Component<DatasetProps, DatasetSt
           <Button style={{color: 'black', textDecoration: 'underline'}} onClick={this.copyURL} aria-label="share">
             Copy link
           </Button>
-          <Link to="help-page" style={{color: 'black'}}>
+          <Link to="/help-page/" style={{color: 'black'}}>
             <Button aria-label="share">
               <ContactSupportIcon />Help
             </Button>
