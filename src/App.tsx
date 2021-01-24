@@ -4,11 +4,9 @@ import DatasetView from "./components/DatasetView"
 import DataLoader from "./models/DataLoader";
 import Datasets from "./models/Datasets";
 import { Container, CssBaseline } from "@material-ui/core";
-import YearSelect from './components/YearSelect';
 
 interface AppState {
   loader: DataLoader
-  yearSelected: boolean
 }
 
 class App extends React.Component<{}, AppState> {
@@ -16,8 +14,7 @@ class App extends React.Component<{}, AppState> {
   constructor(props: {}) {
     super(props);
     this.state = {
-      loader: Datasets.getInstance().getDataLoader(),
-      yearSelected: false
+      loader: Datasets.getInstance().getDataLoader()
     }
   }
 
@@ -29,16 +26,12 @@ class App extends React.Component<{}, AppState> {
     })
   }
 
-  selectYear = () => {
-    this.setState({yearSelected: true})
-  }
 
   render() {
     return (
       <>
-        {this.state.yearSelected === true ? 
-          <DatasetView loader={this.state.loader} />
-        : <YearSelect close={this.selectYear} />}
+        <CssBaseline />
+        <DatasetView loader={this.state.loader} />
       </>
     );
   }

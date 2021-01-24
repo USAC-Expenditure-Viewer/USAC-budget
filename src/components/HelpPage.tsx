@@ -20,14 +20,14 @@ export default class HelpPage extends React.Component {
         <Container style={{border: 'groove', margin: 'auto', width: 1000, backgroundColor: 'lightgray'}}>
           <br />
           <div style={{float: 'right', marginRight: 20}}>
-            <Link to={{
+            {/* <Link to={{
               pathname: '/USAC-budget/',
               search: '?d=2019&tab=keyword&'
-            }}>
+            }}> */}
               <Button style={{backgroundColor: 'red', color: 'black', fontWeight: 'bold', cursor: 'pointer'}}>
                 X
               </Button>
-            </Link>
+            {/* </Link> */}
           </div>
           <br /><br /><br />
           <iframe width="960" height="600" style={{marginLeft: 20, marginRight: 20}} 

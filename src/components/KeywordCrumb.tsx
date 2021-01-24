@@ -21,7 +21,7 @@ export default class KeywordCrumb extends Component<DataLoaderProps, KeywordCrum
   constructor(props: DataLoaderProps) {
     super(props)
     this.state = {
-      drawer: false
+      drawer: true
     }
   }
 

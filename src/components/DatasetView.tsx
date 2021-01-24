@@ -14,6 +14,7 @@ import DateSlider from "./DateSlider";
 import ExplanationText from "./ExplanationText";
 import ContactSupportIcon from "@material-ui/icons/ContactSupport";
 import EmailIcon from '@material-ui/icons/Email';
+import { createBrowserHistory } from 'history';
 
 export type TabTypes = Category | 'table' | 'keyword' | "amount" | "date";
 
@@ -29,8 +30,6 @@ interface DatasetProps {
 export function isOfTypeTabs(input: string): input is TabTypes {
   return isOfTypeCategory(input) || ['table', 'keyword', "amount", "date"].includes(input);
 }
-
-
 
 export default class DatasetView extends React.Component<DatasetProps, DatasetState> {
   private value: TabTypes = 'keyword'
@@ -51,9 +50,6 @@ export default class DatasetView extends React.Component<DatasetProps, DatasetSt
 
   componentDidMount(): void {
     this.props.loader.addChangeCallback(() => this.forceUpdate());
-    setTimeout(() => {
-      alert("Please adjust your screen's zoom so it fits the entire budget viewer.");
-    }, 2000);
   }
 
   parseQuery(query: string): TabTypes {
@@ -84,7 +80,7 @@ export default class DatasetView extends React.Component<DatasetProps, DatasetSt
     this.setState({width: '43%'});
   }
 
-  private copyURL() {
+  copyURL() {
     const selBox = document.createElement('textarea');
     selBox.style.position = 'fixed';
     selBox.style.left = '0';
@@ -112,7 +108,6 @@ export default class DatasetView extends React.Component<DatasetProps, DatasetSt
         <br /><br /><br />
         <div style={{float: 'left', width : this.state.width, marginLeft: 40, height: 600, marginRight: 40}}>
           <RecordTable dataloader={loader} onChange={this.onTabChange.bind(this)} style={{
-            // zIndex: 2,
             backgroundColor: "lightblue",
           }} fullScreen={() => this.fullScreen()} halfScreen={() => this.halfScreen()} />
         </div>
@@ -137,11 +132,9 @@ export default class DatasetView extends React.Component<DatasetProps, DatasetSt
           <Button style={{color: 'black', textDecoration: 'underline'}} onClick={this.copyURL} aria-label="share">
             Copy link
           </Button>
-          <Link to="/help-page/" style={{color: 'black'}}>
-            <Button aria-label="share">
-              <ContactSupportIcon />Help
-            </Button>
-          </Link>
+          <Button aria-label="share" onClick={() => window.location = 'https://www.youtube.com/watch?v=1Bm70HP0zmM'}>
+            <ContactSupportIcon />Video
+          </Button>
         </div>
       </>
     );

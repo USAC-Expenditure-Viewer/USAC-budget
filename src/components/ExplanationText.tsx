@@ -12,51 +12,50 @@ export default function ExplanationText(props: ExpProps) {
     case 'date':
       return (
         <Typography color="textSecondary" style={{fontSize: 16}}>
-          Date transaction entered. (purchases occur beforehand)
+          Date transaction entered (purchases occur beforehand).
         </Typography>
       )
     case 'fund':
       return (
         <Typography color="textSecondary" style={{fontSize: 16}}>
-          Source of money (includes student fees and other income)
+          The source of money (includes student fees and other income).
         </Typography>
       )
     case 'division':
       return (
         <Typography color="textSecondary" style={{fontSize: 16}}>
-          Allocates money to departments.
+          How the money is allocated to the departments.
         </Typography>
       )
     case 'department':
       return (
         <Typography color="textSecondary" style={{fontSize: 16}}>
-          Spends money (includes student groups)
+          How each department spends money (includes student groups).
         </Typography>
       )
     case 'gl':
       return (
         <Typography color="textSecondary" style={{fontSize: 16}}>
-          Rules for how each $ can be spent.
+          General ledger. These are the rules for how the money can be spent.
         </Typography>
       )
     case 'event':
       return (
         <Typography color="textSecondary" style={{fontSize: 16}}>
-          Occasion/reason for transaction. ( generic label is “Commission/Dept related”)
+          Occasion/reason for transaction (generic label is “Commission/Dept related”).
         </Typography>
       )
     case 'keyword':
       return (
         <Typography color="textSecondary" style={{fontSize: 16}}>
           How the departments said they spent money.
-          Accountant abreviates. Wordcloud deabreviates.
-          Font size of word represents total $ for all descriptions that include word.
+          Font size of word represents total dollar amount for all descriptions that include word.
         </Typography>
       )
     case 'amount':
       return (
         <Typography color="textSecondary" style={{fontSize: 16}}>
-          Size of each transaction. (may include several purchases)
+          Size of each transaction (may include several purchases).
         </Typography>
       )
     case 'table':
@@ -74,8 +73,8 @@ export default function ExplanationText(props: ExpProps) {
           We had to de-abbreviate them, but sometimes did that incorrectly,
           so please comment at the bottom of the page if you see that.
           <br />
-                    These abbreviations had to be autocorrected so they can be categorized in the visual.
-                    If autocorrect groups transactions incorrectly, please comment at the bottom of the page.
+          These abbreviations had to be autocorrected so they can be categorized in the visual.
+          If autocorrect groups transactions incorrectly, please comment at the bottom of the page.
         </Typography>
       )
     default:
