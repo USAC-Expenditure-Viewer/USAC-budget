@@ -1,6 +1,7 @@
 import { KMFormat, KMFToNum } from "../util";
 import * as Papa from 'papaparse';
 import QueryBuilder from "./QueryBuilder";
+import {createBrowserHistory} from 'history';
 
 interface DataEntry {
   date: Date,
@@ -356,6 +357,8 @@ export default class DataLoader {
 
   sliceFilter(remaining_length: number) {
     this.otherDepth = 0
+    let history = createBrowserHistory();
+    history.push(window.location.href);
     this.filters = this.filters.slice(0, remaining_length)
     this.listChangeCallback()
   }
@@ -372,6 +375,9 @@ export default class DataLoader {
     } else {
       word_index = this.data.filter(e => e.words.includes(word))
     }
+
+    let history = createBrowserHistory();
+    history.push(window.location.href);
 
     this.filters.push({
       category: 'keyword',
@@ -403,6 +409,9 @@ export default class DataLoader {
       new_index = this.data.filter(e => (e[category] === value))
     }
 
+    let history = createBrowserHistory();
+    history.push(window.location.href);
+
     this.filters.push({
       category: category,
       name: value,
@@ -433,6 +442,9 @@ export default class DataLoader {
       new_index = this.data.filter(e => (e[category] === value))
     }
 
+    let history = createBrowserHistory();
+    history.push(window.location.href);
+
     this.filters.push({
       category: category,
       name: value,
@@ -453,6 +465,9 @@ export default class DataLoader {
     const last_index = this.filters.length > 0 ? this.filters[this.filters.length - 1].index : this.data
     const new_index = last_index
       .filter((e) => (low <= e.amount && e.amount <= high))
+
+    let history = createBrowserHistory();
+    history.push(window.location.href);
 
     this.filters.push({
       category: 'amount',
@@ -477,6 +492,9 @@ export default class DataLoader {
         const month_string = (e.date.getFullYear() + "").padStart(4, '0') + '-' + ((e.date.getMonth() + 1) + "").padStart(2, '0')
         return low.localeCompare(month_string) <= 0 && month_string.localeCompare(high) <= 0
       })
+
+    let history = createBrowserHistory();
+    history.push(window.location.href);
 
     this.filters.push({
       category: 'date',

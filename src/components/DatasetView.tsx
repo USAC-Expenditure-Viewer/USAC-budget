@@ -20,7 +20,7 @@ export type TabTypes = Category | 'table' | 'keyword' | "amount" | "date";
 
 interface DatasetState {
   value: TabTypes
-  width: string
+  graphic: boolean
 }
 
 interface DatasetProps {
@@ -42,7 +42,7 @@ export default class DatasetView extends React.Component<DatasetProps, DatasetSt
 
     this.state = {
       value: this.value,
-      width: '43%'
+      graphic: true
     }
 
     QueryBuilder.getInstance().addGenerator(this.generateQuery.bind(this), 1)
@@ -72,14 +72,6 @@ export default class DatasetView extends React.Component<DatasetProps, DatasetSt
     QueryBuilder.getInstance().update()
   }
 
-  fullScreen() {
-    this.setState({width: '90%'});
-  }
-
-  halfScreen() {
-    this.setState({width: '43%'});
-  }
-
   copyURL() {
     const selBox = document.createElement('textarea');
     selBox.style.position = 'fixed';
@@ -106,23 +98,29 @@ export default class DatasetView extends React.Component<DatasetProps, DatasetSt
           <KeywordCrumb dataloader={loader} />
         </div>
         <br /><br /><br />
-        <div style={{float: 'left', width : this.state.width, marginLeft: 40, height: 600, marginRight: 40}}>
-          <RecordTable dataloader={loader} onChange={this.onTabChange.bind(this)} style={{
-            backgroundColor: "lightblue",
-          }} fullScreen={() => this.fullScreen()} halfScreen={() => this.halfScreen()} />
+        <div style={{position: 'absolute', left: '15%', width: '70%'}}>
+          <RecordTable
+            dataloader={loader}
+            onChange={this.onTabChange.bind(this)}
+            style={{backgroundColor: "lightblue"}}
+            minimized={this.state.graphic}
+          />
         </div>
-        {this.state.width === '43%' ? 
-        <div style={{float: 'right', width : '43%', marginRight: 40}}>
-          <h1>{graphicTitle}</h1>
-          <ExplanationText category={this.state.value} />
-          <WordCloud hidden={this.state.value !== 'keyword'} dataloader={loader} />
-          <CategoryPie hidden={!isOfTypeCategory(this.state.value)}
+        <div style={{position: 'absolute', left: '25%', width: '50%', marginTop: 160}}>
+          <h1 hidden={!this.state.graphic} style={{marginBottom: 0}}>{graphicTitle}</h1>
+          <ExplanationText hidden={!this.state.graphic} category={this.state.value} />
+          <WordCloud hidden={this.state.value !== 'keyword' || !this.state.graphic} dataloader={loader} />
+          <CategoryPie hidden={!isOfTypeCategory(this.state.value) || !this.state.graphic}
             category={isOfTypeCategory(this.state.value) ? this.state.value : "fund"} dataloader={loader} />
-          <AmountSlider hidden={this.state.value !== "amount"} dataloader={loader} />
-          <DateSlider hidden={this.state.value !== 'date'} dataloader={loader} />
+          <AmountSlider hidden={this.state.value !== "amount" || !this.state.graphic} dataloader={loader} />
+          <DateSlider hidden={this.state.value !== 'date' || !this.state.graphic} dataloader={loader} />
         </div>
-        : null}
-        <div style={{marginTop: 750, color: 'black'}}>
+        <Button
+          style={{backgroundColor: "lightgray", marginTop: 870, position: 'absolute', fontWeight: 'bold', width: '8%', left: '46%'}}
+          onClick={() => this.setState({graphic: !this.state.graphic})}>
+          {this.state.graphic ? <>View Table</> : <>View Graphic</>}
+        </Button>
+        <div style={{color: 'black', marginTop: 885}}>
           <a href="mailto:vtran@asucla.ucla.edu" style={{ padding: 20, color: 'black' }}>
             <EmailIcon /> Professional Accountant
           </a>
@@ -132,9 +130,11 @@ export default class DatasetView extends React.Component<DatasetProps, DatasetSt
           <Button style={{color: 'black', textDecoration: 'underline'}} onClick={this.copyURL} aria-label="share">
             Copy link
           </Button>
-          <Button aria-label="share" onClick={() => window.location = 'https://www.youtube.com/watch?v=1Bm70HP0zmM'}>
-            <ContactSupportIcon />Video
-          </Button>
+          <a href='https://www.youtube.com/watch?v=1Bm70HP0zmM' target="_blank">
+            <Button aria-label="share">
+              <ContactSupportIcon />Video
+            </Button>
+          </a>
         </div>
       </>
     );

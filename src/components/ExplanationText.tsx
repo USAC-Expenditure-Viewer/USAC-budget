@@ -3,12 +3,16 @@ import { Typography } from "@material-ui/core";
 import { Category } from "../models/DataLoader";
 
 export interface ExpProps {
+  hidden?: boolean
   category: Category | 'date' | 'amount' | 'keyword' | 'table' | 'footer';
 }
 
 export default function ExplanationText(props: ExpProps) {
 
-  switch (props.category) {
+  if (props.hidden) {
+    return null
+  } else {
+    switch (props.category) {
     case 'date':
       return (
         <Typography color="textSecondary" style={{fontSize: 16}}>
@@ -79,6 +83,6 @@ export default function ExplanationText(props: ExpProps) {
       )
     default:
       return <div />
+    }
   }
-
 }

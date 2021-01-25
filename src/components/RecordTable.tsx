@@ -56,7 +56,6 @@ const dateToYearMonth = (value: Date) =>
 interface RecordTableState {
   sortingState: Sorting[]
   groupBy: Category | "date" | undefined
-  dataHeight: number
   selectedColumn: string
   searchValue: string
 }
@@ -64,8 +63,7 @@ interface RecordTableState {
 interface RecordTableProps extends DataLoaderProps {
   hidden?: boolean | undefined;
   onChange: (a: TabTypes) => void;
-  fullScreen: () => void;
-  halfScreen: () => void;
+  minimized: boolean
 }
 
 export default class RecordTable extends Component<RecordTableProps, RecordTableState> {
@@ -188,7 +186,6 @@ export default class RecordTable extends Component<RecordTableProps, RecordTable
     this.state = {
       sortingState: [{ columnName: 'id', direction: 'asc' }],
       groupBy: undefined,
-      dataHeight: 110,
       selectedColumn: 'description',
       searchValue: ''
     }
@@ -222,15 +219,6 @@ export default class RecordTable extends Component<RecordTableProps, RecordTable
     }
   }
 
-  private searchLock(value: string) {
-    this.searchValue = value
-    if (value) {
-      this.props.fullScreen();
-    } else {
-      this.props.halfScreen();
-    }
-  }
-
   componentDidUpdate(prevProps: Readonly<RecordTableProps>, prevState: Readonly<RecordTableState>, snapshot?: any): void {
     if (this.state.groupBy != prevState.groupBy) {
       this.buildGroupWeightTable()
@@ -238,15 +226,11 @@ export default class RecordTable extends Component<RecordTableProps, RecordTable
         sortingState: this.getGroupSortingState(),
       })
     }
-
   }
   
   render() {
-    if (this.props.dataloader.getPeekTable()) {
-      this.props.dataloader.setPeekTable(false)
-      // this.peekTable(this)
-    }
-    console.log(this.state.selectedColumn)
+    if (this.state.searchValue != '' && this.props.minimized)
+      this.setState({searchValue: ''});
     const rows = this.props.dataloader.getRecords().map((e, i) => { e.id = i; return e })
     if (this.props.hidden === true)
       return <Paper />
@@ -259,7 +243,7 @@ export default class RecordTable extends Component<RecordTableProps, RecordTable
           <GroupingState
             grouping={this.state.groupBy !== undefined ? [{ columnName: this.state.groupBy }] : []}
           />
-          <SearchState onValueChange={(value) => this.searchLock(value)} />
+          <SearchState value={this.state.searchValue} onValueChange={(value) => this.setState({searchValue: value})} />
           <SummaryState totalItems={this.summaryItems} groupItems={this.groupSummaryItems} />
 
           <IntegratedGrouping columnExtensions={this.groupingColumnExtensions} />
@@ -270,7 +254,10 @@ export default class RecordTable extends Component<RecordTableProps, RecordTable
           <DataTypeProvider for={['amount']} formatterComponent={CurrencyFormatter} />
           <DataTypeProvider for={['date']} formatterComponent={DateFormatter} />
 
-          <VirtualTable columnExtensions={this.tableColumnExtension} height={650} />
+          <VirtualTable
+            columnExtensions={this.tableColumnExtension}
+            height={this.props.minimized ? 110 : 720}
+          />
 
           <TableColumnVisibility
             defaultHiddenColumnNames={['id']}
