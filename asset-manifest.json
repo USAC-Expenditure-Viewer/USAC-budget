@@ -1,25 +1,25 @@
 {
   "files": {
     "main.css": "/USAC-budget/static/css/main.e565de74.chunk.css",
-    "main.js": "/USAC-budget/static/js/main.6aa7fbd2.chunk.js",
-    "main.js.map": "/USAC-budget/static/js/main.6aa7fbd2.chunk.js.map",
+    "main.js": "/USAC-budget/static/js/main.f33d3f2d.chunk.js",
+    "main.js.map": "/USAC-budget/static/js/main.f33d3f2d.chunk.js.map",
     "runtime-main.js": "/USAC-budget/static/js/runtime-main.d708de8d.js",
     "runtime-main.js.map": "/USAC-budget/static/js/runtime-main.d708de8d.js.map",
     "static/css/2.61a570a4.chunk.css": "/USAC-budget/static/css/2.61a570a4.chunk.css",
-    "static/js/2.337c2393.chunk.js": "/USAC-budget/static/js/2.337c2393.chunk.js",
-    "static/js/2.337c2393.chunk.js.map": "/USAC-budget/static/js/2.337c2393.chunk.js.map",
+    "static/js/2.35b4c0b1.chunk.js": "/USAC-budget/static/js/2.35b4c0b1.chunk.js",
+    "static/js/2.35b4c0b1.chunk.js.map": "/USAC-budget/static/js/2.35b4c0b1.chunk.js.map",
     "index.html": "/USAC-budget/index.html",
-    "precache-manifest.5d868310b95069bec2902ac929f2c109.js": "/USAC-budget/precache-manifest.5d868310b95069bec2902ac929f2c109.js",
+    "precache-manifest.a5b1be0453a4437aa7272d40161eb5cc.js": "/USAC-budget/precache-manifest.a5b1be0453a4437aa7272d40161eb5cc.js",
     "service-worker.js": "/USAC-budget/service-worker.js",
     "static/css/2.61a570a4.chunk.css.map": "/USAC-budget/static/css/2.61a570a4.chunk.css.map",
     "static/css/main.e565de74.chunk.css.map": "/USAC-budget/static/css/main.e565de74.chunk.css.map",
-    "static/js/2.337c2393.chunk.js.LICENSE.txt": "/USAC-budget/static/js/2.337c2393.chunk.js.LICENSE.txt"
+    "static/js/2.35b4c0b1.chunk.js.LICENSE.txt": "/USAC-budget/static/js/2.35b4c0b1.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
     "static/js/runtime-main.d708de8d.js",
     "static/css/2.61a570a4.chunk.css",
-    "static/js/2.337c2393.chunk.js",
+    "static/js/2.35b4c0b1.chunk.js",
     "static/css/main.e565de74.chunk.css",
-    "static/js/main.6aa7fbd2.chunk.js"
+    "static/js/main.f33d3f2d.chunk.js"
   ]
 }
