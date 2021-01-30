@@ -52,9 +52,6 @@ export default class DataLoader {
   private dataChangeCallbacks: (() => void)[] = []
   private total_amount: number = 0
   private dataset: string | null = null
-  private otherDepth: number = 0
-  private otherCategory: Category = "fund"
-  private peekTable: boolean = false
 
   constructor(dataset: string | null) {
     this.dataset = dataset
@@ -158,33 +155,6 @@ export default class DataLoader {
 
   addChangeCallback(callback: () => void) {
     this.dataChangeCallbacks.push(callback)
-  }
-
-  getOtherDepth(): number {
-    return this.otherDepth
-  }
-
-  setOtherDepth(depth: number) {
-    this.otherDepth = depth
-    this.listChangeCallback()
-  }
-
-  getOtherCategory(): Category {
-    return this.otherCategory
-  }
-
-  setOtherCategory(category: Category) {
-    this.otherCategory = category
-    this.listChangeCallback()
-  }
-
-  setPeekTable(active: boolean) {
-    this.peekTable = active
-    this.listChangeCallback()
-  }
-
-  getPeekTable(): boolean {
-    return this.peekTable
   }
 
   getRecords(): DataEntry[] {
@@ -356,7 +326,6 @@ export default class DataLoader {
   }
 
   sliceFilter(remaining_length: number) {
-    this.otherDepth = 0
     let history = createBrowserHistory();
     history.push(window.location.href);
     this.filters = this.filters.slice(0, remaining_length)

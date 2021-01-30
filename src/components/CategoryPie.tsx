@@ -86,7 +86,6 @@ export default class CategoryPie extends Component<CategoryPieProps, CategoryPie
   private clickSlice(e: any) {
     this.state.selectedSlices.set(this.props.category, e.text)
     this.props.dataloader.addCategoryFilter(this.props.category, e.text)
-    this.props.dataloader.setPeekTable(true)
   }
 
   getColor(entry: any): string {

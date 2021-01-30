@@ -111,7 +111,7 @@ export default class DatasetView extends React.Component<DatasetProps, DatasetSt
             openTable={this.openTable}
           />
         </div>
-        <div style={{position: 'absolute', left: '25%', width: '50%', marginTop: 160}}>
+        <div style={{position: 'absolute', left: '25%', width: '50%', marginTop: 170}}>
           <h1 hidden={!this.state.graphic} style={{marginBottom: 0}}>{graphicTitle}</h1>
           <ExplanationText hidden={!this.state.graphic} category={this.state.value} />
           <WordCloud hidden={this.state.value !== 'keyword' || !this.state.graphic} dataloader={loader} />
