@@ -23,9 +23,12 @@ class App extends React.Component<{}, AppState> {
       this.setState({
         loader: Datasets.getInstance().getDataLoader()
       })
-    })
-  }
+    });
 
+    window.addEventListener('popstate', (event) => {
+      // window.history.back();
+    }, false);
+  }
 
   render() {
     return (

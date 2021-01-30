@@ -64,6 +64,7 @@ interface RecordTableProps extends DataLoaderProps {
   hidden?: boolean | undefined;
   onChange: (a: TabTypes) => void;
   minimized: boolean
+  openTable: () => void
 }
 
 export default class RecordTable extends Component<RecordTableProps, RecordTableState> {
@@ -243,7 +244,14 @@ export default class RecordTable extends Component<RecordTableProps, RecordTable
           <GroupingState
             grouping={this.state.groupBy !== undefined ? [{ columnName: this.state.groupBy }] : []}
           />
-          <SearchState value={this.state.searchValue} onValueChange={(value) => this.setState({searchValue: value})} />
+          <SearchState
+            value={this.state.searchValue}
+            onValueChange={(value) => {
+              if (this.props.minimized)
+                this.props.openTable();
+              this.setState({searchValue: value});
+            }}
+          />
           <SummaryState totalItems={this.summaryItems} groupItems={this.groupSummaryItems} />
 
           <IntegratedGrouping columnExtensions={this.groupingColumnExtensions} />

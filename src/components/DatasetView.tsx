@@ -72,6 +72,10 @@ export default class DatasetView extends React.Component<DatasetProps, DatasetSt
     QueryBuilder.getInstance().update()
   }
 
+  openTable = () => {
+    this.setState({graphic: false});
+  }
+
   copyURL() {
     const selBox = document.createElement('textarea');
     selBox.style.position = 'fixed';
@@ -104,6 +108,7 @@ export default class DatasetView extends React.Component<DatasetProps, DatasetSt
             onChange={this.onTabChange.bind(this)}
             style={{backgroundColor: "lightblue"}}
             minimized={this.state.graphic}
+            openTable={this.openTable}
           />
         </div>
         <div style={{position: 'absolute', left: '25%', width: '50%', marginTop: 160}}>
