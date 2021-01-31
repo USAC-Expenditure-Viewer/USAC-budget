@@ -93,7 +93,11 @@ export default class DataLoader {
     this.listChangeCallback()
   }
 
-  private parseQuery(query: string) {
+  removeFilters() {
+    this.filters = [];
+  }
+
+  parseQuery(query: string) {
     if (query[0] === '?') query = query.slice(1)
     const callbacks = this.dataChangeCallbacks
     this.dataChangeCallbacks = []
@@ -132,6 +136,51 @@ export default class DataLoader {
     this.dataChangeCallbacks = callbacks
   }
 
+  refreshParseQuery(query: string) {
+    if (query[0] === '?') query = query.slice(1)
+    const callbacks = this.dataChangeCallbacks
+    this.dataChangeCallbacks = []
+    try {
+      var filterAmount = 0
+      query.split('&').forEach(entry => {
+        if (!entry.includes('=')) return
+        const sign_location = entry.indexOf('=')
+        const q = entry.substr(0, sign_location)
+        const v = entry.substr(sign_location + 1)
+        switch (q) {
+          case 'keyword':
+            this.refreshKeywordFilter(v)
+            filterAmount++
+            break
+          case 'fund':
+          case 'division':
+          case 'department':
+          case 'gl':
+          case 'event':
+            filterAmount++
+            this.refreshCategoryFilter(q, atob(v))
+            break
+          case 'amount':
+            if (!v.includes('..')) return
+            filterAmount++
+            const valuesa = v.split('..').map(e => KMFToNum(e))
+            this.refreshAmountFilter(valuesa[0], valuesa[1])
+            break
+          case 'date':
+            if (!v.includes('..')) return
+            filterAmount++
+            const valuesd = v.split('..')
+            this.refreshMonthFilter(valuesd[0], valuesd[1])
+            break
+        }
+      })
+      if (filterAmount == 1) this.filters = []
+    } catch (e) {
+      console.log(e)
+    }
+    this.dataChangeCallbacks = callbacks
+  }
+
   private generateQueryString() {
     const strings = this.filters.map((curr) => {
       switch (curr.category) {
@@ -146,6 +195,10 @@ export default class DataLoader {
       }
     })
     return strings.join('&')
+  }
+
+  updateCallbacks() {
+    this.dataChangeCallbacks.forEach(c => c())
   }
 
   private listChangeCallback() {
@@ -359,6 +412,30 @@ export default class DataLoader {
     this.listChangeCallback()
   }
 
+  refreshKeywordFilter(word: string) {
+    if (this.data.length === 0) return
+    if (this.filters.reduce((prev, curr) => prev || (curr.category === 'keyword' && curr.name === word), false))
+      return
+
+    let word_index: DataEntry[]
+    if (this.filters.length !== 0) {
+      const last_index = this.filters[this.filters.length - 1].index
+      word_index = last_index.filter((e) => e.words.includes(word))
+    } else {
+      word_index = this.data.filter(e => e.words.includes(word))
+    }
+
+    this.filters.push({
+      category: 'keyword',
+      name: word,
+      index: word_index,
+      amount: word_index
+        .reduce((prev, curr) => prev + curr.amount, 0)
+    })
+
+    this.listChangeCallback()
+  }
+
   addCategoryFilter(category: Category, value: string) {
     if (this.data.length === 0) return
     if (this.filters.reduce((prev, curr) => prev || (curr.category === category && curr.name === value), false))
@@ -391,6 +468,34 @@ export default class DataLoader {
     this.listChangeCallback()
   }
 
+  refreshCategoryFilter(category: Category, value: string) {
+    if (this.data.length === 0) return
+    if (this.filters.reduce((prev, curr) => prev || (curr.category === category && curr.name === value), false))
+      return
+
+    if (this.getLastFilter()?.category === category) {
+      this.filters = this.filters.slice(0, -1)
+    }
+
+    let new_index: DataEntry[]
+    if (this.filters.length !== 0) {
+      const last_index = this.filters[this.filters.length - 1].index
+      // @ts-ignore
+      new_index = last_index.filter((e) => (e[category] === value))
+    } else {
+      // @ts-ignore
+      new_index = this.data.filter(e => (e[category] === value))
+    }
+
+    this.filters.push({
+      category: category,
+      name: value,
+      index: new_index,
+      amount: new_index.reduce((prev, curr) => prev + curr.amount, 0)
+    })
+
+    this.listChangeCallback()
+  }
 
   removeCategoryFilter(category: Category, value: string) {
     if (this.data.length === 0) return
@@ -424,7 +529,6 @@ export default class DataLoader {
     this.listChangeCallback()
   }
 
-
   addAmountFilter(low: number, high: number) {
     if (this.data.length === 0) return
 
@@ -437,6 +541,27 @@ export default class DataLoader {
 
     let history = createBrowserHistory();
     history.push(window.location.href);
+
+    this.filters.push({
+      category: 'amount',
+      name: KMFormat(low) + "~" + KMFormat(high),
+      index: new_index,
+      amount: new_index
+        .reduce((prev, curr) => prev + curr.amount, 0)
+    })
+
+    this.listChangeCallback()
+  }
+
+  refreshAmountFilter(low: number, high: number) {
+    if (this.data.length === 0) return
+
+    if (this.filters.length > 0 && this.filters[this.filters.length - 1].category === 'amount') {
+      this.filters = this.filters.slice(0, -1)
+    }
+    const last_index = this.filters.length > 0 ? this.filters[this.filters.length - 1].index : this.data
+    const new_index = last_index
+      .filter((e) => (low <= e.amount && e.amount <= high))
 
     this.filters.push({
       category: 'amount',
@@ -464,6 +589,30 @@ export default class DataLoader {
 
     let history = createBrowserHistory();
     history.push(window.location.href);
+
+    this.filters.push({
+      category: 'date',
+      name: low + "~" + high,
+      index: new_index,
+      amount: new_index
+        .reduce((prev, curr) => prev + curr.amount, 0)
+    })
+
+    this.listChangeCallback()
+  }
+
+  refreshMonthFilter(low: string, high: string) {
+    if (this.data.length === 0) return
+
+    if (this.filters.length > 0 && this.filters[this.filters.length - 1].category === 'date') {
+      this.filters = this.filters.slice(0, -1)
+    }
+    const last_index = this.filters.length > 0 ? this.filters[this.filters.length - 1].index : this.data
+    const new_index = last_index
+      .filter((e) => {
+        const month_string = (e.date.getFullYear() + "").padStart(4, '0') + '-' + ((e.date.getMonth() + 1) + "").padStart(2, '0')
+        return low.localeCompare(month_string) <= 0 && month_string.localeCompare(high) <= 0
+      })
 
     this.filters.push({
       category: 'date',

@@ -60,7 +60,7 @@ export default class CategoryPie extends Component<CategoryPieProps, CategoryPie
                 label={(e) => this.renderCustomizedLabel(e, this.props.dataloader.getTotal())} labelLine={false}>
                 {
                   data.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={this.getColor(entry)} />
+                    <Cell key={`cell-${index}`} style={{cursor: 'pointer'}} fill={this.getColor(entry)} />
                   ))
                 }
               </Pie>

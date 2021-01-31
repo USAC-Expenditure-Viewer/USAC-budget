@@ -4,6 +4,7 @@ import DatasetView from "./components/DatasetView"
 import DataLoader from "./models/DataLoader";
 import Datasets from "./models/Datasets";
 import { Container, CssBaseline } from "@material-ui/core";
+// const createHistory = require('history').createBrowserHistory;
 
 interface AppState {
   loader: DataLoader
@@ -24,9 +25,10 @@ class App extends React.Component<{}, AppState> {
         loader: Datasets.getInstance().getDataLoader()
       })
     });
-
     window.addEventListener('popstate', (event) => {
-      // window.history.back();
+      this.state.loader.removeFilters()
+      this.state.loader.refreshParseQuery(window.location.search)
+      this.state.loader.updateCallbacks()
     }, false);
   }
 
