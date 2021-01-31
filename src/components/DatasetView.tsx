@@ -125,7 +125,7 @@ export default class DatasetView extends React.Component<DatasetProps, DatasetSt
           onClick={() => this.setState({graphic: !this.state.graphic})}>
           {this.state.graphic ? <>View Table</> : <>View Graphic</>}
         </Button>
-        <div style={{color: 'black', marginTop: 885}}>
+        <div style={{color: 'black', marginTop: 900}}>
           <a href="mailto:vtran@asucla.ucla.edu" style={{ padding: 20, color: 'black' }}>
             <EmailIcon /> Professional Accountant
           </a>
