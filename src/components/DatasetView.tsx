@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { Link } from 'react-router-dom';
 import {
   Container,
@@ -19,6 +19,13 @@ import ExplanationText from "./ExplanationText";
 import ContactSupportIcon from "@material-ui/icons/ContactSupport";
 import EmailIcon from '@material-ui/icons/Email';
 import { createBrowserHistory } from 'history';
+
+// declare global {
+//   namespace JSX {
+//       interface IntrinsicElements {
+//           'person-info': React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement>, HTMLElement>;
+//       }
+//   }
 
 export type TabTypes = Category | 'table' | 'keyword' | "amount" | "date";
 
@@ -104,52 +111,44 @@ export default class DatasetView extends React.Component<DatasetProps, DatasetSt
           <KeywordCrumb dataloader={loader} />
         </div>
         <br /><br />
-        <center>
-          <Container style={{ width: '80%' }}>
-            <Row>
-              <Col>
-                <RecordTable
-                  dataloader={loader}
-                  onChange={this.onTabChange.bind(this)}
-                  style={{ backgroundColor: "lightblue" }}
-                  minimized={this.state.graphic}
-                  openTable={this.openTable}
-                />
-              </Col>
-            </Row>
-          </Container>
-        </center>
-        <Container style={{ marginLeft: '10%', marginRight: '10%' }}>
+        <Container style={{ width: '80%', marginLeft: '10%', marginRight: '10%' }}>
+          <Row>
+            <Col>
+              <RecordTable
+                dataloader={loader}
+                onChange={this.onTabChange.bind(this)}
+                style={{ backgroundColor: "lightblue" }}
+                minimized={this.state.graphic}
+                openTable={this.openTable}
+              />
+            </Col>
+          </Row>
           <Row>
             <Col>
               <ExplanationText hidden={!this.state.graphic} category={this.state.value} />
             </Col>
           </Row>
+          <Row>
+            <Col>
+              <br />
+              <WordCloud hidden={this.state.value !== 'keyword' || !this.state.graphic} dataloader={loader} />
+              <CategoryPie hidden={!isOfTypeCategory(this.state.value) || !this.state.graphic}
+                category={isOfTypeCategory(this.state.value) ? this.state.value : "fund"} dataloader={loader} />
+              <AmountSlider hidden={this.state.value !== "amount" || !this.state.graphic} dataloader={loader} />
+              <DateSlider hidden={this.state.value !== 'date' || !this.state.graphic} dataloader={loader} />
+            </Col>
+          </Row>
+          <br />
+          <Row>
+            <Col>
+              <Button
+                style={{ backgroundColor: "lightgray", fontWeight: 'bold', marginLeft: '45%', marginRight: '45%', width: '10%' }}
+                onClick={() => this.setState({ graphic: !this.state.graphic })}>
+                {this.state.graphic ? <>View Table</> : <>View Graphic</>}
+              </Button>
+            </Col>
+          </Row>
         </Container>
-        <center>
-          <Container style={{ width: '80%' }}>
-            <Row>
-              <Col>
-                <br />
-                <WordCloud hidden={this.state.value !== 'keyword' || !this.state.graphic} dataloader={loader} />
-                <CategoryPie hidden={!isOfTypeCategory(this.state.value) || !this.state.graphic}
-                  category={isOfTypeCategory(this.state.value) ? this.state.value : "fund"} dataloader={loader} />
-                <AmountSlider hidden={this.state.value !== "amount" || !this.state.graphic} dataloader={loader} />
-                <DateSlider hidden={this.state.value !== 'date' || !this.state.graphic} dataloader={loader} />
-              </Col>
-            </Row>
-            <br />
-            <Row>
-              <Col>
-                <Button
-                  style={{ backgroundColor: "lightgray", fontWeight: 'bold', width: 'auto' }}
-                  onClick={() => this.setState({ graphic: !this.state.graphic })}>
-                  {this.state.graphic ? <>View Table</> : <>View Graphic</>}
-                </Button>
-              </Col>
-            </Row>
-          </Container>
-        </center>
         <br />
         <Container>
           <Row>
