@@ -17,7 +17,7 @@ import {
   IntegratedSummary, SearchState,
   Sorting, TableColumnResizing,
   SortingState, SummaryItem,TableColumnWidthInfo,
-  SummaryState, TableGroupRow as TableGroupRowBase
+  SummaryState, TableGroupRow as TableGroupRowBase, FilteringState
 } from "@devexpress/dx-react-grid";
 import { Paper } from "@material-ui/core";
 import { DataTypeProvider } from "@devexpress/dx-react-grid";
@@ -72,10 +72,13 @@ export default class RecordTable extends Component<RecordTableProps, RecordTable
   private TableHeaderCell = (props: TableHeaderRow.CellProps) => (
     <TableHeaderRow.Cell
       {...props}
-      onClick={() => this.setHighlight(props.column)}
-      style={props.column.name === this.state.selectedColumn ?
-        { cursor: 'pointer', textDecoration: 'underline', fontWeight: "bold", backgroundColor: this.getSelectedBackgroundColor(props.column.name), color: "White" } :
-        { cursor: 'pointer', fontWeight: "bold", backgroundColor: this.getBackgroundColor(props.column.name), color: "Black" }}
+      onClick={() => this.props.minimized ? this.setHighlight(props.column) : this.setSorting(props.column)}
+      style={!this.props.minimized ?
+          { cursor: 'pointer', fontWeight: "bold", backgroundColor: this.getBackgroundColor(props.column.name), color: "Black" }
+        : props.column.name === this.state.selectedColumn ?
+          { cursor: 'pointer', textDecoration: 'underline', fontWeight: "bold", backgroundColor: this.getSelectedBackgroundColor(props.column.name), color: "White" }
+        :
+          { cursor: 'pointer', fontWeight: "bold", backgroundColor: this.getBackgroundColor(props.column.name), color: "Black" }}
     />
   );
 
@@ -296,14 +299,21 @@ export default class RecordTable extends Component<RecordTableProps, RecordTable
     this.setState({
       selectedColumn: sorts.name
     })
-    this.setSorting(sorts)
-  }
-
-  private setSorting(sorts: Column) {
     if (isOfTypeTabs(sorts.name)) {
       this.props.onChange(sorts.name);
     } else if (sorts.name == 'description') {
       this.props.onChange('keyword');
+    }
+  }
+
+  private setSorting(sorts: Column) {
+    if (this.state.sortingState[0].columnName === sorts.name) {
+      if (this.state.sortingState[0].direction === 'asc')
+        this.setState({sortingState: [{columnName: sorts.name, direction: 'desc'}]})
+      else if (this.state.sortingState[0].direction === 'desc')
+        this.setState({sortingState: [{columnName: sorts.name, direction: 'asc'}]})
+    } else {
+      this.setState({sortingState: [{columnName: sorts.name, direction: 'asc'}]})
     }
   }
 

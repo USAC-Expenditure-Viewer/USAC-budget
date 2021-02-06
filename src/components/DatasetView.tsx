@@ -1,5 +1,9 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import {
+  Container,
+  Row, Col
+} from 'reactstrap';
 import '../App.css';
 import WordCloud from "./WordCloud";
 import RecordTable from "./RecordTable";
@@ -73,7 +77,7 @@ export default class DatasetView extends React.Component<DatasetProps, DatasetSt
   }
 
   openTable = () => {
-    this.setState({graphic: false});
+    this.setState({ graphic: false });
   }
 
   copyURL() {
@@ -93,54 +97,82 @@ export default class DatasetView extends React.Component<DatasetProps, DatasetSt
 
   render() {
     const loader = this.props.loader;
-    var graphicTitle = this.state.value === 'keyword' ? 'description' : this.state.value;
-    graphicTitle = graphicTitle.charAt(0).toUpperCase() + graphicTitle.slice(1)
     return (
       <>
         <br /><br />
-        <div style={{marginLeft: 30, marginRight: 30}}>
+        <div style={{ marginLeft: 30, marginRight: 30 }}>
           <KeywordCrumb dataloader={loader} />
         </div>
-        <br /><br /><br />
-        <div style={{position: 'absolute', left: '15%', width: '70%'}}>
-          <RecordTable
-            dataloader={loader}
-            onChange={this.onTabChange.bind(this)}
-            style={{backgroundColor: "lightblue"}}
-            minimized={this.state.graphic}
-            openTable={this.openTable}
-          />
-        </div>
-        <div style={{position: 'absolute', left: '25%', width: '50%', marginTop: 170}}>
-          <h1 hidden={!this.state.graphic} style={{marginBottom: 0}}>{graphicTitle}</h1>
-          <ExplanationText hidden={!this.state.graphic} category={this.state.value} />
-          <WordCloud hidden={this.state.value !== 'keyword' || !this.state.graphic} dataloader={loader} />
-          <CategoryPie hidden={!isOfTypeCategory(this.state.value) || !this.state.graphic}
-            category={isOfTypeCategory(this.state.value) ? this.state.value : "fund"} dataloader={loader} />
-          <AmountSlider hidden={this.state.value !== "amount" || !this.state.graphic} dataloader={loader} />
-          <DateSlider hidden={this.state.value !== 'date' || !this.state.graphic} dataloader={loader} />
-        </div>
-        <Button
-          style={{backgroundColor: "lightgray", marginTop: 870, position: 'absolute', fontWeight: 'bold', width: '8%', left: '46%'}}
-          onClick={() => this.setState({graphic: !this.state.graphic})}>
-          {this.state.graphic ? <>View Table</> : <>View Graphic</>}
-        </Button>
-        <div style={{color: 'black', marginTop: 900}}>
-          <a href="mailto:vtran@asucla.ucla.edu" style={{ padding: 20, color: 'black' }}>
-            <EmailIcon /> Professional Accountant
-          </a>
-          <a href="mailto:usacouncil@asucla.ucla.edu" style={{ padding: 20, color: 'black' }}>
-            <EmailIcon /> USAC Council
-          </a>
-          <Button style={{color: 'black', textDecoration: 'underline'}} onClick={this.copyURL} aria-label="share">
-            Copy link
-          </Button>
-          <a href='https://www.youtube.com/watch?v=1Bm70HP0zmM' target="_blank">
-            <Button aria-label="share">
-              <ContactSupportIcon />Video
-            </Button>
-          </a>
-        </div>
+        <br /><br />
+        <center>
+          <Container style={{ width: '80%' }}>
+            <Row>
+              <Col>
+                <RecordTable
+                  dataloader={loader}
+                  onChange={this.onTabChange.bind(this)}
+                  style={{ backgroundColor: "lightblue" }}
+                  minimized={this.state.graphic}
+                  openTable={this.openTable}
+                />
+              </Col>
+            </Row>
+          </Container>
+        </center>
+        <Container style={{ marginLeft: '10%', marginRight: '10%' }}>
+          <Row>
+            <Col>
+              <ExplanationText hidden={!this.state.graphic} category={this.state.value} />
+            </Col>
+          </Row>
+        </Container>
+        <center>
+          <Container style={{ width: '80%' }}>
+            <Row>
+              <Col>
+                <br />
+                <WordCloud hidden={this.state.value !== 'keyword' || !this.state.graphic} dataloader={loader} />
+                <CategoryPie hidden={!isOfTypeCategory(this.state.value) || !this.state.graphic}
+                  category={isOfTypeCategory(this.state.value) ? this.state.value : "fund"} dataloader={loader} />
+                <AmountSlider hidden={this.state.value !== "amount" || !this.state.graphic} dataloader={loader} />
+                <DateSlider hidden={this.state.value !== 'date' || !this.state.graphic} dataloader={loader} />
+              </Col>
+            </Row>
+            <br />
+            <Row>
+              <Col>
+                <Button
+                  style={{ backgroundColor: "lightgray", fontWeight: 'bold', width: 'auto' }}
+                  onClick={() => this.setState({ graphic: !this.state.graphic })}>
+                  {this.state.graphic ? <>View Table</> : <>View Graphic</>}
+                </Button>
+              </Col>
+            </Row>
+          </Container>
+        </center>
+        <br />
+        <Container>
+          <Row>
+            <Col>
+              <div style={{ color: 'black', float: 'left' }}>
+                <a href="mailto:vtran@asucla.ucla.edu" style={{ padding: 20, color: 'black' }}>
+                  <EmailIcon /> Professional Accountant
+              </a>
+                <a href="mailto:usacouncil@asucla.ucla.edu" style={{ padding: 20, color: 'black' }}>
+                  <EmailIcon /> USAC Council
+              </a>
+                <Button style={{ color: 'black', textDecoration: 'underline' }} onClick={this.copyURL} aria-label="share">
+                  Copy link
+              </Button>
+                <a href='https://www.youtube.com/watch?v=1Bm70HP0zmM' target="_blank">
+                  <Button aria-label="share">
+                    <ContactSupportIcon />Video
+                </Button>
+                </a>
+              </div>
+            </Col>
+          </Row>
+        </Container>
       </>
     );
   }
