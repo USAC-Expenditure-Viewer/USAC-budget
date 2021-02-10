@@ -22,8 +22,6 @@ export default class ExplanationText extends React.Component<ExpProps, ExpState>
   }
 
   render = () => {
-    var graphicTitle = this.props.category === 'keyword' ? 'description' : this.props.category;
-    graphicTitle = graphicTitle.charAt(0).toUpperCase() + graphicTitle.slice(1)
     if (this.props.hidden) {
       return null
     } else {
@@ -31,172 +29,120 @@ export default class ExplanationText extends React.Component<ExpProps, ExpState>
       case 'date':
         return (
           <>
-            <h1 style={{marginBottom: 0}}>{graphicTitle}</h1>
+            <h1 style={{marginBottom: 0}}>Date</h1>
+            <span>
+            <Typography color="textSecondary" style={{fontSize: 16, float: 'left'}}>
+              When money leaves the Association.
+            </Typography>
             <InfoIcon
               style={{float: 'left'}}
               onMouseEnter={() => this.setState({longDescription: true})}
               onMouseLeave={() => this.setState({longDescription: false})}
-            />
-            {this.state.longDescription ? 
+            /></span>
+            {this.state.longDescription ?
               <Typography color="textSecondary" style={{fontSize: 16}}>
-                Date transaction entered (purchases occur beforehand).
-                This is when money leaves the Association, not when it was
-                budgeted or spent. For example, a spender (a.k.a *Department*)
-                may choose to be reimbursed after their expenditure, or receive
-                a cash-advance before their expenditure.
+                Not when it was budgeted or spent. For example, a spender (a.k.a *Department*)
+                may choose to be reimbursed afterward, or receive a cash-advance beforehand.
               </Typography>
-            : 
-              <Typography color="textSecondary" style={{fontSize: 16}}>
-                Date transaction entered (purchases occur beforehand).
-              </Typography>
-            }
+            : null}
           </>
         )
       case 'fund':
         return (
           <>
-            <h1 style={{marginBottom: 0}}>{graphicTitle}</h1>
+            <h1 style={{marginBottom: 0}}>Fund</h1>
+            <Typography color="textSecondary" style={{fontSize: 16, float: 'left'}}>
+              Where money comes from.
+            </Typography>
             <InfoIcon
               style={{float: 'left'}}
               onMouseEnter={() => this.setState({longDescription: true})}
               onMouseLeave={() => this.setState({longDescription: false})}
             />
-            {this.state.longDescription ? 
+            {this.state.longDescription ?
               <Typography color="textSecondary" style={{fontSize: 16}}>
-                The source of money (includes student fees and other income).
                 Most but not all funds are from student fees.
               </Typography>
-            : 
-              <Typography color="textSecondary" style={{fontSize: 16}}>
-                The source of money (includes student fees and other income).
-              </Typography>
-            }
+            : null}
           </>
         )
       case 'division':
         return (
           <>
-            <h1 style={{marginBottom: 0}}>{graphicTitle}</h1>
-            {/* <InfoIcon
-              style={{float: 'left'}}
-              onMouseEnter={() => this.setState({longDescription: true})}
-              onMouseLeave={() => this.setState({longDescription: false})}
-            />
-            {this.state.longDescription ? 
-              <Typography color="textSecondary" style={{fontSize: 16}}>
-              </Typography>
-            :  */}
-              <Typography color="textSecondary" style={{fontSize: 16}}>
-                How the money is allocated to the departments.
-              </Typography>
-            {/* } */}
+            <h1 style={{marginBottom: 0}}>Division</h1>
+            <Typography color="textSecondary" style={{fontSize: 16}}>
+              Who controls the money.
+            </Typography>
           </>
         )
       case 'department':
         return (
           <>
-            <h1 style={{marginBottom: 0}}>{graphicTitle}</h1>
-            {/* <InfoIcon
-              style={{float: 'left'}}
-              onMouseEnter={() => this.setState({longDescription: true})}
-              onMouseLeave={() => this.setState({longDescription: false})}
-            />
-            {this.state.longDescription ? 
-              <Typography color="textSecondary" style={{fontSize: 16}}>
-              </Typography>
-            :  */}
-              <Typography color="textSecondary" style={{fontSize: 16}}>
-                How each department spends money (includes student groups).
-              </Typography>
-            {/* } */}
+            <h1 style={{marginBottom: 0}}>Department</h1>
+            <Typography color="textSecondary" style={{fontSize: 16}}>
+              Who spends the money.
+            </Typography>
           </>
         )
       case 'gl':
         return (
           <>
-            <h1 style={{marginBottom: 0}}>{graphicTitle}</h1>
-            {/* <InfoIcon
-              style={{float: 'left'}}
-              onMouseEnter={() => this.setState({longDescription: true})}
-              onMouseLeave={() => this.setState({longDescription: false})}
-            />
-            {this.state.longDescription ? 
-              <Typography color="textSecondary" style={{fontSize: 16}}>
-              </Typography> */}
-            : 
-              <Typography color="textSecondary" style={{fontSize: 16}}>
-                General ledger. These are the rules for how the money can be spent.
-              </Typography>
-            {/* } */}
+            <h1 style={{marginBottom: 0}}>General Ledger</h1>
+            <Typography color="textSecondary" style={{fontSize: 16}}>
+              Rules for how each dollar can be spent.
+            </Typography>
           </>
         )
       case 'event':
         return (
           <>
-            <h1 style={{marginBottom: 0}}>{graphicTitle}</h1>
-            {/* <InfoIcon
-              style={{float: 'left'}}
-              onMouseEnter={() => this.setState({longDescription: true})}
-              onMouseLeave={() => this.setState({longDescription: false})}
-            />
-            {this.state.longDescription ? 
-              <Typography color="textSecondary" style={{fontSize: 16}}>
-              </Typography>
-            :  */}
-              <Typography color="textSecondary" style={{fontSize: 16}}>
-                Occasion/reason for transaction (generic label is “Commission/Dept related”).
-              </Typography>
-            {/* } */}
+            <h1 style={{marginBottom: 0}}>Event</h1>
+            <Typography color="textSecondary" style={{fontSize: 16}}>
+              What the occasion was.
+            </Typography>
           </>
         )
       case 'keyword':
         return (
           <>
-            <h1 style={{marginBottom: 0}}>{graphicTitle}</h1>
+            <h1 style={{marginBottom: 0}}>Description</h1>
+            <Typography color="textSecondary" style={{fontSize: 16, float: 'left'}}>
+              Where money gets spent, according to the spender (a.k.a. *Department*). Larger font means more money.
+            </Typography>
             <InfoIcon
               style={{float: 'left'}}
               onMouseEnter={() => this.setState({longDescription: true})}
               onMouseLeave={() => this.setState({longDescription: false})}
             />
-            {this.state.longDescription ? 
+            {this.state.longDescription ?
               <Typography color="textSecondary" style={{fontSize: 16}}>
-                How the departments said they spent money.
-                Font size of word represents total dollar amount for all descriptions that include word.
                 If you wanted to narrow the results to “Bruin Bash”, click the word “Bruin” and then “Bash”.
-                You will see only the transactions with both words in the *Description*.
-                The choice of these words is at the spenders discretion, subject to approval/abbreviation
-                by the accountant. For example, the spender might write “ … student wellness commission …”,
-                and the accountant may abbreviate it as “ … swc …” The graphic performs intelligent de-abbreviation
-                for your convenience.
+                You will see only the transactions with both words in the *Description*. The choice of these
+                words is at the spenders discretion, subject to approval/abbreviation by the accountant.
+                For example, the spender might write “ … student wellness commission …”, and the accountant
+                may abbreviate it as “ … swc …” The graphic performs intelligent de-abbreviation for your convenience.
               </Typography>
-            : 
-              <Typography color="textSecondary" style={{fontSize: 16}}>
-                How the departments said they spent money.
-                Font size of word represents total dollar amount for all descriptions that include word.
-              </Typography>
-            }
+            : null}
           </>
         )
       case 'amount':
         return (
           <>
-            <h1 style={{marginBottom: 0}}>{graphicTitle}</h1>
+            <h1 style={{marginBottom: 0}}>Amount</h1>
+            <Typography color="textSecondary" style={{fontSize: 16, float: 'left'}}>
+              How much money is in each transaction.
+            </Typography>
             <InfoIcon
               style={{float: 'left'}}
               onMouseEnter={() => this.setState({longDescription: true})}
               onMouseLeave={() => this.setState({longDescription: false})}
             />
-            {this.state.longDescription ? 
+            {this.state.longDescription ?
               <Typography color="textSecondary" style={{fontSize: 16}}>
-                Size of each transaction (may include several purchases).
                 Multiple purchases may be grouped under one transaction.
                 Negative values are refunds to the Association.
               </Typography>
-            : 
-              <Typography color="textSecondary" style={{fontSize: 16}}>
-                Size of each transaction (may include several purchases).
-              </Typography>
-            }
+            : null}
           </>
         )
       case 'table':

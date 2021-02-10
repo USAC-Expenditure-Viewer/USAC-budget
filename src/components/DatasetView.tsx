@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { Link } from 'react-router-dom';
 import {
   Container,
   Row, Col
@@ -16,16 +15,11 @@ import AmountSlider from "./AmountSlider";
 import QueryBuilder from "../models/QueryBuilder";
 import DateSlider from "./DateSlider";
 import ExplanationText from "./ExplanationText";
+import {Link} from "@material-ui/core";
 import ContactSupportIcon from "@material-ui/icons/ContactSupport";
 import EmailIcon from '@material-ui/icons/Email';
+import FeedbackIcon from '@material-ui/icons/Feedback';
 import { createBrowserHistory } from 'history';
-
-// declare global {
-//   namespace JSX {
-//       interface IntrinsicElements {
-//           'person-info': React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement>, HTMLElement>;
-//       }
-//   }
 
 export type TabTypes = Category | 'table' | 'keyword' | "amount" | "date";
 
@@ -128,6 +122,7 @@ export default class DatasetView extends React.Component<DatasetProps, DatasetSt
               <ExplanationText hidden={!this.state.graphic} category={this.state.value} />
             </Col>
           </Row>
+          <br />
           <Row>
             <Col>
               <br />
@@ -154,19 +149,28 @@ export default class DatasetView extends React.Component<DatasetProps, DatasetSt
           <Row>
             <Col>
               <div style={{ color: 'black', float: 'left' }}>
-                <a href="mailto:vtran@asucla.ucla.edu" style={{ padding: 20, color: 'black' }}>
+                <a
+                  href="https://forms.gle/68zdvLpYxs8av16H8"
+                  rel="noopener noreferrer"
+                  target="_blank"
+                  style={{ padding: 20, color: 'black' }}
+                  aria-label="feedback"
+                >
+                  <FeedbackIcon/> Feedback
+                </a>
+                <a href="mailto:vtran@asucla.ucla.edu" style={{ padding: 20, color: 'black' }} aria-label="email accountant">
                   <EmailIcon /> Professional Accountant
-              </a>
-                <a href="mailto:usacouncil@asucla.ucla.edu" style={{ padding: 20, color: 'black' }}>
+                </a>
+                <a href="mailto:usacouncil@asucla.ucla.edu" style={{ padding: 20, color: 'black' }} aria-label="email usac">
                   <EmailIcon /> USAC Council
-              </a>
+                </a>
                 <Button style={{ color: 'black', textDecoration: 'underline' }} onClick={this.copyURL} aria-label="share">
                   Copy link
-              </Button>
-                <a href='https://www.youtube.com/watch?v=1Bm70HP0zmM' target="_blank">
+                </Button>
+                <a href='https://www.youtube.com/watch?v=1Bm70HP0zmM' rel="noopener noreferrer" target="_blank" aria-label="tutorial video">
                   <Button aria-label="share">
                     <ContactSupportIcon />Video
-                </Button>
+                  </Button>
                 </a>
               </div>
             </Col>
