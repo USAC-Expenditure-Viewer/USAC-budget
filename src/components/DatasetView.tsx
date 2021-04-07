@@ -167,7 +167,7 @@ export default class DatasetView extends React.Component<DatasetProps, DatasetSt
                 <Button style={{ color: 'black', textDecoration: 'underline' }} onClick={this.copyURL} aria-label="share">
                   Copy link
                 </Button>
-                <a href='https://www.youtube.com/watch?v=1Bm70HP0zmM' rel="noopener noreferrer" target="_blank" aria-label="tutorial video">
+                <a href='https://www.youtube.com/watch?v=cG8gkj6EEs0' rel="noopener noreferrer" target="_blank" aria-label="tutorial video">
                   <Button aria-label="share">
                     <ContactSupportIcon />Video
                   </Button>
