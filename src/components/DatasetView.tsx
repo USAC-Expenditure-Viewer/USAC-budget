@@ -158,6 +158,9 @@ export default class DatasetView extends React.Component<DatasetProps, DatasetSt
                 >
                   <FeedbackIcon/> Feedback
                 </a>
+                <a href="mailto:usacbudgetviewer@gmail.com" style={{ padding: 20, color: 'black' }} aria-label="email accountant">
+                  <EmailIcon /> Contact Us
+                </a>
                 <a href="mailto:vtran@asucla.ucla.edu" style={{ padding: 20, color: 'black' }} aria-label="email accountant">
                   <EmailIcon /> Professional Accountant
                 </a>
