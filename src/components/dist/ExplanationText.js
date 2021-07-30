@@ -54,7 +54,7 @@ var ExplanationText = /** @class */ (function (_super) {
                     case 'gl':
                         return (react_1["default"].createElement(react_1["default"].Fragment, null,
                             react_1["default"].createElement("h1", { style: { marginBottom: 0 } }, "General Ledger"),
-                            react_1["default"].createElement(core_1.Typography, { color: "textSecondary", style: { fontSize: 16 } }, "Rules for how each dollar can be spent.")));
+                            react_1["default"].createElement(core_1.Typography, { color: "textSecondary", style: { fontSize: 16 } }, "Category that accounting assigns to the expenditure (i.e. programming, honorarium, etc.)")));
                     case 'event':
                         return (react_1["default"].createElement(react_1["default"].Fragment, null,
                             react_1["default"].createElement("h1", { style: { marginBottom: 0 } }, "Event"),

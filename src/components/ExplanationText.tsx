@@ -89,7 +89,7 @@ export default class ExplanationText extends React.Component<ExpProps, ExpState>
           <>
             <h1 style={{marginBottom: 0}}>General Ledger</h1>
             <Typography color="textSecondary" style={{fontSize: 16}}>
-              Rules for how each dollar can be spent.
+            Category that accounting assigns to the expenditure (i.e. programming, honorarium, etc.)
             </Typography>
           </>
         )
