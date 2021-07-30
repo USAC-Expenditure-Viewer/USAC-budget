@@ -70,9 +70,23 @@ export default class ExplanationText extends React.Component<ExpProps, ExpState>
         return (
           <>
             <h1 style={{marginBottom: 0}}>Division</h1>
-            <Typography color="textSecondary" style={{fontSize: 16}}>
-              Who controls the money.
+            <Typography color="textSecondary" style={{fontSize: 16, float: 'left'}}>
+              Entity overseeing the funds; the division is an umbrella to the department
+              and a single division can include multiple departments.
             </Typography>
+            <InfoIcon
+              style={{float: 'left'}}
+              onMouseEnter={() => this.setState({longDescription: true})}
+              onMouseLeave={() => this.setState({longDescription: false})}
+            />
+            {this.state.longDescription ?
+              <Typography color="textSecondary" style={{fontSize: 16}}>
+                You may need to click on the division and the department to understand which
+                entity is tied to the funds. The division may not always give enough information
+                on it’s own. The membership fees are delegated to other entities (not
+                directly administered by USAC, but USAC has reporting oversight).
+              </Typography>
+            : null}
           </>
         )
       case 'department':
