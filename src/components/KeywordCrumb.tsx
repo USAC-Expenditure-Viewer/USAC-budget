@@ -61,7 +61,7 @@ export default class KeywordCrumb extends Component<DataLoaderProps, KeywordCrum
         <Breadcrumbs separator=">" style={this.props.style}>
           <Typography align="center">
             <div style={{fontWeight: 'bold', color: 'black'}}>
-              USAC Budget Filters
+              USAC Expenditure Filters
             </div>
           </Typography>
           <Typography align="center">
