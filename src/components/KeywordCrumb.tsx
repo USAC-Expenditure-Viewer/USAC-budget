@@ -125,7 +125,7 @@ export default class KeywordCrumb extends Component<DataLoaderProps, KeywordCrum
                   Datasets.getInstance().setCurrentDataset(text)
                 }}>
                   <ListItemIcon><ListIcon /></ListItemIcon>
-                  <ListItemText primary={"Budget " + Datasets.getDatasetTitle(text)} />
+                  <ListItemText primary={"Expenses " + Datasets.getDatasetTitle(text)} />
                 </ListItem>
               ))}
             </List>

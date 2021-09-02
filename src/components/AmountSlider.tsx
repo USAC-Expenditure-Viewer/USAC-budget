@@ -65,7 +65,7 @@ export default class AmountSlider extends Component<SliderProps, SliderState> {
                 width={AmountSlider.getYAxisWidth()}
               >
                 <Label angle={270} position="insideLeft" style={{textAnchor: 'middle'}}>
-                  Percent of USAC Budget
+                  Percent of USAC Expenses
                 </Label>
               </YAxis>
               <ReferenceLine y={0} label="" stroke="black"/>

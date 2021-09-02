@@ -26,7 +26,7 @@ export default function Footer() {
     <footer>
       <div style={{ color: 'black', float: 'left' }}>
         <a
-          href="https://forms.gle/68zdvLpYxs8av16H8"
+          href="https://forms.gle/yX6LdkHmtWS2YaUZA"
           rel="noopener noreferrer"
           target="_blank"
           style={{ padding: 20, color: 'black' }}
@@ -34,7 +34,7 @@ export default function Footer() {
         >
           <FeedbackIcon/> Feedback
         </a>
-        <a href="mailto:usacbudgetviewer@gmail.com" style={{ padding: 20, color: 'black' }} aria-label="email accountant">
+        <a href="mailto:usacexpenditureviewer@gmail.com" style={{ padding: 20, color: 'black' }} aria-label="email accountant">
           <EmailIcon /> Contact Us
         </a>
         <a href="mailto:vtran@asucla.ucla.edu" style={{ padding: 20, color: 'black' }} aria-label="email accountant">
