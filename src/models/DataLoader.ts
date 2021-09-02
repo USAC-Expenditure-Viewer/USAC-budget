@@ -45,6 +45,9 @@ export interface DataLoaderProps {
   style?: Object,
 }
 
+/**
+ * Handles all changes to the datasets and queries
+ */
 export default class DataLoader {
 
   private data: DataEntry[] = []
@@ -174,7 +177,7 @@ export default class DataLoader {
             break
         }
       })
-      if (filterAmount == 1) this.filters = []
+      if (filterAmount === 1) this.filters = []
     } catch (e) {
       console.log(e)
     }

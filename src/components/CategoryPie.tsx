@@ -1,9 +1,7 @@
 import React, { Component } from "react";
-import { Category, DataLoaderProps, WordEntry } from "../models/DataLoader";
+import { Category, DataLoaderProps, } from "../models/DataLoader";
 import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from 'recharts';
 import { KMFormat } from "../util";
-import { Word } from "react-wordcloud";
-import { Filter } from "@devexpress/dx-react-grid";
 
 interface CategoryPieProps extends DataLoaderProps {
   category: Category
@@ -38,34 +36,37 @@ export default class CategoryPie extends Component<CategoryPieProps, CategoryPie
     var filters = this.props.dataloader.getFilters()
     this.state.selectedSlices.forEach((value, key) => {
       for (var i = 0; i < filters.length; i++) {
-        if (filters[i].category == key) {
+        if (filters[i].category === key) {
           return
         }
       }
       this.state.selectedSlices.delete(key)
     })
-
     const data = this.props.dataloader.getCategories(this.props.category)
-    const lastFilter = this.props.dataloader.getLastFilter()
-    const selected = lastFilter == null ? undefined :
-      (lastFilter.category === this.props.category ? lastFilter.name : undefined)
 
     return (
       <div style={{ height: '60vh' }} hidden={this.props.hidden || false}>
         {(this.props.hidden || false) ? null : (
           <ResponsiveContainer height="100%" width="100%">
             <PieChart>
-              <Pie data={data} dataKey="value" nameKey="text"
+              <Pie
+                data={data}
+                dataKey="value"
+                nameKey="text"
                 onClick={(e) => this.clickSlice(e)}
-                label={(e) => this.renderCustomizedLabel(e, this.props.dataloader.getTotal())} labelLine={false}>
+                label={(e) => this.renderCustomizedLabel(e, this.props.dataloader.getTotal())}
+                labelLine={false}
+              >
                 {
                   data.map((entry, index) => (
                     <Cell key={`cell-${index}`} style={{cursor: 'pointer'}} fill={this.getColor(entry)} />
                   ))
                 }
               </Pie>
-              <Tooltip formatter={(value) => "$" + KMFormat(value as number)}
-                contentStyle={{ padding: '0 5px', margin: 0, borderRadius: 5 }} />
+              <Tooltip
+                formatter={(value) => "$" + KMFormat(value as number)}
+                contentStyle={{ padding: '0 5px', margin: 0, borderRadius: 5 }}
+              />
             </PieChart>
           </ResponsiveContainer>
         )}
@@ -90,7 +91,7 @@ export default class CategoryPie extends Component<CategoryPieProps, CategoryPie
 
   getColor(entry: any): string {
     if (this.state.selectedSlices.has(this.props.category)) {
-      if (this.state.selectedSlices.get(this.props.category) == entry.text) {
+      if (this.state.selectedSlices.get(this.props.category) === entry.text) {
         switch (this.props.category) {
           case "fund":
             return "#9E0000" // Red

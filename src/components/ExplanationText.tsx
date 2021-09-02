@@ -31,14 +31,15 @@ export default class ExplanationText extends React.Component<ExpProps, ExpState>
           <>
             <h1 style={{marginBottom: 0}}>Date</h1>
             <span>
-            <Typography color="textSecondary" style={{fontSize: 16, float: 'left'}}>
-              When money leaves the Association.
-            </Typography>
-            <InfoIcon
-              style={{float: 'left'}}
-              onMouseEnter={() => this.setState({longDescription: true})}
-              onMouseLeave={() => this.setState({longDescription: false})}
-            /></span>
+              <Typography color="textSecondary" style={{fontSize: 16, float: 'left'}}>
+                When money leaves the Association.
+              </Typography>
+              <InfoIcon
+                style={{float: 'left'}}
+                onMouseEnter={() => this.setState({longDescription: true})}
+                onMouseLeave={() => this.setState({longDescription: false})}
+              />
+            </span>
             {this.state.longDescription ?
               <Typography color="textSecondary" style={{fontSize: 16}}>
                 Not when it was budgeted or spent. For example, a spender (a.k.a *Department*)
@@ -103,7 +104,7 @@ export default class ExplanationText extends React.Component<ExpProps, ExpState>
           <>
             <h1 style={{marginBottom: 0}}>General Ledger</h1>
             <Typography color="textSecondary" style={{fontSize: 16}}>
-            Category that accounting assigns to the expenditure (i.e. programming, honorarium, etc.)
+              Category that accounting assigns to the expenditure (i.e. programming, honorarium, etc.)
             </Typography>
           </>
         )

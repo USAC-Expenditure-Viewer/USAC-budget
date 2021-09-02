@@ -7,7 +7,6 @@ import '../App.css';
 import WordCloud from "./WordCloud";
 import RecordTable from "./RecordTable";
 import KeywordCrumb from "./KeywordCrumb";
-import Paper from "@material-ui/core/Paper";
 import DataLoader, { Category, isOfTypeCategory } from "../models/DataLoader";
 import CategoryPie from "./CategoryPie";
 import { Button, } from "@material-ui/core";
@@ -15,11 +14,7 @@ import AmountSlider from "./AmountSlider";
 import QueryBuilder from "../models/QueryBuilder";
 import DateSlider from "./DateSlider";
 import ExplanationText from "./ExplanationText";
-import {Link} from "@material-ui/core";
-import ContactSupportIcon from "@material-ui/icons/ContactSupport";
-import EmailIcon from '@material-ui/icons/Email';
-import FeedbackIcon from '@material-ui/icons/Feedback';
-import { createBrowserHistory } from 'history';
+import Footer from "./Footer";
 
 export type TabTypes = Category | 'table' | 'keyword' | "amount" | "date";
 
@@ -36,20 +31,20 @@ export function isOfTypeTabs(input: string): input is TabTypes {
   return isOfTypeCategory(input) || ['table', 'keyword', "amount", "date"].includes(input);
 }
 
+/**
+ * The main page that organizes the keyword crumb, the data table,
+ * the graphic tabs, and the footer.
+ */
 export default class DatasetView extends React.Component<DatasetProps, DatasetState> {
   private value: TabTypes = 'keyword'
 
   constructor(props: DatasetProps) {
     super(props);
-
     this.value = 'keyword'
-    // this.parseQuery(QueryBuilder.getInstance().getQuery())
-
     this.state = {
       value: this.value,
       graphic: true
     }
-
     QueryBuilder.getInstance().addGenerator(this.generateQuery.bind(this), 1)
   }
 
@@ -79,21 +74,6 @@ export default class DatasetView extends React.Component<DatasetProps, DatasetSt
 
   openTable = () => {
     this.setState({ graphic: false });
-  }
-
-  copyURL() {
-    const selBox = document.createElement('textarea');
-    selBox.style.position = 'fixed';
-    selBox.style.left = '0';
-    selBox.style.top = '0';
-    selBox.style.opacity = '0';
-    selBox.value = window.location.href;
-    document.body.appendChild(selBox);
-    selBox.focus();
-    selBox.select();
-    document.execCommand('copy');
-    document.body.removeChild(selBox);
-    alert('Link Copied to Clipboard! (filters saved)');
   }
 
   render() {
@@ -137,8 +117,15 @@ export default class DatasetView extends React.Component<DatasetProps, DatasetSt
           <Row>
             <Col>
               <Button
-                style={{ backgroundColor: "lightgray", fontWeight: 'bold', marginLeft: '45%', marginRight: '45%', width: '10%' }}
-                onClick={() => this.setState({ graphic: !this.state.graphic })}>
+                style={{
+                  backgroundColor: "lightgray",
+                  fontWeight: 'bold',
+                  marginLeft: '45%',
+                  marginRight: '45%',
+                  width: '10%',
+                }}
+                onClick={() => this.setState({ graphic: !this.state.graphic })}
+              >
                 {this.state.graphic ? <>View Table</> : <>View Graphic</>}
               </Button>
             </Col>
@@ -148,34 +135,7 @@ export default class DatasetView extends React.Component<DatasetProps, DatasetSt
         <Container>
           <Row>
             <Col>
-              <div style={{ color: 'black', float: 'left' }}>
-                <a
-                  href="https://forms.gle/68zdvLpYxs8av16H8"
-                  rel="noopener noreferrer"
-                  target="_blank"
-                  style={{ padding: 20, color: 'black' }}
-                  aria-label="feedback"
-                >
-                  <FeedbackIcon/> Feedback
-                </a>
-                <a href="mailto:usacbudgetviewer@gmail.com" style={{ padding: 20, color: 'black' }} aria-label="email accountant">
-                  <EmailIcon /> Contact Us
-                </a>
-                <a href="mailto:vtran@asucla.ucla.edu" style={{ padding: 20, color: 'black' }} aria-label="email accountant">
-                  <EmailIcon /> Professional Accountant
-                </a>
-                <a href="mailto:usacouncil@asucla.ucla.edu" style={{ padding: 20, color: 'black' }} aria-label="email usac">
-                  <EmailIcon /> USAC Council
-                </a>
-                <Button style={{ color: 'black', textDecoration: 'underline' }} onClick={this.copyURL} aria-label="share">
-                  Copy link
-                </Button>
-                <a href='https://www.youtube.com/watch?v=cG8gkj6EEs0' rel="noopener noreferrer" target="_blank" aria-label="tutorial video">
-                  <Button aria-label="share">
-                    <ContactSupportIcon />Video
-                  </Button>
-                </a>
-              </div>
+              <Footer />
             </Col>
           </Row>
         </Container>

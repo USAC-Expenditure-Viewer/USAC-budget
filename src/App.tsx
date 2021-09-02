@@ -3,13 +3,15 @@ import './App.css';
 import DatasetView from "./components/DatasetView"
 import DataLoader from "./models/DataLoader";
 import Datasets from "./models/Datasets";
-import { Container, CssBaseline } from "@material-ui/core";
-// const createHistory = require('history').createBrowserHistory;
+import { CssBaseline } from "@material-ui/core";
 
 interface AppState {
   loader: DataLoader
 }
 
+/**
+ * This is the main class for the entire app
+ */
 class App extends React.Component<{}, AppState> {
 
   constructor(props: {}) {
@@ -20,11 +22,14 @@ class App extends React.Component<{}, AppState> {
   }
 
   componentDidMount(): void {
+    //  updates the loader state after any changes
     Datasets.getInstance().addChangeCallback(() => {
       this.setState({
         loader: Datasets.getInstance().getDataLoader()
       })
     });
+
+    //  updates the loader when user clicks browser back button
     window.addEventListener('popstate', (event) => {
       this.state.loader.removeFilters()
       this.state.loader.refreshParseQuery(window.location.search)

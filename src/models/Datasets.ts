@@ -1,6 +1,9 @@
 import QueryBuilder from "./QueryBuilder";
 import DataLoader from "./DataLoader";
 
+/**
+ * Loads the dataset for the specified year from the JSON files
+ */
 export default class Datasets {
 
   private static instance: Datasets | null = null

@@ -12,6 +12,9 @@ interface WordCloudProps extends DataLoaderProps {
   hidden?: boolean
 }
 
+/**
+ * The word cloud (keyword) UI
+ */
 export default class WordCloud extends Component<WordCloudProps> {
   private callbacks: Callbacks = {
     getWordTooltip: (word: Word) => `Descriptions containing "${word.text}" total $${KMFormat(word.value)}`,
@@ -26,18 +29,14 @@ export default class WordCloud extends Component<WordCloudProps> {
     fontStyle: 'normal',
     fontWeight: 'normal',
     scale: 'log',
-    //spiral: 'archimedean',
     deterministic: true,
-
     rotations: 4,
     rotationAngles: [-45, 90],
-
     transitionDuration: 200,
   }
 
   constructor(props: DataLoaderProps) {
     super(props)
-
     this.state = {
       words: [{ text: 'Loading...', value: 100 }]
     }
@@ -51,8 +50,11 @@ export default class WordCloud extends Component<WordCloudProps> {
     return (
       <div style={{ height: '60vh' }} hidden={this.props.hidden}>
         {(this.props.hidden || false) ? null : (
-          <ReactWordcloud callbacks={this.callbacks} words={this.props.dataloader.getWordList().slice(0, 80)}
-            options={this.options} />
+          <ReactWordcloud
+            callbacks={this.callbacks}
+            words={this.props.dataloader.getWordList().slice(0, 80)}
+            options={this.options}
+          />
         )}
       </div>
     )

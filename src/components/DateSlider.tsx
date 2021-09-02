@@ -26,6 +26,9 @@ interface SliderState {
 
 const month_name = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
 
+/**
+ * UI where the user chooses their range of dates
+ */
 export default class DateSlider extends Component<SliderProps, SliderState> {
 
   constructor(props: SliderProps) {

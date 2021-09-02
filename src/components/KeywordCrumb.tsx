@@ -5,7 +5,6 @@
  */
 import React, { Component } from 'react';
 import { Breadcrumbs, Tooltip, Typography, Drawer, List, ListItem, ListItemIcon, ListItemText } from "@material-ui/core";
-import Link from "@material-ui/core/Link";
 import ListIcon from "@material-ui/icons/List";
 
 import { KMFormat } from "../util";
@@ -16,6 +15,9 @@ interface KeywordCrumbState {
   drawer: boolean
 }
 
+/**
+ * These are the clickable filters 
+ */
 export default class KeywordCrumb extends Component<DataLoaderProps, KeywordCrumbState> {
 
   constructor(props: DataLoaderProps) {

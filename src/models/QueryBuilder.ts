@@ -1,3 +1,6 @@
+/**
+ * Handles changes in the URL when the user interacts with the graphics or tabs
+ */
 export default class QueryBuilder {
 
   private static instance: QueryBuilder | null = null

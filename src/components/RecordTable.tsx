@@ -15,9 +15,9 @@ import {
   Column, GroupingState, GroupSummaryItem, IntegratedFiltering, IntegratedGrouping,
   IntegratedSorting,
   IntegratedSummary, SearchState,
-  Sorting, TableColumnResizing,
-  SortingState, SummaryItem,TableColumnWidthInfo,
-  SummaryState, TableGroupRow as TableGroupRowBase, FilteringState
+  Sorting,
+  SortingState, SummaryItem,
+  SummaryState, TableGroupRow as TableGroupRowBase,
 } from "@devexpress/dx-react-grid";
 import { Paper } from "@material-ui/core";
 import { DataTypeProvider } from "@devexpress/dx-react-grid";
@@ -67,6 +67,9 @@ interface RecordTableProps extends DataLoaderProps {
   openTable: () => void
 }
 
+/**
+ * This is the table that displays all of the searchable line items
+ */
 export default class RecordTable extends Component<RecordTableProps, RecordTableState> {
 
   private TableHeaderCell = (props: TableHeaderRow.CellProps) => (
@@ -179,8 +182,6 @@ export default class RecordTable extends Component<RecordTableProps, RecordTable
 
   private groupWeight: Map<string, number>
 
-  private searchValue: string = ''
-
   private integratedSortingColumnExtensions: IntegratedSorting.ColumnExtension[] = []
 
   constructor(props: RecordTableProps) {
@@ -224,7 +225,7 @@ export default class RecordTable extends Component<RecordTableProps, RecordTable
   }
 
   componentDidUpdate(prevProps: Readonly<RecordTableProps>, prevState: Readonly<RecordTableState>, snapshot?: any): void {
-    if (this.state.groupBy != prevState.groupBy) {
+    if (this.state.groupBy !== prevState.groupBy) {
       this.buildGroupWeightTable()
       this.setState({
         sortingState: this.getGroupSortingState(),
@@ -233,7 +234,7 @@ export default class RecordTable extends Component<RecordTableProps, RecordTable
   }
   
   render() {
-    if (this.state.searchValue != '' && this.props.minimized)
+    if (this.state.searchValue !== '' && this.props.minimized)
       this.setState({searchValue: ''});
     const rows = this.props.dataloader.getRecords().map((e, i) => { e.id = i; return e })
     if (this.props.hidden === true)
@@ -301,7 +302,7 @@ export default class RecordTable extends Component<RecordTableProps, RecordTable
     })
     if (isOfTypeTabs(sorts.name)) {
       this.props.onChange(sorts.name);
-    } else if (sorts.name == 'description') {
+    } else if (sorts.name === 'description') {
       this.props.onChange('keyword');
     }
   }
